@@ -21,6 +21,8 @@ String WIFIpassword;
 String WIFIhostname;
 time_t WIFItimeout = 15; //number of seconds WiFi tries to connect before starting an accesspoint
 
+int timeZone = 0;
+
 //Serial logging switches
 bool memoryLogging = true;
 
