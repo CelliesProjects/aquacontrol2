@@ -55,7 +55,7 @@ void setupWebServer() {
   });
 
   webServer.on( "/api/getpercentage", []() {
-    String HTTPresponse = String(random( 100 )) + "," + String(random( 100 )) + "," + String(random( 100 )) + "," + String(random( 100 )) + "," + String(random( 100 )) + ",11:25:57,Lights controlled by program.";
+    String HTTPresponse = String(random( 100 )) + "," + String(random( 100 )) + "," + String(random( 100 )) + "," + String(random( 100 )) + "," + String(random( 100 )) + "," + formattedTime( localTime() ) + ",Lights controlled by program.";
     webServer.send( 200, "text/plain", HTTPresponse );
   });
 
