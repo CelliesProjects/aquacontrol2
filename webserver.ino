@@ -128,7 +128,7 @@ const char uploadHTMLheader[] = R"=====(<!DOCTYPE html>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">  <!--prevent favicon requests-->
 <title>Aquacontrol2 Network Setup</title>
 </head>
-<body>
+<body style="text-align:center;">
 )=====";
 
 const char uploadHTMLfooter[] = R"=====(</body>
@@ -136,9 +136,9 @@ const char uploadHTMLfooter[] = R"=====(</body>
 )=====";
 
 void showFileEditor() {
-  const char* uploadForm = "<form method='POST' action='/api/upload' enctype='multipart/form-data'><input type='file' name='upload' required><input type='submit' value='Upload'></form>";
+  const char* uploadForm = "<form style=\"margin:10px auto;border:solid 1px black;width:90%;padding:5px 0;\" method='POST' action='/api/upload' enctype='multipart/form-data'><h3>File upload</h3><input type='file' name='upload' required><input type='submit' value='Upload'><p>Warning: uploading files will overwrite destination!</p></form>";
   String fileName;
-  String HTTPresponse = "<div style=\"height:200px;width:90%;overflow:auto;margin:0 auto\">"; 
+  String HTTPresponse = "<h3>Aquacontrol File Editor</h3><div style=\"height:200px;width:90%;overflow:auto;margin:0 auto;border:solid 1px black;\">"; 
   
   Dir dir = SPIFFS.openDir("/");
   while ( dir.next() ) {
