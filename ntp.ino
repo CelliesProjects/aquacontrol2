@@ -80,3 +80,26 @@ time_t getTimefromNTP() {
     return 0;                                                 //return error code
   }
 }
+
+void initNTP() {
+  Serial.println( F("Synching clock by NTP.") );
+  byte numberOfTries = 3;
+  byte counter = 1;
+  while ( ntpError && counter <= numberOfTries ) {
+    Serial.print( F("NTP sync try number ") );  Serial.println( counter );
+    time_t result = getTimefromNTP();
+    if ( result != 0 ) {
+      setTime( result );
+      bootTime = result;
+      ntpError = false;
+    } else {
+      counter++;
+    }
+  }
+  if ( ntpError ) {
+    Serial.print( F("No NTP sync. System clock is reading: ") );
+  } else {
+    Serial.print( F("Local time set to ") );
+  }
+  Serial.println( formattedTime( localTime() ) );
+}

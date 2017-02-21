@@ -22,6 +22,7 @@ String WIFIpassword;
 String WIFIhostname;
 time_t WIFItimeout = 15; //number of seconds WiFi tries to connect before starting an accesspoint
 
+time_t bootTime;
 int timeZone = 0;
 
 //Serial logging switches
@@ -72,6 +73,7 @@ void setup() {
     }
     Serial.printf("\n");
   }
+  initNTP();
   setupWebServer();
 
 }
