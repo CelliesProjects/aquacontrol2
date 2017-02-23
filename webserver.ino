@@ -118,8 +118,7 @@ bool handleSPIFFSfile( String path ) {
       return true;
     };
     File file = SPIFFS.open( path, "r" );
-    String contentType = getContentType( path );
-    size_t sent = webServer.streamFile( file, contentType );
+    size_t sent = webServer.streamFile( file, getContentType( path ) );
     file.close();
     return true;
   }
