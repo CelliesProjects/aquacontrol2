@@ -106,14 +106,19 @@ void handleNotFound() {
 }
 
 bool handleSPIFFSfile( String path ) {
-  Serial.println( "non handled request for: " + path );
+  Serial.println( "Request for: " + path );
   if ( path.endsWith( "/" ) ) path += "index.htm";
-  String contentType = getContentType( path );
-  String pathWithGz = path + ".gz";
-  if ( SPIFFS.exists( pathWithGz) || SPIFFS.exists( path ) ) {
-    if ( SPIFFS.exists( pathWithGz ) )
-      path += ".gz";
+
+  if ( SPIFFS.exists( path ) ) {
+    if ( webServer.arg( "action" ) == "delete" ) {
+      Serial.println( "Delete request. Deleting..." );
+      SPIFFS.remove( path );
+      Serial.println( path + " deleted" );
+      webServer.send( 200, "text/plain", path + " deleted" );
+      return true;
+    };
     File file = SPIFFS.open( path, "r" );
+    String contentType = getContentType( path );
     size_t sent = webServer.streamFile( file, contentType );
     file.close();
     return true;
