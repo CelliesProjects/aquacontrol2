@@ -28,7 +28,7 @@ int timeZone = 0;
 bool programOverride = false; // used for LIGHTS ON & LIGHTS OFF in webinterface
 
 //Serial logging switches
-bool memoryLogging = true;
+bool memoryLogging = false;
 bool channelLogging = false; //logging of percentage % values over Serial. Useful when debugging unrelated stuff and a uncluttered screen
 
 //channel setup
