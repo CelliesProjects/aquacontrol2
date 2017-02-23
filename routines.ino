@@ -55,3 +55,33 @@ boolean isDST( int mo, int dy, int dw ) {
   return previousSunday <= 0; // In November we must be before the first Sunday to be DST. That means the previous Sunday must be before the 1st.
 }
 
+void setPercentage( const byte thisChannel, const time_t secondsToday ) {
+  if ( !programOverride && ( secondsToday != 0 ) ) {     ///to solve flashing at midnight due to secondsToday which cant be smaller than 0 -- so at midnight there is no adjusting
+    byte thisTimer = 0;
+    while ( channel[thisChannel].timer[thisTimer].time < secondsToday ) {
+      thisTimer++;
+    }
+    float dimPercentage = channel[thisChannel].timer[thisTimer].percentage - channel[thisChannel].timer[thisTimer - 1].percentage;
+    time_t numberOfSecondsBetween = channel[thisChannel].timer[thisTimer].time - channel[thisChannel].timer[thisTimer - 1].time;
+    time_t secondsSinceLastTimer = secondsToday - channel[thisChannel].timer[thisTimer - 1].time;
+    float changePerSecond  = dimPercentage / numberOfSecondsBetween;
+    channel[thisChannel].currentPercentage = channel[thisChannel].timer[thisTimer - 1].percentage + ( secondsSinceLastTimer * changePerSecond );
+
+    //check if channel has a minimum set
+    if ( channel[thisChannel].currentPercentage < channel[thisChannel].minimumLevel ) {
+      channel[thisChannel].currentPercentage = channel[thisChannel].minimumLevel;
+    }
+
+    analogWrite( channel[thisChannel].pin, ( int )mapFloat( channel[thisChannel].currentPercentage, 0, 100, 0, PWMdepth ) );
+
+    if ( channelLogging ) {
+      Serial.print( F("Channel: ") );
+      Serial.print( channel[thisChannel].name );
+      Serial.print( F(" ") );
+      Serial.print( String( channel[ thisChannel ].currentPercentage ) );
+      String rawValue = String( ( int )mapFloat( channel[thisChannel].currentPercentage, 0, 100, 0, PWMdepth ) );
+      Serial.print( F("% RAW: ") );
+      Serial.println(  rawValue );
+    }
+  }
+}

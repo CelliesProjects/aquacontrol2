@@ -25,8 +25,38 @@ time_t WIFItimeout = 15; //number of seconds WiFi tries to connect before starti
 time_t bootTime;
 int timeZone = 0;
 
+bool programOverride = false; // used for LIGHTS ON & LIGHTS OFF in webinterface
+
 //Serial logging switches
 bool memoryLogging = true;
+bool channelLogging = false; //logging of percentage % values over Serial. Useful when debugging unrelated stuff and a uncluttered screen
+
+//channel setup
+const byte numberOfChannels         =  5  ;
+const byte maxTimers                =  50 ;
+
+unsigned int PWMdepth                =  PWMRANGE * 10;                //PWMRANGE defaults to 1023 on ESP8266 in Arduino IDE
+
+//the beef of the program is constructed here
+//first define a list of timers
+struct lightTimer {
+  time_t        time;                                                 //time in seconds since midnight so range is 0-86400
+  byte          percentage;                                           // in percentage so range is 0-100
+};
+
+//then a struct for general housekeeping of a ledstrip
+struct lightTable {
+  lightTimer timer[maxTimers];
+  String     name;                                                    //initially set to 'channel 1' 'channel 2' etc.
+  String     color;                                                   //!!interface color, not light color! Can be 'red' or '#ff0000' or 'rgba(255,0,0,1)', basically anything a browser understands
+  float      currentPercentage;                                       //what percentage is this channel set to
+  byte       pin;                                                     //which pin is this channel on
+  byte       numberOfTimers;                                          //actual number of timers for this channel
+  float      minimumLevel;                                            //never dim this channel below this percentage
+};
+
+//and make 5 instances
+struct lightTable channel[numberOfChannels];                           //all channels are now memory allocated
 
 ESP8266WebServer webServer ( 80 );
 
