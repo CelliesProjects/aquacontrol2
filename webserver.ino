@@ -98,10 +98,10 @@ void handleNotFound() {
   /////////////////////////////////////////////////////////////////////////////////////
   // if the request is not handled by any of the defined handlers
   // try to use the argument as filename and serve from SPIFFS
-  // if no matching file is found, throw an error:
-  // 404 not found
+  // if no matching file is found, throw an error.
   if ( !handleSPIFFSfile( webServer.uri() ) ) {
-    webServer.send( 404, "text/plain", "Nothing here. Are you sure you typed correctly?" );
+    Serial.println( "404 File not found." );
+    webServer.send( 404, "text/plain", "404 - File not found." );
   }
 }
 
