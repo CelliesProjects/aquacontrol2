@@ -31,7 +31,7 @@ bool memoryLogging = true;
 ESP8266WebServer webServer ( 80 );
 
 void setup() {
-  //WiFi.disconnect();
+  WiFi.persistent( false );
 
   Serial.begin ( 115200 );
   Serial.print( "\n\n" );
