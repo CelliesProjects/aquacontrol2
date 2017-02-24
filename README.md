@@ -15,3 +15,7 @@ Aquacontrol2 is a refactor of Aquacontrol and re-uses a lot of the same code. Bo
 Aquacontrol started of as a project on the original Arduino Uno, but due to RAM size and lack of network connectivity on the Arduino, the hardware was changed to a WeMos D1 mini.
 
 This new version is setup specifically for the WeMos D1 and carries not much of the original flaws.
+
+At first the HTML files from the original versions will be used. These work but will be rewritten sometime after a first release.
+
+Cellie februari 2017
