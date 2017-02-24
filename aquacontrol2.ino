@@ -58,10 +58,28 @@ struct lightTable {
 //and make 5 instances
 struct lightTable channel[numberOfChannels];                           //all channels are now memory allocated
 
+//pin functions
+const byte ledPin[numberOfChannels] =  { D1, D2, D3, D4, D5 } ;        //pin numbers of the channels !!!!! should contain [numberOfChannels] entries. D1 through D8 are the exposed pins on 'Wemos D1 mini'
+//see online for pin number conversion Arduino <> Wemos D1 mini: https://github.com/esp8266/Arduino/blob/master/variants/d1_mini/pins_arduino.h#L49-L61
+
+//I2C pins used for OLED
+const byte   SCL_pin                = D6;
+const byte   SDA_pin                = D7;
+
 ESP8266WebServer webServer ( 80 );
 
 void setup() {
   WiFi.persistent( false );
+
+  //setup channel names and set OUTPUT pinModes
+  for (byte thisChannel = 0; thisChannel < numberOfChannels; thisChannel++ ) {
+    channel[ thisChannel ].name = "CHANNEL" + String( thisChannel + 1 );
+    channel[ thisChannel ].color = "white";
+    channel[ thisChannel ].pin = ledPin[ thisChannel ];
+    channel[ thisChannel ].minimumLevel = 0;
+    pinMode( channel[ thisChannel ].pin, OUTPUT );
+    digitalWrite( channel[ thisChannel ].pin, LOW );
+  }
 
   Serial.begin ( 115200 );
   Serial.print( "\n\n" );
