@@ -5,12 +5,9 @@
 #include <EEPROM.h>
 #include <FS.h>
 
-
-/*
   extern "C" {
   #include "user_interface.h"
   }
-*/
 
 //https://gist.github.com/dogrocker/f998dde4dbac923c47c1
 
@@ -68,7 +65,8 @@ const byte   SDA_pin                = D7;
 
 ESP8266WebServer webServer ( 80 );
 
-void setup() {
+void setup() {\
+  system_update_cpu_freq( 160 );
   WiFi.persistent( false );
 
   //setup channel names and set OUTPUT pinModes
