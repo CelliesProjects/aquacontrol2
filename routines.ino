@@ -85,3 +85,15 @@ void setPercentage( const byte thisChannel, const time_t secondsToday ) {
     }
   }
 }
+
+void updateChannels() {
+  if (channelLogging) {
+    Serial.print( F("Updating all channels at ") );  Serial.print( formattedTime( localTime() ) );  Serial.println( F(" local time.") );
+  }
+  //get the current timeInSeconds and use that as time argument for setPercentage
+  time_t secondsToday = elapsedSecsToday( localTime() );      //elapsedSecsToday lives in TimeLib.h  
+  
+  for ( byte thisChannel = 0; thisChannel < numberOfChannels; thisChannel++ ) {
+    setPercentage(thisChannel, secondsToday );
+  }
+}

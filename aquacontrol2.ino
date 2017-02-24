@@ -4,6 +4,7 @@
 #include <ESP8266WebServer.h>
 #include <EEPROM.h>
 #include <FS.h>
+#include <Ticker.h>
 #include "SSD1306.h" //https://github.com/squix78/esp8266-oled-ssd1306
 
 extern "C" {
@@ -69,6 +70,8 @@ const byte OLEDaddress              = 0x3c;
 SSD1306  OLED( OLEDaddress, SDA_pin, SCL_pin );
 
 ESP8266WebServer webServer ( 80 );
+
+Ticker channelUpdateTimer;
 
 void setup() {
   system_update_cpu_freq( 160 );
@@ -139,6 +142,10 @@ void setup() {
   OLED.clear();
   OLED.drawString( 64, 30, F("Ready." ) );
   OLED.display();
+
+  //set all channels
+  channelUpdateTimer.attach_ms( 1000 , updateChannels );         // Finally set the timer routine to update the leds
+  updateChannels();
 }
 
 int previousFreeRAM; //for memory logging usage, see last lines of loop()
