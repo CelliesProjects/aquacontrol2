@@ -91,6 +91,19 @@ void setupWebServer() {
     webServer.send( 200, "text/plain", lightStatus );
   });
 
+  webServer.on( "/api/pwmfrequency", []() {
+    if ( webServer.arg( "newpwmfrequency" ) != "" ) {
+      int tempPWMfrequency = webServer.arg( "newpwmfrequency" ).toInt();
+      if ( tempPWMfrequency < 1 || tempPWMfrequency > 1000 ) {
+        webServer.send( 200, "text/plain", "Invalid PWM frequency" );
+        return;
+      }
+      PWMfrequency = tempPWMfrequency;
+      analogWriteFreq( PWMfrequency );
+      webServer.send( 200, "text/plain", "PWM frequency is " + String( tempPWMfrequency ) );
+    }
+  });
+
   webServer.on( "/api/pwmdepth", []() {
     if ( webServer.arg( "newpwmdepth" ) != "" ) {
       PWMdepth = webServer.arg( "newpwmdepth" ).toInt();

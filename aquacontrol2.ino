@@ -37,6 +37,7 @@ const byte numberOfChannels         =  5  ;
 const byte maxTimers                =  50 ;
 
 unsigned int PWMdepth                =  PWMRANGE * 10;                //PWMRANGE defaults to 1023 on ESP8266 in Arduino IDE
+int PWMfrequency                     =  400;                          //in Hz
 
 //the beef of the program is constructed here
 //first define a list of timers
