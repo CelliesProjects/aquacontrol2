@@ -143,6 +143,10 @@ void setup() {
   OLED.drawString( 64, 30, F("Ready." ) );
   OLED.display();
 
+  if ( defaultTimersAreLoaded() ) {
+    Serial.println( "Timers loaded from SPIFFS." );
+  }
+  
   //set all channels
   channelUpdateTimer.attach_ms( 1000 , updateChannels );         // Finally set the timer routine to update the leds
   updateChannels();

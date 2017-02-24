@@ -91,9 +91,47 @@ void updateChannels() {
     Serial.print( F("Updating all channels at ") );  Serial.print( formattedTime( localTime() ) );  Serial.println( F(" local time.") );
   }
   //get the current timeInSeconds and use that as time argument for setPercentage
-  time_t secondsToday = elapsedSecsToday( localTime() );      //elapsedSecsToday lives in TimeLib.h  
-  
+  time_t secondsToday = elapsedSecsToday( localTime() );      //elapsedSecsToday lives in TimeLib.h
+
   for ( byte thisChannel = 0; thisChannel < numberOfChannels; thisChannel++ ) {
     setPercentage(thisChannel, secondsToday );
   }
+}
+
+bool defaultTimersAreLoaded() {                                                      //this function loads the timers or returns FALSE
+  //find 'default.aqu' on SPIFFS disk and if present load the timerdata from this file
+  //return false on error
+  File f = SPIFFS.open( "/default.aqu", "r" );
+  if (!f) {
+    Serial.println( F("ERROR: No SPIFFS file!") );
+    return false;
+  }
+  String lineBuf;
+  byte currentTimer = 0;
+  byte thisChannel;
+  while ( f.position() < f.size() ) {
+    lineBuf = f.readStringUntil( '\n' );
+    if ( lineBuf.indexOf( "[" ) > -1 ) {
+      String thisChannelStr;
+      thisChannelStr = lineBuf.substring( lineBuf.indexOf("[") + 1, lineBuf.indexOf("]") );
+      thisChannel = thisChannelStr.toInt();
+      currentTimer = 0;
+    } else {
+      String thisPercentage;
+      String thisTime;
+      thisTime = lineBuf.substring( 0, lineBuf.indexOf(",") );
+      thisPercentage = lineBuf.substring( lineBuf.indexOf(",") + 1 );
+      channel[thisChannel].timer[currentTimer].time = thisTime.toInt();
+      channel[thisChannel].timer[currentTimer].percentage = thisPercentage.toInt();
+      currentTimer++;
+      channel[thisChannel].numberOfTimers = currentTimer;
+    }
+  }
+  f.close();
+  //add the 24:00 timers ( copy of timer percentage no: 0 )
+  for (thisChannel = 0; thisChannel < numberOfChannels; thisChannel++ ) {
+    channel[thisChannel].timer[channel[thisChannel].numberOfTimers].time = 86400;
+    channel[thisChannel].timer[channel[thisChannel].numberOfTimers].percentage = channel[thisChannel].timer[0].percentage;
+  }
+  return true;
 }
