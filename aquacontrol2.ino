@@ -78,6 +78,7 @@ Ticker channelUpdateTimer;
 void setup() {
   system_update_cpu_freq( 160 );
   WiFi.persistent( false );
+  analogWriteRange( PWMdepth );
 
   //setup channel names and set OUTPUT pinModes
   for (byte thisChannel = 0; thisChannel < numberOfChannels; thisChannel++ ) {
@@ -148,7 +149,7 @@ void setup() {
   if ( defaultTimersAreLoaded() ) {
     Serial.println( "Timers loaded from SPIFFS." );
   }
-  
+
   //set all channels
   channelUpdateTimer.attach_ms( 1000 , updateChannels );         // Finally set the timer routine to update the leds
   updateChannels();
@@ -166,7 +167,7 @@ void loop() {
   else {
     OLED.normalDisplay();
   }
-  updateOLEDbar();  
+  updateOLEDbar();
 
   if ( memoryLogging ) {
     //show mem usage

@@ -91,6 +91,13 @@ void setupWebServer() {
     webServer.send( 200, "text/plain", lightStatus );
   });
 
+  webServer.on( "/api/pwmdepth", []() {
+    if ( webServer.arg( "newpwmdepth" ) != "" ) {
+      PWMdepth = webServer.arg( "newpwmdepth" ).toInt();
+    }
+    webServer.send( 200, "text/plain", "PWM depth is " + String( PWMdepth ) );
+  });
+
   webServer.on( "/api/timezone", []() {
     if ( webServer.arg( "newtimezone" ) != "" ) {
       timeZone = webServer.arg( "newtimezone" ).toInt();
