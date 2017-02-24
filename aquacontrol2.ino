@@ -65,7 +65,7 @@ const byte   SDA_pin                = D7;
 
 ESP8266WebServer webServer ( 80 );
 
-void setup() {\
+void setup() {
   system_update_cpu_freq( 160 );
   WiFi.persistent( false );
 
