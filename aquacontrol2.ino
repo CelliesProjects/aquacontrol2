@@ -26,6 +26,8 @@ int timeZone = 0;
 
 bool programOverride = false; // used for LIGHTS ON & LIGHTS OFF in webinterface
 
+String lightStatus; //To keep track if lights are on, off or programmed, this string is displayed on the webif
+
 //Serial logging switches
 bool memoryLogging = false;
 bool channelLogging = false; //logging of percentage % values over Serial. Useful when debugging unrelated stuff and a uncluttered screen
@@ -150,6 +152,7 @@ void setup() {
   //set all channels
   channelUpdateTimer.attach_ms( 1000 , updateChannels );         // Finally set the timer routine to update the leds
   updateChannels();
+  lightStatus = "Lights on program.";
 }
 
 int previousFreeRAM; //for memory logging usage, see last lines of loop()

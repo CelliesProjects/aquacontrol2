@@ -55,7 +55,12 @@ void setupWebServer() {
   });
 
   webServer.on( "/api/getpercentage", []() {
-    String HTTPresponse = String(random( 100 )) + "," + String(random( 100 )) + "," + String(random( 100 )) + "," + String(random( 100 )) + "," + String(random( 100 )) + "," + formattedTime( localTime() ) + ",Lights controlled by program.";
+    String HTTPresponse;
+    for ( byte thisChannel = 0; thisChannel < numberOfChannels; thisChannel++ ) {
+      HTTPresponse += String( channel[thisChannel].currentPercentage ) + F( "," );
+    }
+    HTTPresponse += formattedTime( localTime() ) + F( "," );
+    HTTPresponse += lightStatus;
     webServer.send( 200, "text/plain", HTTPresponse );
   });
 
