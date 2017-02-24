@@ -4,10 +4,11 @@
 #include <ESP8266WebServer.h>
 #include <EEPROM.h>
 #include <FS.h>
+#include "SSD1306.h" //https://github.com/squix78/esp8266-oled-ssd1306
 
-  extern "C" {
-  #include "user_interface.h"
-  }
+extern "C" {
+#include "user_interface.h"
+}
 
 //https://gist.github.com/dogrocker/f998dde4dbac923c47c1
 
@@ -62,6 +63,10 @@ const byte ledPin[numberOfChannels] =  { D1, D2, D3, D4, D5 } ;        //pin num
 //I2C pins used for OLED
 const byte   SCL_pin                = D6;
 const byte   SDA_pin                = D7;
+//I2C address of OLED screen
+const byte OLEDaddress              = 0x3c;
+
+SSD1306  OLED( OLEDaddress, SDA_pin, SCL_pin );
 
 ESP8266WebServer webServer ( 80 );
 
@@ -78,6 +83,15 @@ void setup() {
     pinMode( channel[ thisChannel ].pin, OUTPUT );
     digitalWrite( channel[ thisChannel ].pin, LOW );
   }
+
+  OLED.init();
+  OLED.clear();
+  OLED.flipScreenVertically();
+  OLED.setTextAlignment( TEXT_ALIGN_CENTER );
+  OLED.setFont( ArialMT_Plain_16 );
+  OLED.drawString( 64, 10, F("AquaControl" ) );
+  OLED.drawString( 64, 30, F("Booting..." ) );
+  OLED.display();
 
   Serial.begin ( 115200 );
   Serial.print( "\n\n" );
@@ -122,6 +136,9 @@ void setup() {
   initNTP();
   setupWebServer();
 
+  OLED.clear();
+  OLED.drawString( 64, 30, F("Ready." ) );
+  OLED.display();
 }
 
 int previousFreeRAM; //for memory logging usage, see last lines of loop()
