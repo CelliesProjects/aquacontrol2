@@ -64,6 +64,33 @@ void setupWebServer() {
     webServer.send( 200, "text/plain", HTTPresponse );
   });
 
+  webServer.on( "/api/lightsoff", []() {
+    programOverride = true;
+    for ( byte thisChannel = 0; thisChannel < numberOfChannels; thisChannel++ ) {
+      analogWrite( channel[thisChannel].pin, PWMdepth );
+      channel[thisChannel].currentPercentage = 0;
+    }
+    lightStatus = F( "Lights are off." );
+    webServer.send( 200, "text/plain", lightStatus );
+  });
+
+  webServer.on( "/api/lightson", []() {
+    programOverride = true;
+    for ( byte thisChannel = 0; thisChannel < numberOfChannels; thisChannel++ ) {
+      analogWrite( channel[thisChannel].pin, PWMdepth );
+      channel[thisChannel].currentPercentage = 100;
+    }
+    lightStatus = F( "Lights are on." );
+    webServer.send( 200, "text/plain", lightStatus );
+  });
+
+  webServer.on( "/api/lightsprogram", []() {
+    programOverride = false;
+    updateChannels();
+    lightStatus = F( "Lights controlled by program." );
+    webServer.send( 200, "text/plain", lightStatus );
+  });
+
   webServer.on( "/api/timezone", []() {
     if ( webServer.arg( "newtimezone" ) != "" ) {
       timeZone = webServer.arg( "newtimezone" ).toInt();

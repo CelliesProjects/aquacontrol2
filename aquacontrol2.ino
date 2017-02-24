@@ -152,7 +152,7 @@ void setup() {
   //set all channels
   channelUpdateTimer.attach_ms( 1000 , updateChannels );         // Finally set the timer routine to update the leds
   updateChannels();
-  lightStatus = "Lights on program.";
+  lightStatus = "Lights controlled by program.";
 }
 
 int previousFreeRAM; //for memory logging usage, see last lines of loop()
