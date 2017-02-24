@@ -64,6 +64,13 @@ void setupWebServer() {
     webServer.send( 200, "text/plain", HTTPresponse );
   });
 
+  webServer.on( "/api/timezone", []() {
+    if ( webServer.arg( "newtimezone" ) != "" ) {
+      timeZone = webServer.arg( "newtimezone" ).toInt();
+    }
+    webServer.send( 200, "text/plain", "Timezone is " + String( timeZone ) );
+  });
+
   webServer.on( "/api/upload", HTTP_POST, []() {
     webServer.sendHeader("Connection", "close");
     webServer.sendHeader("Access-Control-Allow-Origin", "*");
