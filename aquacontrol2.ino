@@ -153,6 +153,14 @@ int previousFreeRAM; //for memory logging usage, see last lines of loop()
 void loop() {
   webServer.handleClient();
 
+  if ( programOverride ) {
+    OLED.invertDisplay();
+  }
+  else {
+    OLED.normalDisplay();
+  }
+  updateOLEDbar();  
+
   if ( memoryLogging ) {
     //show mem usage
     int nowFreeRAM = ESP.getFreeHeap();
