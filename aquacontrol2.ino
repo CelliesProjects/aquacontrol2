@@ -14,11 +14,12 @@ extern "C" {
 //https://gist.github.com/dogrocker/f998dde4dbac923c47c1
 
 
-const char *defaultHostname = "aquacontrol2";
+//String WIFIhostname= "aquacontrol2";
+bool hostNameChanged = false;
 
 String WIFIssid;
 String WIFIpassword;
-String WIFIhostname;
+String WIFIhostname = "";
 time_t WIFItimeout = 15; //number of seconds WiFi tries to connect before starting an accesspoint
 
 time_t bootTime;
@@ -78,7 +79,6 @@ Ticker channelUpdateTimer;
 
 void setup() {
   system_update_cpu_freq( 160 );
-  WiFi.persistent( false );
   analogWriteRange( PWMdepth );
 
   //setup channel names and set OUTPUT pinModes
@@ -155,11 +155,33 @@ void setup() {
   channelUpdateTimer.attach_ms( 1000 , updateChannels );         // Finally set the timer routine to update the leds
   updateChannels();
   lightStatus = "Lights controlled by program.";
+
+  if ( WiFi.hostname() != WIFIhostname) {
+    hostNameChanged = true;
+  }
 }
 
 int previousFreeRAM; //for memory logging usage, see last lines of loop()
 
 void loop() {
+
+  if ( hostNameChanged ) {
+    WiFi.hostname( WIFIhostname );
+    WiFi.mode( WIFI_OFF );
+    WiFi.begin();
+    OLED.clear();
+    OLED.setTextAlignment( TEXT_ALIGN_CENTER );
+    OLED.setFont( ArialMT_Plain_16 );
+    OLED.drawString( 64, 10, F("Setting") );
+    OLED.drawString( 64, 30, F("hostname...") );
+    OLED.display();
+    while ( WiFi.status() != WL_CONNECTED ) {
+      delay(20);
+      yield();
+    }
+    hostNameChanged = false;
+  }
+
   webServer.handleClient();
 
   if ( programOverride ) {

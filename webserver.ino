@@ -75,6 +75,26 @@ void setupWebServer() {
     webServer.send( 200, "text/plain", HTTPresponse );
   });
 
+  webServer.on( "/api/hostname", []() {
+    if ( webServer.arg( "newhostname" ) != "" ) {
+      String newHostName = webServer.arg( "newhostname" );
+      newHostName.trim();
+      //check for illegal characters --legal chars are alphanumeric
+      for ( byte thisChar = 0; thisChar < newHostName.length(); thisChar++ ) {
+        if ( !isAlphaNumeric( newHostName[thisChar] ) || isSpace( newHostName[thisChar] ) ) {
+          webServer.send( 200, "text/plain", "ERROR - Invalid character in hostname." );
+          return;
+        }
+      }
+      WIFIhostname= newHostName;
+      hostNameChanged = true;
+      writeWifiDataToEEPROM();
+      webServer.send( 200, "text/plain", "Hostname set to " + WIFIhostname);
+      return;
+    }
+    webServer.send( 200, "text/plain", WiFi.hostname() );
+  });
+
   webServer.on( "/api/lightsoff", []() {
     programOverride = true;
     for ( byte thisChannel = 0; thisChannel < numberOfChannels; thisChannel++ ) {
