@@ -38,6 +38,17 @@ void setupWebServer() {
     webServer.send( 200, "text/plain", "EEPROM cleared" );
   });
 
+  webServer.on( "/api/formatspiffs", []() {
+    OLED.clear();
+    OLED.setTextAlignment( TEXT_ALIGN_CENTER );
+    OLED.setFont( ArialMT_Plain_16 );
+    OLED.drawString( 64, 10, F("Formatting" ) );
+    OLED.drawString( 64, 30, F("Please wait..." ) );
+    OLED.display();
+    SPIFFS.format();
+    webServer.send( 200, "text/plain", "SPIFFS disk formatted" );
+  });
+
   webServer.on( "/api/files", []() {
     String HTTPresponse;
     {
