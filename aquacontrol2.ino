@@ -143,10 +143,6 @@ void setup() {
   initNTP();
   setupWebServer();
 
-  OLED.clear();
-  OLED.drawString( 64, 30, F("Ready." ) );
-  OLED.display();
-
   if ( defaultTimersAreLoaded() ) {
     Serial.println( "Timers loaded from SPIFFS." );
   }
