@@ -72,7 +72,8 @@ function scanWiFi(networkName){
 void startAccessPoint() {
   
   String apName = "aquacontrol";
-  
+  long passWord = random( 10000000, 99999999 );
+  String pinStr = String( passWord );
   IPAddress accessPointIP     ( 192, 168, 3, 1 );
   IPAddress accessPointNetmask( 255, 255, 255, 0 );
 
@@ -80,7 +81,7 @@ void startAccessPoint() {
   Serial.println( "Starting access point...");
 
   WiFi.mode( WIFI_AP );
-  WiFi.softAP(  apName.c_str() );                                                                    // --1  dit is de goede volgorde!
+  WiFi.softAP(  apName.c_str(), pinStr.c_str()  );                                                                    // --1  dit is de goede volgorde!
   WiFi.softAPConfig( accessPointIP, accessPointIP, accessPointNetmask );                             // --2  echt waar!
   //                                                                                                 //http://wasietsmet.nl/esp8266/esp8266-softap-en-softapconfig-in-arduino-ide/
   Serial.println( "Access point " + apName + " created.");
@@ -149,6 +150,16 @@ void startAccessPoint() {
   });
 
   webServer.begin();
+
+  OLED.clear();
+  OLED.setTextAlignment( TEXT_ALIGN_CENTER );
+  OLED.setFont( ArialMT_Plain_10 );
+  OLED.drawString( 64, 0, F( "ACCESSPOINT:" ) );
+  OLED.drawString( 64, 11, apName );
+  OLED.drawString( 64, 22, "passw: " + String( passWord ) ); 
+  OLED.drawString( 64, 33, F( "IP:" ) );
+  OLED.drawString( 64, 44, WiFi.softAPIP().toString() );
+  OLED.display();
 
   while ( true ) {
     webServer.handleClient();
