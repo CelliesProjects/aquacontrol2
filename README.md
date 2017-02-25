@@ -18,4 +18,9 @@ This new version is setup specifically for the WeMos D1 and carries not much of 
 
 At first the HTML files from the original versions will be used. These work but will be rewritten sometime after a first release.
 
-Cellie februari 2017
+### External ibraries used:
+
+[esp8266-oled-ssd1306 3.2.5](https://github.com/squix78/esp8266-oled-ssd1306/tree/3.2.5)
+
+Cellie,
+februari 2017
