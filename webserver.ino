@@ -150,8 +150,6 @@ void setupWebServer() {
   });
 
   webServer.on( "/api/upload", HTTP_POST, []() {
-    webServer.sendHeader("Connection", "close");
-    webServer.sendHeader("Access-Control-Allow-Origin", "*");
     webServer.send( 200, "text/plain", "" );
   }, []() {
     HTTPUpload& upload = webServer.upload();
