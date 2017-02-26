@@ -152,13 +152,13 @@ void setupWebServer() {
   webServer.on( "/api/upload", HTTP_POST, []() {
     webServer.sendHeader("Connection", "close");
     webServer.sendHeader("Access-Control-Allow-Origin", "*");
+    webServer.send( 200, "text/plain", "" );
   }, []() {
     HTTPUpload& upload = webServer.upload();
     if ( upload.status == UPLOAD_FILE_START ) {
       String filename = upload.filename;
       if ( !filename.startsWith("/") ) filename = "/" + filename;
       fsUploadFile = SPIFFS.open( filename, "w");
-      //filename = String();
     } else if ( upload.status == UPLOAD_FILE_WRITE ) {
       if ( fsUploadFile )
         fsUploadFile.write( upload.buf, upload.currentSize );
@@ -166,7 +166,6 @@ void setupWebServer() {
       if ( fsUploadFile ) {
         fsUploadFile.close();
       }
-      webServer.send( 200, "text/plain", formatBytes( upload.totalSize ) + " written in '" + upload.filename + "'" );
     }
   });
 
