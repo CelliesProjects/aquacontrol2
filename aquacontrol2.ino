@@ -19,7 +19,7 @@ bool hostNameChanged = false;
 
 String WIFIssid;
 String WIFIpassword;
-String WIFIhostname = "";
+String WIFIhostname;
 time_t WIFItimeout = 15; //number of seconds WiFi tries to connect before starting an accesspoint
 
 time_t bootTime;
@@ -104,6 +104,10 @@ void setup() {
   Serial.print( "\n\n" );
 
   readWifiDataFromEEPROM();
+
+  if ( WIFIhostname == "" ) {
+    WIFIhostname = "aquacontrol";
+  }
 
   //check if WiFi data is found
   if ( WIFIssid != "" ) {
