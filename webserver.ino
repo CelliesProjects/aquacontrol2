@@ -149,7 +149,12 @@ void setupWebServer() {
 
   webServer.on( "/api/timezone", []() {
     if ( webServer.arg( "newtimezone" ) != "" ) {
-      timeZone = webServer.arg( "newtimezone" ).toInt();
+      int newTimeZone = webServer.arg( "newtimezone" ).toInt();
+      if ( newTimeZone < -13 || newTimeZone > 13 ) {
+        webServer.send( 200, "text/plain", "ERROR - Invalid timezone" );
+        return;
+      }
+      timeZone = newTimeZone;
     }
     webServer.send( 200, "text/plain", "Timezone is " + String( timeZone ) );
   });
