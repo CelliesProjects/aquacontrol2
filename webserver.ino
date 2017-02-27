@@ -64,10 +64,8 @@ void setupWebServer() {
       while ( dir.next() ) {
         fileName = dir.fileName();
         size_t fileSize = dir.fileSize();
-        Serial.printf( "FS File: %s, size: %s\n", fileName.c_str(), formatBytes( fileSize ).c_str() );
         HTTPresponse += fileName + "," + formatBytes( fileSize ) + "-";
       }
-      Serial.printf("\n");
     }
     webServer.send( 200, "text/plain", HTTPresponse );
   });
