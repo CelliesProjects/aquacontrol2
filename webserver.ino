@@ -38,6 +38,13 @@ void setupWebServer() {
     webServer.send( 200, "text/plain", "EEPROM cleared" );
   });
 
+  webServer.on( "/api/diskspace", []() {
+    FSInfo fs_info;
+    SPIFFS.info(fs_info);
+    size_t diskSpace = fs_info.totalBytes - fs_info.usedBytes;
+    webServer.send( 200, "text/plain", String( diskSpace ) );
+  });
+
   webServer.on( "/api/formatspiffs", []() {
     OLED.clear();
     OLED.setTextAlignment( TEXT_ALIGN_CENTER );
