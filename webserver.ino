@@ -208,7 +208,7 @@ void handleNotFound() {
 }
 
 bool handleSPIFFSfile( String path ) {
-  Serial.println( "Request for: " + path );
+  path = urldecode( path );
   if ( path.endsWith( "/" ) ) path += "index.htm";
 
   if ( SPIFFS.exists( path ) ) {
