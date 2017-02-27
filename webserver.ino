@@ -93,7 +93,7 @@ void setupWebServer() {
           return;
         }
       }
-      WIFIhostname= newHostName;
+      WIFIhostname = newHostName;
       hostNameChanged = true;
       writeWifiDataToEEPROM();
       webServer.send( 200, "text/plain", "Hostname set to " + WIFIhostname);
