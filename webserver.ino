@@ -136,8 +136,8 @@ void setupWebServer() {
       }
       PWMfrequency = tempPWMfrequency;
       analogWriteFreq( PWMfrequency );
-      webServer.send( 200, "text/plain", "PWM frequency is " + String( tempPWMfrequency ) );
     }
+    webServer.send( 200, "text/plain", "PWM frequency is " + String( PWMfrequency ) );
   });
 
   webServer.on( "/api/pwmdepth", []() {
