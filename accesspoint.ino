@@ -113,12 +113,8 @@ void startAccessPoint() {
 
 
   webServer.on( "/testnetwork", []() {
-
     //check if the networks exists in scan list, save ssid & pw to EEProm and reboot
-
     //call: aquacontrol/testnetwork?ssid=mysid&password=mypassowrd
-
-    String message;
 
     if ( webServer.arg( "ssid" ) != "" ) {
       //check if the network is in the list
@@ -132,21 +128,16 @@ void startAccessPoint() {
       if ( validNetwork ) {
         WIFIssid = webServer.arg( "ssid" );
         WIFIpassword = webServer.arg( "password" );
-        message = "Valid SSID was provided. Rebooting and testing ssid.";
         Serial.println( "Rebooting for network test..." );
-        webServer.send ( 200, "text/html", message );
+        webServer.send ( 200, "text/html", "Valid SSID was provided. Rebooting and testing ssid." );
         writeWifiDataToEEPROM();
         delay(100);
         ESP.reset();
       } else {
         //the ssid provided is not found in the scan list
-        message = "SSID " + webServer.arg( "ssid" ) + " not found.";
+        webServer.send ( 200, "text/html", "SSID " + webServer.arg( "ssid" ) + " not found." );
       }
-
     }
-
-    webServer.send ( 200, "text/html", message );
-
   });
 
   webServer.begin();
