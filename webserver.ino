@@ -64,7 +64,7 @@ void setupWebServer() {
       while ( dir.next() ) {
         fileName = dir.fileName();
         size_t fileSize = dir.fileSize();
-        HTTPresponse += fileName + "," + formatBytes( fileSize ) + "-";
+        HTTPresponse += fileName + "," + formatBytes( fileSize ) + "|";
       }
     }
     webServer.send( 200, "text/plain", HTTPresponse );
