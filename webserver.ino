@@ -103,7 +103,7 @@ void setupWebServer() {
   webServer.on( "/api/lightsoff", []() {
     programOverride = true;
     for ( byte thisChannel = 0; thisChannel < numberOfChannels; thisChannel++ ) {
-      analogWrite( channel[thisChannel].pin, PWMdepth );
+      analogWrite( channel[thisChannel].pin, 0 );
       channel[thisChannel].currentPercentage = 0;
     }
     lightStatus = F( "Lights are off." );
