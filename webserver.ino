@@ -208,7 +208,7 @@ void handleNotFound() {
 }
 
 bool handleSPIFFSfile( String path ) {
-  path = urldecode( path );
+  path = webServer.urlDecode( path );
   if ( path.endsWith( "/" ) ) path += "index.htm";
 
   if ( SPIFFS.exists( path ) ) {
