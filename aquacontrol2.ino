@@ -190,7 +190,8 @@ void loop() {
   else {
     OLED.normalDisplay();
   }
-  updateOLEDbar();
+  updateOLED();
+
 
   if ( memoryLogging ) {
     //show mem usage

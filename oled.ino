@@ -3,7 +3,7 @@
 time_t nextOLEDswitch = now() + 5;                   //switch between showing IP or hostname every 5 seconds
 bool showIP = true;
 
-void updateOLEDbar() {
+void updateOLED() {
   int barWidth = DISPLAY_WIDTH / numberOfChannels;
   OLED.clear();
   for ( byte thisChannel = 0; thisChannel < numberOfChannels; thisChannel++ ) {
