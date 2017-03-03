@@ -165,6 +165,7 @@ void setupWebServer() {
         return;
       }
       timeZone = newTimeZone;
+      updateChannels();
     }
     webServer.send( 200, "text/plain", "Timezone is " + String( timeZone ) );
   });
