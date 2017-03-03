@@ -24,8 +24,8 @@ void setupWebServer() {
   });
 
   //handle the file editor
-  webServer.on( "/file_editor", []() {
-    showFileEditor();
+  webServer.on( "/file_upload", []() {
+    showFileUploader();
   });
 
   //handle the setup page
@@ -246,7 +246,7 @@ const char uploadHTMLfooter[] = R"=====(</body>
 </html>
 )=====";
 
-void showFileEditor() {
+void showFileUploader() {
   const char* uploadForm = "<form style=\"margin:10px auto;border:solid 1px black;width:90%;padding:5px 0;\" method='POST' action='/api/upload' enctype='multipart/form-data'><h3>File upload</h3><input type='file' name='upload' required><input type='submit' value='Upload'><p>Warning: uploading files will overwrite destination!</p></form>";
   String fileName;
   String HTTPresponse = "<h3>Aquacontrol File Editor</h3><div style=\"height:200px;width:90%;overflow:auto;margin:0 auto;border:solid 1px black;\">"; 
