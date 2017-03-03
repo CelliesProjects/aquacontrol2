@@ -9,9 +9,14 @@ void setupWebServer() {
   //the web interface pages alphabetically
 
   //handle the index page
-  webServer.on( "/", []() {
-    webServer.send( 200, "text/html", "Welcome Earthling!" );
-  });
+  if ( SPIFFS.exists( "/index.htm" ) ) {
+    webServer.serveStatic( "/", SPIFFS, "/index.htm" );
+    webServer.serveStatic( "/index.htm", SPIFFS, "/index.htm" );
+  } else {
+    webServer.on( "/", []() {
+      webServer.send( 200, "text/plain", "No index.htm present during boot.\nUpload index.htm and reset controller" );
+    });
+  }
 
   //handle the timer editor
   webServer.on( "/editor", []() {
