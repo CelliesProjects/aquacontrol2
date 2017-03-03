@@ -17,6 +17,6 @@ If you managed to completely wipe your SPIFFS disk, there is a emergency uploade
 
 You can use this url to bootstrap your system back to life.
 
-After a delete or new upload of 'index.htm', please reboot the controller.
+After a delete or new upload of `index.htm`, please reboot the controller.
 
 Cellie 2017
