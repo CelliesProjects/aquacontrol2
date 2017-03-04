@@ -102,12 +102,17 @@ void setupWebServer() {
     if ( webServer.arg( "newhostname" ) != "" ) {
       String newHostName = webServer.arg( "newhostname" );
       newHostName.trim();
+      newHostName = webServer.urlDecode( newHostName );
       //check for illegal characters --legal chars are alphanumeric
       for ( byte thisChar = 0; thisChar < newHostName.length(); thisChar++ ) {
-        if ( !isAlphaNumeric( newHostName[thisChar] ) || isSpace( newHostName[thisChar] ) ) {
+        if ( !isAlphaNumeric( newHostName[thisChar] ) ) {
           webServer.send( 200, FPSTR( textplainHEADER ), F( "ERROR - Invalid character in hostname." ) );
           return;
         }
+      }
+      if ( newHostName == WiFi.hostname() ) {
+        webServer.send( 200, FPSTR( textplainHEADER ), "Hostname already set to " + WiFi.hostname() );
+        return;
       }
       WIFIhostname = newHostName;
       hostNameChanged = true;
