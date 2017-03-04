@@ -101,7 +101,7 @@ void setup() {
   OLED.display();
 
   Serial.begin ( 115200 );
-  Serial.print( "\n\n" );
+  Serial.println( "\r\n\r\n" );
 
   readWifiDataFromEEPROM();
 
@@ -140,9 +140,9 @@ void setup() {
     while (dir.next()) {
       String fileName = dir.fileName();
       size_t fileSize = dir.fileSize();
-      Serial.printf("FS File: %s, size: %s\n", fileName.c_str(), formatBytes(fileSize).c_str());
+      Serial.printf( "FS File: %s, size: %s\r\n", fileName.c_str(), formatBytes(fileSize).c_str() );
     }
-    Serial.printf("\n");
+    Serial.println();
   }
   initNTP();
   setupWebServer();
