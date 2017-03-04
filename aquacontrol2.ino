@@ -14,7 +14,6 @@ extern "C" {
 //https://gist.github.com/dogrocker/f998dde4dbac923c47c1
 
 
-//String WIFIhostname= "aquacontrol2";
 bool hostNameChanged = false;
 
 String WIFIssid;
@@ -84,7 +83,7 @@ void setup() {
   //setup channel names and set OUTPUT pinModes
   for (byte thisChannel = 0; thisChannel < numberOfChannels; thisChannel++ ) {
     channel[ thisChannel ].name = "CHANNEL" + String( thisChannel + 1 );
-    channel[ thisChannel ].color = "white";
+    channel[ thisChannel ].color = F( "undefined" );
     channel[ thisChannel ].pin = ledPin[ thisChannel ];
     channel[ thisChannel ].minimumLevel = 0;
     pinMode( channel[ thisChannel ].pin, OUTPUT );
@@ -96,8 +95,8 @@ void setup() {
   OLED.flipScreenVertically();
   OLED.setTextAlignment( TEXT_ALIGN_CENTER );
   OLED.setFont( ArialMT_Plain_16 );
-  OLED.drawString( 64, 10, F("AquaControl" ) );
-  OLED.drawString( 64, 30, F("Booting..." ) );
+  OLED.drawString( 64, 10, F( "AquaControl" ) );
+  OLED.drawString( 64, 30, F( "Booting..." ) );
   OLED.display();
 
   Serial.begin ( 115200 );
@@ -106,15 +105,15 @@ void setup() {
   readWifiDataFromEEPROM();
 
   if ( WIFIhostname == "" ) {
-    WIFIhostname = "aquacontrol";
+    WIFIhostname = F( "aquacontrol" );
   }
 
   //check if WiFi data is found
   if ( WIFIssid != "" ) {
-    Serial.print( "WIFI credentials found. Connecting to access point " );
+    Serial.print( F( "WIFI credentials found. Connecting to access point " ) );
     Serial.println( WIFIssid );
   } else {
-    Serial.println( "No WiFi ssid found." );
+    Serial.println( F( "No WiFi ssid found." ) );
     startAccessPoint();
   }
 
@@ -124,14 +123,14 @@ void setup() {
   WIFItimeout = now() + 30;
   while ( now() < WIFItimeout && WiFi.status() != WL_CONNECTED ) {
     delay ( 500 );
-    Serial.print ( "." );
+    Serial.print ( F( "." ) );
   }
   Serial.println();
 
   if ( WiFi.status() != WL_CONNECTED ) {
     startAccessPoint();
   }
-  Serial.println( "WiFi connected.");
+  Serial.println( F( "WiFi connected." ) );
 
   //check SPIFFS
   SPIFFS.begin();
@@ -154,7 +153,7 @@ void setup() {
   //set all channels
   channelUpdateTimer.attach_ms( 1000 , updateChannels );         // Finally set the timer routine to update the leds
   updateChannels();
-  lightStatus = "Lights controlled by program.";
+  lightStatus = F( "Lights controlled by program." );
 
   if ( WiFi.hostname() != WIFIhostname) {
     hostNameChanged = true;
@@ -172,8 +171,8 @@ void loop() {
     OLED.clear();
     OLED.setTextAlignment( TEXT_ALIGN_CENTER );
     OLED.setFont( ArialMT_Plain_16 );
-    OLED.drawString( 64, 10, F("Setting") );
-    OLED.drawString( 64, 30, F("hostname...") );
+    OLED.drawString( 64, 10, F( "Setting" ) );
+    OLED.drawString( 64, 30, F( "hostname..." ) );
     OLED.display();
     while ( WiFi.status() != WL_CONNECTED ) {
       delay(20);
@@ -197,7 +196,7 @@ void loop() {
     //show mem usage
     int nowFreeRAM = ESP.getFreeHeap();
     if ( previousFreeRAM != nowFreeRAM) {
-      Serial.print( nowFreeRAM );  Serial.println( F(" bytes RAM.") );
+      Serial.print( nowFreeRAM );  Serial.println( F( " bytes RAM." ) );
       previousFreeRAM = nowFreeRAM;
     }
   }
