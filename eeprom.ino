@@ -11,14 +11,17 @@ void readWifiDataFromEEPROM() {
   for ( byte thisChar = 0; thisChar < ssidLength; thisChar++ ) {
     WIFIssid += (char)EEPROM.read( thisChar );
   }
+  WIFIssid.trim();
   //read the password ( bytes 32...63 )
   for ( byte thisChar = 0; thisChar < passwordLength; thisChar++ ) {
     WIFIpassword += (char)EEPROM.read( ssidLength + thisChar );
   }
+  WIFIpassword.trim();
   //read the hostname ( bytes 64...95 )
   for ( byte thisChar = 0; thisChar < hostnameLength; thisChar++ ) {
     WIFIhostname += (char)EEPROM.read( ssidLength + passwordLength + thisChar );
   }
+  WIFIhostname.trim();
   EEPROM.end();
 }
 
@@ -38,6 +41,7 @@ void writeWifiDataToEEPROM() {
     EEPROM.write( 96 + thisChar, WIFIhostname[ thisChar ] );
   }
   EEPROM.commit();
+  EEPROM.end();
 }
 
 void clearEEPROM() {
