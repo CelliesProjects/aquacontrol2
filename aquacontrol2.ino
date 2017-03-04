@@ -183,14 +183,7 @@ void loop() {
 
   webServer.handleClient();
 
-  if ( programOverride ) {
-    OLED.invertDisplay();
-  }
-  else {
-    OLED.normalDisplay();
-  }
   updateOLED();
-
 
   if ( memoryLogging ) {
     //show mem usage

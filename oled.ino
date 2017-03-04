@@ -4,7 +4,17 @@ time_t nextOLEDswitch = now() + 5;                   //switch between showing IP
 bool showIP = true;
 
 void updateOLED() {
+  if ( programOverride ) {
+    OLED.invertDisplay();
+    OLED.clear();
+    OLED.setFont( ArialMT_Plain_16 );
+    OLED.setTextAlignment( TEXT_ALIGN_CENTER );
+    OLED.drawString( DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2 - 8, lightStatus );
+    OLED.display();
+    return;
+  }
   int barWidth = DISPLAY_WIDTH / numberOfChannels;
+  OLED.normalDisplay();
   OLED.clear();
   for ( byte thisChannel = 0; thisChannel < numberOfChannels; thisChannel++ ) {
     int x1 = barWidth * thisChannel;
