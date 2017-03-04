@@ -25,10 +25,13 @@ a {
   color: black;
   text-decoration: none;
   margin: 0 10px;
+}
+
+.systemLink{
   padding: 3px 10px;
 }
 
-a:hover {
+.systemLink:hover {
   background:grey;
 }
 
@@ -58,7 +61,6 @@ a:hover {
   width: 700px;
   background-color: beige;
   margin: auto;
-  border: solid 1px black;
   font-family: monospace;
   font-variant-caps: initial;
   overflow: auto;
@@ -140,7 +142,7 @@ progress{
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 </head>
 <body>
-<p class="shadowedBox"  style="background-color:beige;"><a href="/">INDEX</a><a href="setup.htm">SETUP</a><a href="editor.htm">EDITOR</a></p>  
+<p class="shadowedBox"  style="background-color:beige;"><a class="systemLink" href="/">INDEX</a><a class="systemLink" href="setup.htm">SETUP</a><a class="systemLink" href="editor.htm">EDITOR</a></p>  
 <div id="titleBox" class="shadowedBox">AQUACONTROL FILE MANAGER</div>
 <div id="fileBox" class="shadowedBox">
   <div id="fileList"></div>
