@@ -3,34 +3,37 @@
 //holds the current upload
 File fsUploadFile;
 
+const char textplainHEADER[] PROGMEM = "text/plain";
+const char texthtmlHEADER[] PROGMEM = "text/html";
+
 void setupWebServer() {
 
   ////////////////////////////////////////////////////////////////////////////////////
   //the web interface pages alphabetically
 
   //handle the index page
-  if ( SPIFFS.exists( "/index.htm" ) ) {
+  if ( SPIFFS.exists( F( "/index.htm" ) ) ) {
     webServer.serveStatic( "/", SPIFFS, "/index.htm" );
     webServer.serveStatic( "/index.htm", SPIFFS, "/index.htm" );
   } else {
     webServer.on( "/", []() {
-      webServer.send( 200, "text/plain", "No index.htm present during boot.\nUpload index.htm and reset controller" );
+      webServer.send( 200, FPSTR( textplainHEADER ), F( "No index.htm present during boot.\nUpload index.htm and reset controller" ) );
     });
   }
 
   //handle the filemanager
-  if ( SPIFFS.exists( "/filemanager.htm" ) ) {
+  if ( SPIFFS.exists( F( "/filemanager.htm" ) ) ) {
     webServer.serveStatic( "/filemanager", SPIFFS, "/filemanager.htm" );
     webServer.serveStatic( "/filemanager.htm", SPIFFS, "/filemanager.htm" );
   } else {
     webServer.on( "/filemanager", []() {
-      webServer.send( 200, "text/plain", "No filemanager present during boot.\nUpload index.htm and reset controller" );
+      webServer.send( 200, FPSTR( textplainHEADER ), F( "No filemanager present during boot.\nUpload index.htm and reset controller" ) );
     });
   }
 
   //handle the timer editor
   webServer.on( "/editor", []() {
-    webServer.send( 200, "text/html", "editor" );
+    webServer.send( 200, FPSTR( texthtmlHEADER ), F( "editor" ) );
   });
 
   //handle the file editor
@@ -40,7 +43,7 @@ void setupWebServer() {
 
   //handle the setup page
   webServer.on( "/setup", []() {
-    webServer.send( 200, "text/html", "setup page" );
+    webServer.send( 200, FPSTR( texthtmlHEADER ), F( "setup page" ) );
   });
 
   /////////////////////////////////////////////////////////////////////////////////////
@@ -50,25 +53,25 @@ void setupWebServer() {
 
   webServer.on( "/api/cleareeprom", []() {
     clearEEPROM();
-    webServer.send( 200, "text/plain", "EEPROM cleared" );
+    webServer.send( 200, FPSTR( textplainHEADER ), F( "EEPROM cleared" ) );
   });
 
   webServer.on( "/api/diskspace", []() {
     FSInfo fs_info;
     SPIFFS.info(fs_info);
     size_t diskSpace = fs_info.totalBytes - fs_info.usedBytes;
-    webServer.send( 200, "text/plain", String( diskSpace ) );
+    webServer.send( 200, FPSTR( textplainHEADER ), String( diskSpace ) );
   });
 
   webServer.on( "/api/formatspiffs", []() {
     OLED.clear();
     OLED.setTextAlignment( TEXT_ALIGN_CENTER );
     OLED.setFont( ArialMT_Plain_16 );
-    OLED.drawString( 64, 10, F("Formatting" ) );
-    OLED.drawString( 64, 30, F("Please wait..." ) );
+    OLED.drawString( 64, 10, F( "Formatting" ) );
+    OLED.drawString( 64, 30, F( "Please wait..." ) );
     OLED.display();
     SPIFFS.format();
-    webServer.send( 200, "text/plain", "SPIFFS disk formatted" );
+    webServer.send( 200, FPSTR( textplainHEADER ), F( "SPIFFS disk formatted" ) );
   });
 
   webServer.on( "/api/files", []() {
@@ -82,7 +85,7 @@ void setupWebServer() {
         HTTPresponse += fileName + "," + formatBytes( fileSize ) + "|";
       }
     }
-    webServer.send( 200, "text/plain", HTTPresponse );
+    webServer.send( 200, FPSTR( textplainHEADER ), HTTPresponse );
   });
 
   webServer.on( "/api/getpercentage", []() {
@@ -92,7 +95,7 @@ void setupWebServer() {
     }
     HTTPresponse += formattedTime( localTime() ) + F( "," );
     HTTPresponse += lightStatus;
-    webServer.send( 200, "text/plain", HTTPresponse );
+    webServer.send( 200, FPSTR( textplainHEADER ), HTTPresponse );
   });
 
   webServer.on( "/api/hostname", []() {
@@ -102,17 +105,17 @@ void setupWebServer() {
       //check for illegal characters --legal chars are alphanumeric
       for ( byte thisChar = 0; thisChar < newHostName.length(); thisChar++ ) {
         if ( !isAlphaNumeric( newHostName[thisChar] ) || isSpace( newHostName[thisChar] ) ) {
-          webServer.send( 200, "text/plain", "ERROR - Invalid character in hostname." );
+          webServer.send( 200, FPSTR( textplainHEADER ), F( "ERROR - Invalid character in hostname." ) );
           return;
         }
       }
       WIFIhostname = newHostName;
       hostNameChanged = true;
       writeWifiDataToEEPROM();
-      webServer.send( 200, "text/plain", "Hostname set to " + WIFIhostname);
+      webServer.send( 200, FPSTR( textplainHEADER ), "Hostname set to " + WIFIhostname);
       return;
     }
-    webServer.send( 200, "text/plain", WiFi.hostname() );
+    webServer.send( 200, FPSTR( textplainHEADER ), WiFi.hostname() );
   });
 
   webServer.on( "/api/lightsoff", []() {
@@ -122,7 +125,7 @@ void setupWebServer() {
       channel[thisChannel].currentPercentage = 0;
     }
     lightStatus = F( "Lights are off." );
-    webServer.send( 200, "text/plain", lightStatus );
+    webServer.send( 200, FPSTR( textplainHEADER ), lightStatus );
   });
 
   webServer.on( "/api/lightson", []() {
@@ -132,56 +135,56 @@ void setupWebServer() {
       channel[thisChannel].currentPercentage = 100;
     }
     lightStatus = F( "Lights are on." );
-    webServer.send( 200, "text/plain", lightStatus );
+    webServer.send( 200, FPSTR( textplainHEADER ), lightStatus );
   });
 
   webServer.on( "/api/lightsprogram", []() {
     programOverride = false;
     updateChannels();
     lightStatus = F( "Lights controlled by program." );
-    webServer.send( 200, "text/plain", lightStatus );
+    webServer.send( 200, FPSTR( textplainHEADER ), lightStatus );
   });
 
   webServer.on( "/api/pwmfrequency", []() {
     if ( webServer.arg( "newpwmfrequency" ) != "" ) {
       int tempPWMfrequency = webServer.arg( "newpwmfrequency" ).toInt();
       if ( tempPWMfrequency < 1 || tempPWMfrequency > 1000 ) {
-        webServer.send( 200, "text/plain", "Invalid PWM frequency" );
+        webServer.send( 200, FPSTR( textplainHEADER ), F( "Invalid PWM frequency" ) );
         return;
       }
       PWMfrequency = tempPWMfrequency;
       analogWriteFreq( PWMfrequency );
     }
-    webServer.send( 200, "text/plain", "PWM frequency is " + String( PWMfrequency ) );
+    webServer.send( 200, FPSTR( textplainHEADER ),  "PWM frequency is " + String( PWMfrequency ) );
   });
 
   webServer.on( "/api/pwmdepth", []() {
     if ( webServer.arg( "newpwmdepth" ) != "" ) {
       unsigned int newPWMdepth = webServer.arg( "newpwmdepth" ).toInt();
       if ( newPWMdepth < 1023 || newPWMdepth > 10230 ) {
-        webServer.send( 200, "text/plain", "ERROR - Invalid PWM depth" );
+        webServer.send( 200, FPSTR( textplainHEADER ), F( "ERROR - Invalid PWM depth" ) );
         return;
       }
       PWMdepth = newPWMdepth;
     }
-    webServer.send( 200, "text/plain", "PWM depth is " + String( PWMdepth ) );
+    webServer.send( 200, FPSTR( textplainHEADER ), "PWM depth is " + String( PWMdepth ) );
   });
 
   webServer.on( "/api/timezone", []() {
     if ( webServer.arg( "newtimezone" ) != "" ) {
       int newTimeZone = webServer.arg( "newtimezone" ).toInt();
       if ( newTimeZone < -13 || newTimeZone > 13 ) {
-        webServer.send( 200, "text/plain", "ERROR - Invalid timezone" );
+        webServer.send( 200, FPSTR( textplainHEADER ), F( "ERROR - Invalid timezone" ) );
         return;
       }
       timeZone = newTimeZone;
       updateChannels();
     }
-    webServer.send( 200, "text/plain", "Timezone is " + String( timeZone ) );
+    webServer.send( 200, FPSTR( textplainHEADER ), "Timezone is " + String( timeZone ) );
   });
 
   webServer.on( "/api/upload", HTTP_POST, []() {
-    webServer.send( 200, "text/plain", "" );
+    webServer.send( 200, FPSTR( textplainHEADER ), "" );
   }, []() {
     HTTPUpload& upload = webServer.upload();
     if ( upload.status == UPLOAD_FILE_START ) {
@@ -204,7 +207,7 @@ void setupWebServer() {
   //done with setup, start the server
   webServer.begin();
 
-  Serial.print( "HTTP web server started at IP address: "  );
+  Serial.print( F( "HTTP web server started at IP address: " ) );
   Serial.println( WiFi.localIP() );
 }
 
@@ -218,21 +221,21 @@ void handleNotFound() {
   // try to use the argument as filename and serve from SPIFFS
   // if no matching file is found, throw an error.
   if ( !handleSPIFFSfile( webServer.uri() ) ) {
-    Serial.println( "404 File not found." );
-    webServer.send( 404, "text/plain", "404 - File not found." );
+    Serial.println( F( "404 File not found." ) );
+    webServer.send( 404, FPSTR( textplainHEADER ), F( "404 - File not found." ) );
   }
 }
 
 bool handleSPIFFSfile( String path ) {
   path = webServer.urlDecode( path );
-  if ( path.endsWith( "/" ) ) path += "index.htm";
+  if ( path.endsWith( "/" ) ) path += F( "index.htm" );
 
   if ( SPIFFS.exists( path ) ) {
     if ( webServer.arg( "action" ) == "delete" ) {
-      Serial.println( "Delete request. Deleting..." );
+      Serial.println( F( "Delete request. Deleting..." ) );
       SPIFFS.remove( path );
-      Serial.println( path + " deleted" );
-      webServer.send( 200, "text/plain", path + " deleted" );
+      Serial.println( path + F( " deleted" ) );
+      webServer.send( 200, FPSTR( textplainHEADER ), path + " deleted" );
       return true;
     };
     File file = SPIFFS.open( path, "r" );
@@ -266,36 +269,36 @@ void showFileUploader() {
   while ( dir.next() ) {
     fileName = dir.fileName();
     size_t fileSize = dir.fileSize();
-    Serial.printf( "FS File: %s, size: %s\n", fileName.c_str(), formatBytes( fileSize ).c_str() );
+    Serial.printf( "FS File: %s, size: %s\n" , fileName.c_str(), formatBytes( fileSize ).c_str() );
     HTTPresponse += "<p><a href=\"" + fileName + "\">" +fileName + "</a>" + formatBytes( fileSize ) + "</p>";
   }
   HTTPresponse += "</div>";
-  Serial.printf("\n");
+  Serial.println();
 
-  webServer.send( 200, "text/html", uploadHTMLheader + HTTPresponse + uploadForm + uploadHTMLfooter);
+  webServer.send( 200, FPSTR( texthtmlHEADER ), uploadHTMLheader + HTTPresponse + uploadForm + uploadHTMLfooter);
 }
 
 static String getContentType( const String& path) {
   if (path.endsWith(".html")) return "text/html";
-  else if (path.endsWith(".htm")) return "text/html";
-  else if (path.endsWith(".css")) return "text/css";
-  else if (path.endsWith(".txt")) return "text/plain";
-  else if (path.endsWith(".js")) return "application/javascript";
-  else if (path.endsWith(".png")) return "image/png";
-  else if (path.endsWith(".gif")) return "image/gif";
-  else if (path.endsWith(".jpg")) return "image/jpeg";
-  else if (path.endsWith(".ico")) return "image/x-icon";
-  else if (path.endsWith(".svg")) return "image/svg+xml";
-  else if (path.endsWith(".ttf")) return "application/x-font-ttf";
-  else if (path.endsWith(".otf")) return "application/x-font-opentype";
-  else if (path.endsWith(".woff")) return "application/font-woff";
-  else if (path.endsWith(".woff2")) return "application/font-woff2";
-  else if (path.endsWith(".eot")) return "application/vnd.ms-fontobject";
-  else if (path.endsWith(".sfnt")) return "application/font-sfnt";
-  else if (path.endsWith(".xml")) return "text/xml";
-  else if (path.endsWith(".pdf")) return "application/pdf";
-  else if (path.endsWith(".zip")) return "application/zip";
-  else if(path.endsWith(".gz")) return "application/x-gzip";
-  else if (path.endsWith(".appcache")) return "text/cache-manifest";
-  return "application/octet-stream";
+  else if (path.endsWith(".htm")) return F( "text/html" );
+  else if (path.endsWith(".css")) return F( "text/css" );
+  else if (path.endsWith(".txt")) return F( "text/plain" );
+  else if (path.endsWith(".js")) return F( "application/javascript" );
+  else if (path.endsWith(".png")) return F( "image/png" );
+  else if (path.endsWith(".gif")) return F( "image/gif" );
+  else if (path.endsWith(".jpg")) return F( "image/jpeg" );
+  else if (path.endsWith(".ico")) return F( "image/x-icon" );
+  else if (path.endsWith(".svg")) return F( "image/svg+xml" );
+  else if (path.endsWith(".ttf")) return F( "application/x-font-ttf" );
+  else if (path.endsWith(".otf")) return F( "application/x-font-opentype" );
+  else if (path.endsWith(".woff")) return F( "application/font-woff" );
+  else if (path.endsWith(".woff2")) return F( "application/font-woff2" );
+  else if (path.endsWith(".eot")) return F( "application/vnd.ms-fontobject" );
+  else if (path.endsWith(".sfnt")) return F( "application/font-sfnt" );
+  else if (path.endsWith(".xml")) return F( "text/xml" );
+  else if (path.endsWith(".pdf")) return F( "application/pdf" );
+  else if (path.endsWith(".zip")) return F( "application/zip" );
+  else if(path.endsWith(".gz")) return F( "application/x-gzip" );
+  else if (path.endsWith(".appcache")) return F( "text/cache-manifest" );
+  return F( "application/octet-stream" );
 }
