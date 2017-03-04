@@ -18,6 +18,16 @@ void setupWebServer() {
     });
   }
 
+  //handle the filemanager
+  if ( SPIFFS.exists( "/filemanager.htm" ) ) {
+    webServer.serveStatic( "/filemanager", SPIFFS, "/filemanager.htm" );
+    webServer.serveStatic( "/filemanager.htm", SPIFFS, "/filemanager.htm" );
+  } else {
+    webServer.on( "/filemanager", []() {
+      webServer.send( 200, "text/plain", "No filemanager present during boot.\nUpload index.htm and reset controller" );
+    });
+  }
+
   //handle the timer editor
   webServer.on( "/editor", []() {
     webServer.send( 200, "text/html", "editor" );
