@@ -1,6 +1,5 @@
 #include <Time.h>
 #include <WiFiUdp.h>
-#include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
 #include <EEPROM.h>
 #include <FS.h>
@@ -64,13 +63,8 @@ struct lightTable channel[numberOfChannels];                           //all cha
 const byte ledPin[numberOfChannels] =  { D1, D2, D3, D4, D5 } ;        //pin numbers of the channels !!!!! should contain [numberOfChannels] entries. D1 through D8 are the exposed pins on 'Wemos D1 mini'
 //see online for pin number conversion Arduino <> Wemos D1 mini: https://github.com/esp8266/Arduino/blob/master/variants/d1_mini/pins_arduino.h#L49-L61
 
-//I2C pins used for OLED
-const byte   SCL_pin                = D6;
-const byte   SDA_pin                = D7;
-//I2C address of OLED screen
-const byte OLEDaddress              = 0x3c;
-
-SSD1306  OLED( OLEDaddress, SDA_pin, SCL_pin );
+//       OLED( OLEDaddress, SDA_pin, SCL_pin );
+SSD1306  OLED( 0x3c, D7, D6 );
 
 ESP8266WebServer webServer ( 80 );
 
