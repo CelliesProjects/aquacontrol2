@@ -56,7 +56,7 @@ boolean isDST( int mo, int dy, int dw ) {
 }
 
 void setPercentage( const byte thisChannel, const time_t secondsToday ) {
-  if ( !programOverride && ( secondsToday != 0 ) ) {     ///to solve flashing at midnight due to secondsToday which cant be smaller than 0 -- so at midnight there is no adjusting
+  if ( secondsToday != 0 ) {     ///to solve flashing at midnight due to secondsToday which cant be smaller than 0 -- so at midnight there is no adjusting
     byte thisTimer = 0;
     while ( channel[thisChannel].timer[thisTimer].time < secondsToday ) {
       thisTimer++;
@@ -87,6 +87,9 @@ void setPercentage( const byte thisChannel, const time_t secondsToday ) {
 }
 
 void updateChannels() {
+  if ( programOverride ) {
+    return;
+  }
   if (channelLogging) {
     Serial.print( F("Updating all channels at ") );  Serial.print( formattedTime( localTime() ) );  Serial.println( F(" local time.") );
   }
