@@ -15,10 +15,10 @@ extern "C" {
 
 bool hostNameChanged = false;
 
-String WIFIssid;
-String WIFIpassword;
-String WIFIhostname;
-time_t WIFItimeout = 15; //number of seconds WiFi tries to connect before starting an accesspoint
+String myWIFIssid;
+String myWIFIpassword;
+String myWIFIhostname;
+time_t myWIFItimeout = 15; //number of seconds WiFi tries to connect before starting an accesspoint
 
 time_t bootTime;
 int timeZone = 0;
@@ -99,14 +99,14 @@ void setup() {
 
   readWifiDataFromEEPROM();
 
-  if ( WIFIhostname == "" ) {
-    WIFIhostname = F( "aquacontrol" );
+  if ( myWIFIhostname == "" ) {
+    myWIFIhostname = F( "aquacontrol" );
   }
 
   //check if WiFi data is found
-  if ( WIFIssid != "" ) {
+  if ( myWIFIssid != "" ) {
     Serial.print( F( "WIFI credentials found. Connecting to access point " ) );
-    Serial.println( WIFIssid );
+    Serial.println( myWIFIssid );
   } else {
     Serial.println( F( "No WiFi ssid found." ) );
     startAccessPoint();
@@ -114,9 +114,9 @@ void setup() {
 
   WiFi.mode( WIFI_STA );
 
-  WiFi.begin( WIFIssid.c_str(), WIFIpassword.c_str() );
-  WIFItimeout = now() + 30;
-  while ( now() < WIFItimeout && WiFi.status() != WL_CONNECTED ) {
+  WiFi.begin( myWIFIssid.c_str(), myWIFIpassword.c_str() );
+  myWIFItimeout = now() + 30;
+  while ( now() < myWIFItimeout && WiFi.status() != WL_CONNECTED ) {
     delay ( 500 );
     Serial.print ( F( "." ) );
   }
@@ -150,7 +150,7 @@ void setup() {
   updateChannels();
   lightStatus = F( "Lights controlled by program." );
 
-  if ( WiFi.hostname() != WIFIhostname) {
+  if ( WiFi.hostname() != myWIFIhostname) {
     hostNameChanged = true;
   }
 }
@@ -160,7 +160,7 @@ int previousFreeRAM; //for memory logging usage, see last lines of loop()
 void loop() {
 
   if ( hostNameChanged ) {
-    WiFi.hostname( WIFIhostname );
+    WiFi.hostname( myWIFIhostname );
     WiFi.mode( WIFI_OFF );
     WiFi.begin();
     OLED.clear();

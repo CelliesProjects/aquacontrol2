@@ -9,19 +9,19 @@ void readWifiDataFromEEPROM() {
 
   //read the ssid ( bytes 0...31 )
   for ( byte thisChar = 0; thisChar < ssidLength; thisChar++ ) {
-    WIFIssid += (char)EEPROM.read( thisChar );
+    myWIFIssid += (char)EEPROM.read( thisChar );
   }
-  WIFIssid.trim();
+  myWIFIssid.trim();
   //read the password ( bytes 32...63 )
   for ( byte thisChar = 0; thisChar < passwordLength; thisChar++ ) {
-    WIFIpassword += (char)EEPROM.read( ssidLength + thisChar );
+    myWIFIpassword += (char)EEPROM.read( ssidLength + thisChar );
   }
-  WIFIpassword.trim();
+  myWIFIpassword.trim();
   //read the hostname ( bytes 64...95 )
   for ( byte thisChar = 0; thisChar < hostnameLength; thisChar++ ) {
-    WIFIhostname += (char)EEPROM.read( ssidLength + passwordLength + thisChar );
+    myWIFIhostname += (char)EEPROM.read( ssidLength + passwordLength + thisChar );
   }
-  WIFIhostname.trim();
+  myWIFIhostname.trim();
   EEPROM.end();
 }
 
@@ -30,15 +30,15 @@ void writeWifiDataToEEPROM() {
   EEPROM.begin( 512 );
   //write the ssid with trailing zero's
   for ( byte thisChar = 0; thisChar < ssidLength; thisChar++ ) {
-    EEPROM.write( thisChar, WIFIssid[ thisChar ] );
+    EEPROM.write( thisChar, myWIFIssid[ thisChar ] );
   }
   //write the password with trailing zero's
   for ( byte thisChar = 0; thisChar < passwordLength; thisChar++ ) {
-    EEPROM.write( 32 + thisChar, WIFIpassword[ thisChar ] );
+    EEPROM.write( 32 + thisChar, myWIFIpassword[ thisChar ] );
   }
   //write the hostname with trailing zero's
   for ( byte thisChar = 0; thisChar < hostnameLength; thisChar++ ) {
-    EEPROM.write( 96 + thisChar, WIFIhostname[ thisChar ] );
+    EEPROM.write( 96 + thisChar, myWIFIhostname[ thisChar ] );
   }
   EEPROM.commit();
   EEPROM.end();

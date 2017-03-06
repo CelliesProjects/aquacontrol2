@@ -114,10 +114,10 @@ void setupWebServer() {
         webServer.send( 200, FPSTR( textplainHEADER ), "Hostname already set to " + WiFi.hostname() );
         return;
       }
-      WIFIhostname = newHostName;
+      myWIFIhostname = newHostName;
       hostNameChanged = true;
       writeWifiDataToEEPROM();
-      webServer.send( 200, FPSTR( textplainHEADER ), "Hostname set to " + WIFIhostname);
+      webServer.send( 200, FPSTR( textplainHEADER ), "Hostname set to " + myWIFIhostname);
       return;
     }
     webServer.send( 200, FPSTR( textplainHEADER ), WiFi.hostname() );

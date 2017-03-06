@@ -126,8 +126,8 @@ void startAccessPoint() {
       }
 
       if ( validNetwork ) {
-        WIFIssid = webServer.arg( "ssid" );
-        WIFIpassword = webServer.arg( "password" );
+        myWIFIssid = webServer.arg( "ssid" );
+        myWIFIpassword = webServer.arg( "password" );
         Serial.println( "Rebooting for network test..." );
         webServer.send ( 200, "text/html", "Valid SSID was provided. Rebooting and testing ssid." );
         writeWifiDataToEEPROM();
