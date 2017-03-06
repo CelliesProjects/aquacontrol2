@@ -150,6 +150,11 @@ void setupWebServer() {
     webServer.send( 200, FPSTR( textplainHEADER ), lightStatus );
   });
 
+  webServer.on( "/api/loadtimers", []() {
+    webServer.send( 200, FPSTR( textplainHEADER ), defaultTimersAreLoaded() ? F( "Succes" ) : F( "Failed" ) );
+    updateChannels();
+  });
+
   webServer.on( "/api/pwmfrequency", []() {
     if ( webServer.arg( "newpwmfrequency" ) != "" ) {
       int tempPWMfrequency = webServer.arg( "newpwmfrequency" ).toInt();
