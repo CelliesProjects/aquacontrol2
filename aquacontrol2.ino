@@ -160,20 +160,7 @@ int previousFreeRAM; //for memory logging usage, see last lines of loop()
 void loop() {
 
   if ( hostNameChanged ) {
-    WiFi.hostname( myWIFIhostname );
-    WiFi.mode( WIFI_OFF );
-    WiFi.begin();
-    OLED.clear();
-    OLED.setTextAlignment( TEXT_ALIGN_CENTER );
-    OLED.setFont( ArialMT_Plain_16 );
-    OLED.drawString( 64, 10, F( "Setting" ) );
-    OLED.drawString( 64, 30, F( "hostname..." ) );
-    OLED.display();
-    while ( WiFi.status() != WL_CONNECTED ) {
-      delay(20);
-      yield();
-    }
-    hostNameChanged = false;
+    setNewHostname();
   }
 
   webServer.handleClient();
