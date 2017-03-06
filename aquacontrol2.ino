@@ -71,6 +71,7 @@ ESP8266WebServer webServer ( 80 );
 Ticker channelUpdateTimer;
 
 void setup() {
+  WiFi.persistent( false );
   system_update_cpu_freq( 160 );
   analogWriteRange( PWMdepth );
 
