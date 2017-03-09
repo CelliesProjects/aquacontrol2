@@ -11,41 +11,48 @@ void setupWebServer() {
   ////////////////////////////////////////////////////////////////////////////////////
   //the web interface pages alphabetically
 
-  //handle the index page
-  if ( SPIFFS.exists( F( "/index.htm" ) ) ) {
-    webServer.serveStatic( "/", SPIFFS, "/index.htm" );
-    webServer.serveStatic( "/index.htm", SPIFFS, "/index.htm" );
+  //handle the timer editor
+  if ( SPIFFS.exists( F( "/editor.htm" ) ) ) {
+    webServer.serveStatic( "/editor", SPIFFS, "/editor.htm" );
   } else {
-    webServer.on( "/", []() {
-      webServer.send( 200, FPSTR( textplainHEADER ), F( "No index.htm present during boot.\nUpload index.htm and reset controller" ) );
-    });
+    webServer.send( 200, FPSTR( textplainHEADER ), F( "No timer editor present during boot." ) );
   }
 
   //handle the filemanager
   if ( SPIFFS.exists( F( "/filemanager.htm" ) ) ) {
     webServer.serveStatic( "/filemanager", SPIFFS, "/filemanager.htm" );
-    webServer.serveStatic( "/filemanager.htm", SPIFFS, "/filemanager.htm" );
   } else {
     webServer.on( "/filemanager", []() {
-      webServer.send( 200, FPSTR( textplainHEADER ), F( "No filemanager present during boot.\nUpload index.htm and reset controller" ) );
+      webServer.send( 200, FPSTR( textplainHEADER ), F( "No filemanager present during boot." ) );
     });
   }
 
-  //handle the timer editor
-  webServer.on( "/editor", []() {
-    webServer.send( 200, FPSTR( texthtmlHEADER ), F( "editor" ) );
-  });
-
-  //handle the file editor
+  //handle the emergency uploader
   webServer.on( "/file_upload", []() {
     showFileUploader();
   });
+
+  //handle the index page
+  if ( SPIFFS.exists( F( "/index.htm" ) ) ) {
+    webServer.serveStatic( "/", SPIFFS, "/index.htm" );
+  } else {
+    webServer.on( "/", []() {
+      webServer.send( 200, FPSTR( textplainHEADER ), F( "No index.htm present during boot." ) );
+    });
+  }
 
   //handle the setup page
   webServer.on( "/setup", []() {
     webServer.send( 200, FPSTR( texthtmlHEADER ), F( "setup page" ) );
   });
 
+  if ( SPIFFS.exists( F( "/setup.htm" ) ) ) {
+    webServer.serveStatic( "/setup", SPIFFS, "/setup.htm" );
+  } else {
+    webServer.on( "/setup", []() {
+      webServer.send( 200, FPSTR( textplainHEADER ), F( "No setup.htm present during boot." ) );
+    });
+  }
   /////////////////////////////////////////////////////////////////////////////////////
   //API calls alphabetically
   //API calls come from flash memory only and can not be deleted unlike files on SPIFFS
