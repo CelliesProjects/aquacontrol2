@@ -1,0 +1,559 @@
+<!doctype HTML>
+<html lang="en">
+<head>
+<title>Aquacontrol</title>
+<meta charset="utf-8">
+<link rel="icon" href="data:;base64,iVBORw0KGgo=">  <!--prevent favicon requests-->
+<style>
+html, body{
+  margin:0 auto;
+  background-color:grey;
+  text-align:center;
+  width:1024px;
+	font-variant: small-caps;
+  font-size:20px;
+}
+
+a {
+  color:black;
+  text-decoration:none;
+  margin:0 10px;
+  padding: 3px 10px;
+}
+
+a:hover {
+  background:grey;
+}
+
+p{
+  margin:0;
+}
+
+hr{
+  margin:auto;
+}
+
+input[type="button"] {
+  height: 30px;
+  padding: 5px 20px;
+  margin: 10px;
+  border: solid 1px black;
+}
+
+input[type="button"]:hover {
+  background:darkgray;
+}
+#wrapper{
+  background-color: black;
+  margin:auto;
+  cursor: default;
+  //unselectable
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.shadowedBox {
+  box-shadow: 0px 0px 13px 0px rgba(0,0,0,1);
+  border:solid 1px black;
+  border-radius: 15px;
+  margin:10px 0;
+}
+
+#hostName{
+  color:blue;
+}
+
+#editorCanvas{
+}
+
+#timerList{
+  height: 300px;
+  width: 600px;
+  background: beige;
+  margin: auto;
+  overflow:auto;
+}
+
+.timerEntry{
+  width:100%;
+  overflow:auto;
+}
+.timerEntry:hover{
+  background:yellow;
+}
+.timerEntryTime, .timerEntryPercentage{
+  width:40%;
+  float:left;
+}
+
+
+.timerEntryDelete{
+  width:20%;
+  float:left;
+}
+
+.timerEntryDelete:hover{
+  background:red;
+}
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jcanvas/16.7.3/jcanvas.js"></script>
+</head>
+<body>
+<p class="shadowedBox"  style="background-color:beige;"><a href="/">HOME</a><a href="setup.htm">SETUP</a><a href="filemanager">FILE MANAGER</a></p>
+<p id="hostName" class="shadowedBox">&nbsp;</p>
+<p class="shadowedBox"  style="background-color:beige;"><input id="clearButton" type="button" value="CLEAR"><input id="reloadButton" type="button" value="RELOAD"><input type="button" id="uploadButton" value="UPLOAD"></p>
+<div id="wrapper" class="shadowedBox">
+<canvas id="editorCanvas" width="1000px" height="200px"></canvas>
+</div>
+<div class="shadowedBox"  style="background-color:beige;"><input class="channelButton" type="button" value="CHANNEL 1"><input class="channelButton" type="button" value="CHANNEL 2"><input class="channelButton" type="button" value="CHANNEL 3"><input class="channelButton" type="button" value="CHANNEL 4"><input class="channelButton" type="button" value="CHANNEL 5"><hr><input type="button" value="<<"><input type="button" value="<"><input type="button" value=">"><input type="button" value=">>"></div>
+<div class="shadowedBox"><p id="channelTitle">Select a channel.</p><div id="timerList"></div></div>
+<script>
+
+var sideBorder = 42; //pixels
+var updownBorder = 30; //pixels
+var hostName;
+
+var numberOfChannels  =  5;
+var maxNumberOfTimers = 50;
+var currentChannel    =  undefined;
+var currentTimer      =  0;
+
+var channel1 = [];
+var channel2 = [] ;
+var channel3 = [] ;
+var channel4 = [];
+var channel5 = [] ;
+
+var indicatorColor = "yellow";
+
+function makeEmptyTimerList() {
+  channel1 = [];
+  channel1.push( { 'time': 0, 'percentage': 0 } );
+  channel2 = [];
+  channel2.push( { 'time': 0, 'percentage': 0 } );
+  channel3 = [];
+  channel3.push( { 'time': 0, 'percentage': 0 } );
+  channel4 = [];
+  channel4.push( { 'time': 0, 'percentage': 0 } );
+  channel5 = [];
+  channel5.push( { 'time': 0, 'percentage': 0 } );
+}
+
+function map( x,  in_min,  in_max,  out_min,  out_max)
+{
+  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
+
+function timeInSeconds(timeAsString) {        //  input formatted like 12:34:56 -
+                                              // returns value only to full  minute accuracy eg. slashes seconds
+  var thisTimeInSeconds = timeAsString.slice(0,2) * 3600;
+  thisTimeInSeconds += timeAsString.slice(3,5) * 60;
+  return thisTimeInSeconds
+}
+
+function formattedTime(secondsSinceMidnight) {
+  var hours = Math.floor(secondsSinceMidnight / 3600);
+  var minutes = Math.floor((secondsSinceMidnight - (hours * 3600)) / 60);
+  var seconds = secondsSinceMidnight - (hours * 3600) - (minutes * 60);
+  if (hours   < 10) {hours   = "0"+hours;}
+  if (minutes < 10) {minutes = "0"+minutes;}
+  if (seconds < 10) {seconds = "0"+seconds;}
+  return hours + ':' + minutes + ':' + seconds;
+}
+
+function pointerInTimerArea(){ //returns TRUE or FALSE depending if the mouse is above the actual drawing area of the canvas between the borders
+  var areaClickMargin = 5; //number of pixels above or below the actual area that still registers as a click - otherwise setting 0% or 100% would be very tricky
+  return ( event.offsetX > sideBorder && event.offsetX < $('#editorCanvas').width() - sideBorder )
+           &&
+         ( event.offsetY > ( updownBorder - areaClickMargin ) && ( event.offsetY < $('#editorCanvas').height() - ( updownBorder  - areaClickMargin ) ) );
+}
+
+function showMousePosition(){
+  if ( pointerInTimerArea() ) {
+    var clickedTimeInSeconds =  parseInt( ( event.offsetX - sideBorder ) / ( $('#editorCanvas').width() - ( 2 * sideBorder ) ) * 86400 );
+    var currentPercentage =  parseInt (map( event.offsetY, updownBorder, $('#editorCanvas').height() - updownBorder, 100, 0 ) );
+    currentPercentage = Math.min(Math.max(parseInt(currentPercentage), 0), 100);
+    $('#editorCanvas').css( 'cursor', 'crosshair' );
+    $('#hostName').html( formattedTime( clickedTimeInSeconds ).slice(0,5)+" "+currentPercentage+"%" );
+    return;
+  } else {
+    //$('#hostName').html( "X:" + event.offsetX + " Y:" + event.offsetY );
+    $('#hostName').html( hostName );
+    $('#editorCanvas').css( 'cursor', 'default' );
+  }
+}
+
+function addTimer( thisChannel, thisTime, currentPercentage ){
+  if ( currentChannel == undefined ) {
+    console.log( "No channel selected." );
+    return;
+  }
+  if ( thisChannel.length >= maxNumberOfTimers ) {
+    console.log( "Maximum timers set" );
+    return;
+  }
+  var insertPosition = 0;
+  //check if check if timer already in list
+  while ( (  thisTime >= thisChannel[ insertPosition ].time  ) ){
+    insertPosition++;
+    if ( insertPosition == thisChannel.length ) {
+      break;
+    }
+  }
+  if ( thisChannel[ insertPosition - 1 ].time  == thisTime ) {
+    console.log( "Timer already set" );
+    return;
+  }
+  thisChannel.splice( insertPosition, 0, { "time": thisTime.toString(), "percentage": currentPercentage.toString() } );
+  refreshCanvas();
+  refreshTimerList();
+}
+
+function refreshTimerList() {
+  //fill the timerlist with the currently active channel
+  if ( currentChannel == undefined ) {
+    return;
+  }
+  $('#channelTitle').html( "CHANNEL " + ( currentChannel + 1 ) );
+  switch ( parseInt(currentChannel) ) {
+    case 0:
+      fillTimerList( channel1 );
+      break;
+    case 1:
+      fillTimerList( channel2 );
+      break;
+    case 2:
+      fillTimerList( channel3 );
+      break;
+    case 3:
+      fillTimerList( channel4 );
+      break;
+    case 4:
+      fillTimerList( channel5 );
+      break;
+  }
+}
+
+function fillTimerList( thisChannel ) {
+  //fill the list with the current channel timers
+  $('#timerList').html( "" );
+  for (var  thisTimer = 0; thisTimer < thisChannel.length; thisTimer++ ) {
+    //
+    $('#timerList').append( "<div class=\"timerEntry\"><p class=\"timerEntryTime\">" +
+                            formattedTime( thisChannel[thisTimer].time ).slice(0,5) +
+                            "</p><p class=\"timerEntryPercentage\">" +  parseInt( thisChannel[thisTimer].percentage  ) +
+                            "%</p><p class=\"timerEntryDelete\">DELETE</div>" );
+  }
+}
+
+function refreshCanvas(){
+  drawChannel( channel1 , "channel1", 0 );
+  drawChannel( channel2 , "channel2", 1 );
+  drawChannel( channel3 , "channel3", 2 );
+  drawChannel( channel4 , "channel4", 3 );
+  drawChannel( channel5 , "channel5", 4 );
+}
+
+function drawChannel( channel, layerName, channelNumber ){
+  //first construct the line
+  var obj = {
+    type: 'line',
+    rounded: true,
+    strokeStyle: 'grey',
+    strokeWidth: 0.7,
+    strokeDash: [5],
+    strokeDashOffset: 0,
+    layer: true,
+    name: layerName,
+    index: ( 0 - channelNumber )
+  };
+  if ( currentChannel == channelNumber ) {
+    obj[ 'strokeStyle'] = 'white';
+    obj[ 'strokeWidth'] = 3;
+    obj[ 'strokeDash'] = [0];
+    obj[ 'index'] = 99; //always draw current layer on top
+  }
+  //map and add the timers to the object
+  for ( thisTimer = 0; thisTimer < channel.length; thisTimer++ ) {
+    var offsetX = map( channel[thisTimer].time, 0, 86400, sideBorder, $('#editorCanvas').width() - ( sideBorder ) );
+    var offsetY = map( channel[thisTimer].percentage, 100, 0 , updownBorder, $('#editorCanvas').height() - ( updownBorder ) );
+    obj['x'+(thisTimer+1)] = offsetX;
+    obj['y'+(thisTimer+1)] = offsetY;
+  }
+  //connect the line to the fake 24h timer, which is a copy of the 00:00 timer
+  obj['x'+(channel.length + 1)] = $('#editorCanvas').width() - sideBorder;
+  obj['y'+(channel.length + 1)] = obj['y1'];
+  $('#editorCanvas').removeLayer( layerName ).addLayer( obj ).drawLayers();
+}
+
+function drawBackground(){
+  //first draw the outer indicator something like:   |______________|
+  $('#editorCanvas').drawLine({
+    layer: true,
+    strokeStyle: indicatorColor,
+    opacity: 1,
+    strokeWidth: 2,
+    x1: sideBorder, y1: updownBorder,
+    x2: sideBorder, y2: $('#editorCanvas').height() - updownBorder,
+    x3: $('#editorCanvas').width() - sideBorder, y3: $('#editorCanvas').height() - updownBorder,
+    x4: $('#editorCanvas').width() - sideBorder, y4: updownBorder
+  });
+  //draw the hour indicators on the bottom
+  var hourWidth = $('#editorCanvas').width() - ( 2 * sideBorder ) ;
+  hourWidth = hourWidth / 24;
+  for ( hours = 0; hours <= 24; hours++) {
+    var currentOffset = hourWidth * hours;
+    //the text
+    $('#editorCanvas').drawText({
+      layer: true,
+      fillStyle: indicatorColor,
+      strokeWidth: 1,
+      opacity: 1,
+      x: sideBorder + currentOffset, y: $('#editorCanvas').height() - ( updownBorder / 2 ),
+      fontSize: 15,
+      text: hours + "h"
+    }).drawLayers();
+    //short lines at the bottom
+    $('#editorCanvas').drawLine({
+      layer: true,
+      strokeStyle: indicatorColor,
+      strokeWidth: 2,
+      opacity: 1,
+      x1: sideBorder + currentOffset, y1: $('#editorCanvas').height() - updownBorder,
+      x2: sideBorder + currentOffset, y2: $('#editorCanvas').height() - updownBorder + 4
+    });
+    //dashed lines inside
+    if ( hours != 0 && hours != 24 ) {
+      $('#editorCanvas').drawLine({
+        layer: true,
+        strokeStyle: indicatorColor,
+        opacity: 0.3,
+        strokeDash: [2],
+        strokeDashOffset: 0,
+        strokeWidth: 1,
+        x1: sideBorder + currentOffset, y1: $('#editorCanvas').height() - updownBorder,
+        x2: sideBorder + currentOffset, y2: updownBorder
+      });
+    }
+  }
+  //and the percentage indicators on the side
+  for ( var percentage = 0; percentage <= 100; percentage += 25 ) {
+    var verticalOffset = ( ( $('#editorCanvas').height() - (  2 * updownBorder ) ) / 100 ) * percentage;
+    //left
+    $('#editorCanvas').drawText({
+      layer: true,
+      fontSize: 15,
+      fillStyle: indicatorColor,
+      strokeWidth: 1,
+      opacity: 1,
+      x: sideBorder / 2, y: updownBorder + verticalOffset,
+      text: 100 - percentage + "%"
+    });
+    //right
+    $('#editorCanvas').drawText({
+      layer: true,
+      fontSize: 15,
+      fillStyle: indicatorColor,
+      strokeWidth: 1,
+      opacity: 1,
+      x: $('#editorCanvas').width() - sideBorder / 2, y: updownBorder + verticalOffset,
+      text: 100 - percentage + "%"
+    });
+  }
+}
+
+function readTimerFile( filename ) {
+  $.get( filename )
+    .done( function( data ) {
+      channel1 = [];
+      channel2 = [];
+      channel3 = [];
+      channel4 = [];
+      channel5 = [];
+      data = data.split( "\n" );
+      var currentReadChannel = undefined;
+      for ( counter = 0; counter < data.length; counter++ ) {
+        if ( data[counter].startsWith( "[" ) && data[counter].indexOf( "]" ) > 1 ) {
+          currentReadChannel = data[counter].substr( 1, data[counter].indexOf( "]" ) - 1 );
+          counter++;
+        }
+        var thisTimer = data[ counter ].split( "," );
+        if ( thisTimer[0] == "" ) {
+          console.log( "EOF - timers loaded from " + filename );
+          currentReadChannel = 255; //last line of the file (EOF) is read and has to be ignored
+          //TODO: add more data sanity checks here
+        }
+        switch ( parseInt( currentReadChannel ) ) {
+          case 0:
+            channel1.push( {'time':thisTimer[0], 'percentage':thisTimer[1]});
+            break;
+          case 1:
+            channel2.push( {'time':thisTimer[0], 'percentage':thisTimer[1]});
+            break;
+          case 2:
+            channel3.push( {'time':thisTimer[0], 'percentage':thisTimer[1]});
+            break;
+          case 3:
+            channel4.push( {'time':thisTimer[0], 'percentage':thisTimer[1]});
+            break;
+          case 4:
+            channel5.push( {'time':thisTimer[0], 'percentage':thisTimer[1]});
+        }
+      }
+      refreshCanvas();
+      refreshTimerList();
+      $('input').prop("disabled",false);
+    })
+    .fail( function() {
+      $('#hostName').html( "No default timers found" );
+      //load empty timer set
+      makeEmptyTimerList();
+      refreshCanvas();
+      refreshTimerList();
+      $('input').prop("disabled",false);
+    });
+}
+
+
+$( document ).ready( function() {
+  $('input').prop("disabled",true);
+  //set correct height for jCanvas - get the width/height set in html
+  $('#editorCanvas').width( $('#editorCanvas').width() ).height( $('#editorCanvas').height() );
+
+  //get/show the hostname
+  $.get( "http://aquacontrol/api/hostname", function( data ) {
+    $( "#hostName" ).html( data );
+    document.title = data + " Editor";
+    hostName = data;
+  });
+
+  //draw the editor background
+  drawBackground();
+
+  //read the default timer file
+  readTimerFile( "http://aquacontrol/default.aqu" );
+
+  ///end of setup
+
+
+  //event handlers
+  $('#editorCanvas').on( 'mousemove', showMousePosition );
+
+  $('#editorCanvas').on( 'mouseout', function() {
+    $('#hostName').html( hostName );
+  });
+
+  $('#editorCanvas').on( 'mouseup', function() {
+    if ( pointerInTimerArea() ) {
+      var clickedTimeInSeconds =  parseInt( ( event.offsetX - sideBorder ) / ( $('#editorCanvas').width() - ( 2 * sideBorder ) ) * 86400 );
+      var currentPercentage =  parseInt (map( event.offsetY, updownBorder, $('#editorCanvas').height() - updownBorder, 100, 0 ) );
+      currentPercentage = Math.min(Math.max(parseInt(currentPercentage), 0), 100);
+      //console.log( "Clicked on graph at " + formattedTime( clickedTimeInSeconds ) + " setting " + currentPercentage + "%" );
+      clickedTimeInSeconds = timeInSeconds( formattedTime( clickedTimeInSeconds ).slice(0,5) ); //effing neccesary to get it rounded off to nearest minute - TODO: fix this!
+      switch ( parseInt(currentChannel) ) {
+        case 0:
+          addTimer( channel1, clickedTimeInSeconds, currentPercentage );
+          break;
+        case 1:
+          addTimer( channel2, clickedTimeInSeconds, currentPercentage );
+          break;
+        case 2:
+          addTimer( channel3, clickedTimeInSeconds, currentPercentage );
+          break;
+        case 3:
+          addTimer( channel4, clickedTimeInSeconds, currentPercentage );
+          break;
+        case 4:
+          addTimer( channel5, clickedTimeInSeconds, currentPercentage );
+          break;
+      }
+    }
+  });
+
+  $('.channelButton').on('click', function() {
+    $('.channelButton').css('background','lightgray');
+    $(this).css('background','aqua');
+    currentChannel = $(this).index();
+    refreshCanvas();
+    refreshTimerList();
+  });
+
+  $('#timerList').on('click', '.timerEntryDelete', function() {
+    if ( $(this).parent().index() != 0 ) {
+      //delete the clicked item 
+      switch ( currentChannel ) {
+        case 0:
+          channel1.splice( $(this).parent().index(), 1 );
+          break;
+        case 1:
+          channel2.splice( $(this).parent().index(), 1 );
+          break;
+        case 2:
+          channel3.splice( $(this).parent().index(), 1 );
+          break;
+        case 3:
+          channel4.splice( $(this).parent().index(), 1 );
+          break;
+        case 4:
+          channel5.splice( $(this).parent().index(), 1 );
+          break;
+      }
+      refreshCanvas();
+      refreshTimerList();
+    }
+  });      
+  
+  $('#clearButton').on('click', function() {
+    makeEmptyTimerList();
+    refreshCanvas();
+    refreshTimerList();
+  });
+    
+  $('#reloadButton').on('click', function() {
+    readTimerFile( "http://aquacontrol/default.aqu" );
+  });
+
+  $('#uploadButton').on('click', function() {
+    var formData = new FormData();
+    //make a valid file from the cahnneldata
+    var fileData = "[0]\n";
+    for ( lineCounter = 0; lineCounter < channel1.length; lineCounter++) {
+      fileData += channel1[lineCounter].time+','+channel1[lineCounter].percentage+'\n';
+    }
+    fileData += "[1]\n";
+    for ( lineCounter = 0; lineCounter < channel2.length; lineCounter++) {
+      fileData += channel2[lineCounter].time+','+channel2[lineCounter].percentage+'\n';
+    }
+    fileData += "[2]\n";
+    for ( lineCounter = 0; lineCounter < channel3.length; lineCounter++) {
+      fileData += channel3[lineCounter].time+','+channel3[lineCounter].percentage+'\n';
+    }
+    fileData += "[3]\n";
+    for ( lineCounter = 0; lineCounter < channel4.length; lineCounter++) {
+      fileData += channel4[lineCounter].time+','+channel4[lineCounter].percentage+'\n';
+    }
+    fileData += "[4]\n";
+    for ( lineCounter = 0; lineCounter < channel5.length; lineCounter++) {
+      fileData += channel5[lineCounter].time+','+channel5[lineCounter].percentage+'\n';
+    }
+    var blob = new Blob([ fileData ], {type: 'plain/text'});
+    formData.append('file', blob, "default.aqu");
+    var request = new XMLHttpRequest();
+    request.open("POST", "http://aquacontrol/api/upload");
+    request.onload = function( data ) {
+      if ( confirm( "Timers uploaded. Apply now?\n\nIf you choose cancel, the new settings\nwill not be visible." ) ) {
+        //apply the default timers from SPIFFS;
+        $('#hostName').load( 'http://aquacontrol/api/loadtimers' );
+      }
+    };
+    request.send(formData);    
+  });
+});
+</script>
+</body>
+</html>
