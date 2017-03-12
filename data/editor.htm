@@ -426,7 +426,7 @@ $( document ).ready( function() {
   $('#editorCanvas').width( $('#editorCanvas').width() ).height( $('#editorCanvas').height() );
 
   //get/show the hostname
-  $.get( "http://aquacontrol/api/hostname", function( data ) {
+  $.get( "/api/hostname", function( data ) {
     $( "#hostName" ).html( data );
     document.title = data + " Editor";
     hostName = data;
@@ -436,7 +436,7 @@ $( document ).ready( function() {
   drawBackground();
 
   //read the default timer file
-  readTimerFile( "http://aquacontrol/default.aqu" );
+  readTimerFile( "/default.aqu" );
 
   ///end of setup
 
@@ -515,7 +515,7 @@ $( document ).ready( function() {
   });
     
   $('#reloadButton').on('click', function() {
-    readTimerFile( "http://aquacontrol/default.aqu" );
+    readTimerFile( "/default.aqu" );
   });
 
   $('#uploadButton').on('click', function() {
@@ -544,11 +544,11 @@ $( document ).ready( function() {
     var blob = new Blob([ fileData ], {type: 'plain/text'});
     formData.append('file', blob, "default.aqu");
     var request = new XMLHttpRequest();
-    request.open("POST", "http://aquacontrol/api/upload");
+    request.open("POST", "/api/upload");
     request.onload = function( data ) {
       if ( confirm( "Timers uploaded. Apply now?\n\nIf you choose cancel, the new settings\nwill not be visible." ) ) {
         //apply the default timers from SPIFFS;
-        $('#hostName').load( 'http://aquacontrol/api/loadtimers' );
+        $('#hostName').load( '/api/loadtimers' );
       }
     };
     request.send(formData);    
