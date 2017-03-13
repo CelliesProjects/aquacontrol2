@@ -1,6 +1,6 @@
 
 //format bytes as KB, MB or GB with indicator
-String formatBytes( size_t bytes ) {
+String humanReadableSize( size_t bytes ) {
   if ( bytes < 1024) {
     return String( bytes ) + "B";
   } else if ( bytes < ( 1024 * 1024 ) ) {

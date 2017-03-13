@@ -89,7 +89,7 @@ void setupWebServer() {
       while ( dir.next() ) {
         fileName = dir.fileName();
         size_t fileSize = dir.fileSize();
-        HTTPresponse += fileName + "," + formatBytes( fileSize ) + "|";
+        HTTPresponse += fileName + "," + humanReadableSize( fileSize ) + "|";
       }
     }
     webServer.send( 200, FPSTR( textplainHEADER ), HTTPresponse );
@@ -286,8 +286,8 @@ void showFileUploader() {
   while ( dir.next() ) {
     fileName = dir.fileName();
     size_t fileSize = dir.fileSize();
-    Serial.printf( "FS File: %s, size: %s\n" , fileName.c_str(), formatBytes( fileSize ).c_str() );
-    HTTPresponse += "<p><a href=\"" + fileName + "\">" +fileName + "</a>" + formatBytes( fileSize ) + "</p>";
+    Serial.printf( "FS File: %s, size: %s\n" , fileName.c_str(), humanReadableSize( fileSize ).c_str() );
+    HTTPresponse += "<p><a href=\"" + fileName + "\">" +fileName + "</a>" + humanReadableSize( fileSize ) + "</p>";
   }
   HTTPresponse += "</div>";
   Serial.println();

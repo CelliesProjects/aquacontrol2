@@ -134,7 +134,7 @@ void setup() {
     while (dir.next()) {
       String fileName = dir.fileName();
       size_t fileSize = dir.fileSize();
-      Serial.printf( "FS File: %s, size: %s\r\n", fileName.c_str(), formatBytes(fileSize).c_str() );
+      Serial.printf( "FS File: %s, size: %s\r\n", fileName.c_str(), humanReadableSize(fileSize).c_str() );
     }
     Serial.println();
   }
