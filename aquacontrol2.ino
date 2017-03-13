@@ -15,10 +15,10 @@ extern "C" {
 
 bool hostNameChanged = false;
 
-String myWIFIssid;
-String myWIFIpassword;
-String myWIFIhostname;
-time_t myWIFItimeout = 15; //number of seconds WiFi tries to connect before starting an accesspoint
+String myWIFIssid;          // will be set automatically
+String myWIFIpassword;      // will be set automatically
+String myWIFIhostname = ""; // provide one here for the AP mode - not setting it defaults to 'aquacontrol'
+time_t myWIFItimeout = 15;  // number of seconds WiFi tries to connect before starting an accesspoint
 
 time_t bootTime;
 int timeZone = 0;
