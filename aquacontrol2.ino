@@ -115,8 +115,8 @@ void setup() {
   WiFi.mode( WIFI_STA );
 
   WiFi.begin( myWIFIssid.c_str(), myWIFIpassword.c_str() );
-  myWIFItimeout = now() + 30;
-  while ( now() < myWIFItimeout && WiFi.status() != WL_CONNECTED ) {
+  time_t timeout = now() + myWIFItimeout;
+  while ( now() < timeout && WiFi.status() != WL_CONNECTED ) {
     delay ( 500 );
     Serial.print ( F( "." ) );
   }
