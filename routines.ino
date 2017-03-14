@@ -41,18 +41,21 @@ time_t localTime() {
 }
 
 // IsDST(): returns true if during DST, false otherwise
-boolean isDST( int mo, int dy, int dw ) {
-  if ( mo < 3 || mo > 11 ) {
+// For CEST time!!           http://stackoverflow.com/a/22761920
+boolean isDST( int month, int day, int dow ) {
+  if ( month < 3 || month > 11 ) {
     return false;  // January, February, and December are out.
   }
-  if ( mo > 3 && mo < 11 ) {
+  if ( month > 3 && month < 11 ) {
     return true;  // April to October are in
   }
-  int previousSunday = dy - dw;
-  if ( mo == 3 ) {
-    return previousSunday >= 8;  // In March, we are DST if our previous Sunday was on or after the 8th.
+  int previousSunday = day - dow;
+  if ( month == 3 ) {
+    return previousSunday >= 25;  // In March, we are DST if our previous Sunday was on or after the 25th.
   }
-  return previousSunday <= 0; // In November we must be before the first Sunday to be DST. That means the previous Sunday must be before the 1st.
+  if (month == 10) {
+    return previousSunday < 25; // In November we must be before the first Sunday to be DST. That means the previous Sunday must be before the 25st.
+  }
 }
 
 void setPercentage( const byte thisChannel, const time_t secondsToday ) {
