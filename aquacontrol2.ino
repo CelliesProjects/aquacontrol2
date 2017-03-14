@@ -12,6 +12,7 @@ extern "C" {
 
 //https://gist.github.com/dogrocker/f998dde4dbac923c47c1
 
+String configFile = "/system.cfg"; //dont forget the starting slash!
 
 bool hostNameChanged = false;
 
@@ -127,17 +128,40 @@ void setup() {
   }
   Serial.println( F( "WiFi connected." ) );
 
-  //check SPIFFS
+  // check SPIFFS and if config file is present
+  // apply the settings from the configfile
+  // invalid settings are silently ignored
   SPIFFS.begin();
-  {
-    Dir dir = SPIFFS.openDir("/");
-    while (dir.next()) {
-      String fileName = dir.fileName();
-      size_t fileSize = dir.fileSize();
-      Serial.printf( "FS File: %s, size: %s\r\n", fileName.c_str(), humanReadableSize(fileSize).c_str() );
+  File f = SPIFFS.open( configFile, "r" );
+  String lineBuf;
+  String valueStr;
+  while ( f.position() < f.size() ) {
+    lineBuf = f.readStringUntil( '\n' );
+    if ( lineBuf.startsWith( F( "pwmdepth" ) ) ) {
+      valueStr = lineBuf.substring(lineBuf.indexOf( F( "=" ) ) + 1 );
+      unsigned int newPWMdepth = valueStr.toInt();
+      if ( newPWMdepth >= 1024 && newPWMdepth <= 10230 ) {
+        PWMdepth = newPWMdepth;
+        Serial.print( F( "PWM depth set to " ) ); Serial.println( PWMdepth );
+      }
+    } else if ( lineBuf.startsWith( F( "pwmfrequency" ) ) ) {
+      //set freq
+      valueStr = lineBuf.substring(lineBuf.indexOf( F( "=" ) ) + 1 );
+      int newPWMfrequency = valueStr.toInt();
+      if ( newPWMfrequency > 1 && newPWMfrequency < 1001 ) {
+        PWMfrequency = newPWMfrequency;
+        Serial.print( F( "PWM frequency set to " ) ); Serial.println( PWMfrequency );
+      }
+    } else if ( lineBuf.startsWith( F( "timezone" ) ) ) {
+      valueStr = lineBuf.substring(lineBuf.indexOf( F( "=" ) ) + 1 );
+      int newTimezone = valueStr.toInt();
+      if ( newTimezone > -14 && newTimezone < 14 ) {
+        timeZone = newTimezone;
+        Serial.print( F( "Timezone set to " ) ); Serial.println( timeZone );
+      }
     }
-    Serial.println();
   }
+
   initNTP();
   setupWebServer();
 
