@@ -58,6 +58,10 @@ void setupWebServer() {
   //API calls come from flash memory only and can not be deleted unlike files on SPIFFS
   //Do not forget the leading slash  ( so: /api/... and NOT api/... ) !!
 
+  webServer.on( "/api/boottime", []() {
+    webServer.send( 200, FPSTR( textplainHEADER ), String( bootTime ) );
+  });
+
   webServer.on( "/api/cleareeprom", []() {
     clearEEPROM();
     webServer.send( 200, FPSTR( textplainHEADER ), F( "EEPROM cleared" ) );
