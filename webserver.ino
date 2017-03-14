@@ -171,6 +171,7 @@ void setupWebServer() {
       }
       PWMfrequency = tempPWMfrequency;
       analogWriteFreq( PWMfrequency );
+      writeConfigFile();
     }
     webServer.send( 200, FPSTR( textplainHEADER ),  "PWM frequency is " + String( PWMfrequency ) );
   });
@@ -183,6 +184,7 @@ void setupWebServer() {
         return;
       }
       PWMdepth = newPWMdepth;
+      writeConfigFile();
     }
     webServer.send( 200, FPSTR( textplainHEADER ), "PWM depth is " + String( PWMdepth ) );
   });
@@ -196,6 +198,7 @@ void setupWebServer() {
       }
       timeZone = newTimeZone;
       updateChannels();
+      writeConfigFile();
     }
     webServer.send( 200, FPSTR( textplainHEADER ), "Timezone is " + String( timeZone ) );
   });
