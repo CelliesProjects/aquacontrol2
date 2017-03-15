@@ -183,7 +183,7 @@ void setupWebServer() {
   webServer.on( "/api/pwmdepth", []() {
     if ( webServer.arg( "newpwmdepth" ) != "" ) {
       unsigned int newPWMdepth = webServer.arg( "newpwmdepth" ).toInt();
-      if ( newPWMdepth < 1023 || newPWMdepth > 10230 ) {
+      if ( newPWMdepth < 1024 || newPWMdepth > 10240 ) {
         webServer.send( 200, FPSTR( textplainHEADER ), F( "ERROR - Invalid PWM depth" ) );
         return;
       }
