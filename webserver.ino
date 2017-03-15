@@ -177,7 +177,7 @@ void setupWebServer() {
       analogWriteFreq( PWMfrequency );
       writeConfigFile();
     }
-    webServer.send( 200, FPSTR( textplainHEADER ),  "PWM frequency is " + String( PWMfrequency ) );
+    webServer.send( 200, FPSTR( textplainHEADER ), String( PWMfrequency ) );
   });
 
   webServer.on( "/api/pwmdepth", []() {
@@ -190,7 +190,7 @@ void setupWebServer() {
       PWMdepth = newPWMdepth;
       writeConfigFile();
     }
-    webServer.send( 200, FPSTR( textplainHEADER ), "PWM depth is " + String( PWMdepth ) );
+    webServer.send( 200, FPSTR( textplainHEADER ), String( PWMdepth ) );
   });
 
   webServer.on( "/api/timezone", []() {
