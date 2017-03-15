@@ -204,7 +204,7 @@ void setupWebServer() {
       updateChannels();
       writeConfigFile();
     }
-    webServer.send( 200, FPSTR( textplainHEADER ), "Timezone is " + String( timeZone ) );
+    webServer.send( 200, FPSTR( textplainHEADER ), String( timeZone ) );
   });
 
   webServer.on( "/api/upload", HTTP_POST, []() {
