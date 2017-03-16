@@ -166,6 +166,24 @@ void setupWebServer() {
     updateChannels();
   });
 
+  webServer.on( "/api/ntpinterval", []() {
+    if ( webServer.arg( "newntpinterval" ) != "" ) {
+      int tempntpInterval = webServer.arg( "newntpinterval" ).toInt();
+      if ( tempntpInterval < 300 || tempntpInterval > 86400 * 5 ) {
+        webServer.send( 200, FPSTR( textplainHEADER ), F( "ERROR - Out of range NTP interval" ) );
+        return;
+      }
+      ntpInterval = tempntpInterval;
+      time_t ntpTime = getTimefromNTP();
+      if ( ntpTime > 0 ) {
+        setTime( ntpTime );
+        ntpSyncTime = ntpTime + ntpInterval;
+      }
+      writeConfigFile();
+    }
+    webServer.send( 200, FPSTR( textplainHEADER ), String( ntpInterval ) );
+  });
+
   webServer.on( "/api/pwmfrequency", []() {
     if ( webServer.arg( "newpwmfrequency" ) != "" ) {
       int tempPWMfrequency = webServer.arg( "newpwmfrequency" ).toInt();

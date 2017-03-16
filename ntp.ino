@@ -2,8 +2,6 @@
 
 bool ntpError = true;                                                    //Network Time Protocol error -- must be set to true on boot
 
-time_t       lastSyncTime;
-
 const char* ntpServerName            = "nl.pool.ntp.org";                //http://www.pool.ntp.org/use.html
 
 WiFiUDP udp;   //needed for NTP polling
@@ -70,9 +68,6 @@ time_t getTimefromNTP() {
     const unsigned long seventyYears = 2208988800UL;
     // subtract seventy years:
     unsigned long epoch = secsSince1900 - seventyYears;
-    //setTime(epoch);                                         // This syncs the RTC to UTC
-    ntpError = false;
-    lastSyncTime = epoch;
     Serial.println( "NTP time stamp received @ " + formattedTime( epoch ) + " UTC");
     return epoch;                                             // return the time
   } else {

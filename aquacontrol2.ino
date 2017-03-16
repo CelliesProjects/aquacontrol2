@@ -24,6 +24,10 @@ time_t myWIFItimeout = 15;  // number of seconds WiFi tries to connect before st
 time_t bootTime;
 int timeZone = 0;
 
+// NTP sync
+time_t ntpSyncTime;
+time_t ntpInterval = 86400;
+
 bool programOverride = false; // used for LIGHTS ON & LIGHTS OFF in webinterface
 
 String lightStatus; //To keep track if lights are on, off or programmed, this string is displayed on the webif
@@ -137,13 +141,23 @@ void setup() {
   String valueStr;
   while ( f.position() < f.size() ) {
     lineBuf = f.readStringUntil( '\n' );
-    if ( lineBuf.startsWith( F( "pwmdepth" ) ) ) {
+
+    if ( lineBuf.startsWith( F( "ntpinterval" ) ) ) {
+      valueStr = lineBuf.substring(lineBuf.indexOf( F( "=" ) ) + 1 );
+      unsigned int newNtpInterval = valueStr.toInt();
+      if ( newNtpInterval >= 300 && newNtpInterval <= 86400 * 5 ) {
+        ntpInterval = newNtpInterval;
+        Serial.print( F( "NTP interval set to " ) ); Serial.println( ntpInterval );
+      }
+
+    } else if ( lineBuf.startsWith( F( "pwmdepth" ) ) ) {
       valueStr = lineBuf.substring(lineBuf.indexOf( F( "=" ) ) + 1 );
       unsigned int newPWMdepth = valueStr.toInt();
       if ( newPWMdepth >= 1024 && newPWMdepth <= 10230 ) {
         PWMdepth = newPWMdepth;
         Serial.print( F( "PWM depth set to " ) ); Serial.println( PWMdepth );
       }
+
     } else if ( lineBuf.startsWith( F( "pwmfrequency" ) ) ) {
       //set freq
       valueStr = lineBuf.substring(lineBuf.indexOf( F( "=" ) ) + 1 );
@@ -152,6 +166,7 @@ void setup() {
         PWMfrequency = newPWMfrequency;
         Serial.print( F( "PWM frequency set to " ) ); Serial.println( PWMfrequency );
       }
+
     } else if ( lineBuf.startsWith( F( "timezone" ) ) ) {
       valueStr = lineBuf.substring(lineBuf.indexOf( F( "=" ) ) + 1 );
       int newTimezone = valueStr.toInt();
@@ -163,6 +178,7 @@ void setup() {
   }
 
   initNTP();
+  ntpSyncTime = bootTime + ntpInterval;
   setupWebServer();
 
   if ( defaultTimersAreLoaded() ) {
@@ -182,6 +198,14 @@ void setup() {
 int previousFreeRAM; //for memory logging usage, see last lines of loop()
 
 void loop() {
+
+  if ( now() > ntpSyncTime ) {
+    time_t ntpTime = getTimefromNTP();
+    if ( ntpTime > 0 ) {
+      setTime( ntpTime );
+    }
+    ntpSyncTime += ntpInterval;
+  }
 
   if ( hostNameChanged ) {
     setNewHostname();
