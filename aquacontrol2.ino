@@ -199,7 +199,7 @@ int previousFreeRAM; //for memory logging usage, see last lines of loop()
 
 void loop() {
 
-  if ( now() > ntpSyncTime ) {
+  if ( now() >= ntpSyncTime ) {
     time_t ntpTime = getTimefromNTP();
     if ( ntpTime > 0 ) {
       setTime( ntpTime );
