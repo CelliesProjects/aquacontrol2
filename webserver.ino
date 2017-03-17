@@ -14,17 +14,11 @@ void setupWebServer() {
   //handle the timer editor
   if ( SPIFFS.exists( F( "/editor.htm" ) ) ) {
     webServer.serveStatic( "/editor", SPIFFS, "/editor.htm" );
-  } else {
-    webServer.send( 200, FPSTR( textplainHEADER ), F( "No timer editor present during boot." ) );
   }
 
   //handle the filemanager
   if ( SPIFFS.exists( F( "/filemanager.htm" ) ) ) {
     webServer.serveStatic( "/filemanager", SPIFFS, "/filemanager.htm" );
-  } else {
-    webServer.on( "/filemanager", []() {
-      webServer.send( 200, FPSTR( textplainHEADER ), F( "No filemanager present during boot." ) );
-    });
   }
 
   //handle the emergency uploader
@@ -35,24 +29,13 @@ void setupWebServer() {
   //handle the index page
   if ( SPIFFS.exists( F( "/index.htm" ) ) ) {
     webServer.serveStatic( "/", SPIFFS, "/index.htm" );
-  } else {
-    webServer.on( "/", []() {
-      webServer.send( 200, FPSTR( textplainHEADER ), F( "No index.htm present during boot." ) );
-    });
   }
 
   //handle the setup page
-  webServer.on( "/setup", []() {
-    webServer.send( 200, FPSTR( texthtmlHEADER ), F( "setup page" ) );
-  });
-
   if ( SPIFFS.exists( F( "/setup.htm" ) ) ) {
     webServer.serveStatic( "/setup", SPIFFS, "/setup.htm" );
-  } else {
-    webServer.on( "/setup", []() {
-      webServer.send( 200, FPSTR( textplainHEADER ), F( "No setup.htm present during boot." ) );
-    });
   }
+
   /////////////////////////////////////////////////////////////////////////////////////
   //API calls alphabetically
   //API calls come from flash memory only and can not be deleted unlike files on SPIFFS
