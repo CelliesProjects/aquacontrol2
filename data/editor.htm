@@ -13,6 +13,9 @@ html, body{
 	font-variant: small-caps;
   font-size:20px;
 }
+body{
+  opacity:0.4;
+}
 
 a {
   color:black;
@@ -409,6 +412,7 @@ function readTimerFile( filename ) {
       refreshCanvas();
       refreshTimerList();
       $('input').prop("disabled",false);
+      $('body').css('opacity','1'); // and show the page
     })
     .fail( function() {
       $('#hostName').html( "No default timers found" );
@@ -417,6 +421,7 @@ function readTimerFile( filename ) {
       refreshCanvas();
       refreshTimerList();
       $('input').prop("disabled",false);
+      $('body').css('opacity','1'); // and show the page
     });
 }
 
