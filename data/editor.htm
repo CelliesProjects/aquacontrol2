@@ -130,6 +130,7 @@ var channel4 = [];
 var channel5 = [] ;
 
 var indicatorColor = "yellow";
+var nowIndicatorColor = "white";
 
 function makeEmptyTimerList() {
   channel1 = [];
@@ -419,6 +420,35 @@ function readTimerFile( filename ) {
     });
 }
 
+function updateNowIndicator() {
+  $.get( "/api/getpercentage", function( data ) {
+    var item = data.split( "," );
+    //console.log(  item[5]  );
+    var offSet = map( timeInSeconds( item[5] ), 0,86400, sideBorder, $('#editorCanvas').width() - sideBorder );
+    $('#editorCanvas').removeLayer( 'nowIndicator' ).removeLayer( 'nowTextIndicator' );
+    $('#editorCanvas').drawLine({
+      name: 'nowIndicator',
+      layer: true,
+      strokeStyle: nowIndicatorColor,
+      strokeWidth: 0.7,
+      strokeDash: [5],
+      strokeDashOffset: 0,
+      x1: offSet, y1:updownBorder - 5,
+      x2: offSet, y2: $('#editorCanvas').height() - updownBorder
+    }).drawText({
+      name: 'nowTextIndicator',
+      layer: true,
+      fillStyle: "yellow",
+      strokeStyle: "yellow",
+      strokeWidth: 1,
+      x: offSet, y: updownBorder - 10,
+      fontSize: 10,
+      fontFamily: 'Verdana, sans-serif',
+      text: item[5]
+    }).drawLayers();
+  });
+}
+
 $( document ).ready( function() {
   $('input').prop("disabled",true);
 
@@ -427,6 +457,10 @@ $( document ).ready( function() {
 
   //draw the editor background
   drawBackground();
+
+  updateNowIndicator();
+
+  var nowUpdater = setInterval( updateNowIndicator, 1000 );
 
   //get/show the hostname
   $.get( "/api/hostname", function( data ) {
@@ -484,7 +518,7 @@ $( document ).ready( function() {
 
   $('#timerList').on('click', '.timerEntryDelete', function() {
     if ( $(this).parent().index() != 0 ) {
-      //delete the clicked item 
+      //delete the clicked item
       switch ( currentChannel ) {
         case 0:
           channel1.splice( $(this).parent().index(), 1 );
@@ -505,14 +539,14 @@ $( document ).ready( function() {
       refreshCanvas();
       refreshTimerList();
     }
-  });      
-  
+  });
+
   $('#clearButton').on('click', function() {
     makeEmptyTimerList();
     refreshCanvas();
     refreshTimerList();
   });
-    
+
   $('#reloadButton').on('click', function() {
     readTimerFile( "/default.aqu" );
   });
@@ -550,7 +584,7 @@ $( document ).ready( function() {
         $('#hostName').load( '/api/loadtimers' );
       }
     };
-    request.send(formData);    
+    request.send(formData);
   });
 });
 </script>
