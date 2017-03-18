@@ -25,7 +25,8 @@ Click `Tools>ESP8266 Sketch Data Upload` to upload the files.<br><br>
 7. The first time Aquacontrol is installed it does not know your WiFi settings.<br>The controller starts a WiFi access point called 'aquacontrol'.<br>Connect via WiFi to the access point <br>You will need the pass phrase shown on the OLED screen.<br>Select your WiFi network from the list and provide the correct password.<br>The controller will reboot and try to log in on your WiFi network.
 
 8. If something went wrong with logging in, the accesspoint will be started again, but with a DIFFERENT PASSWORD!<br>Repeat step 7 to provide the correct WiFi network and password.<br>If the WiFi network and password are correct the controller will login.
-9. After WiFi login the controller will show the hostname and IP address on the OLED screen.<br>Navigate to IP or hostname -hostname access will require correct local DNS setup- and set up your controller.
+
+9. After WiFi login the controller will show the hostname and IP address on the OLED screen.<br>Navigate to IP or hostname and set up your controller.<br>Hostname access will require correct local DNS setup
 
 ## Features:
 - 128*64 OLED support via I2C. 
@@ -33,7 +34,6 @@ Click `Tools>ESP8266 Sketch Data Upload` to upload the files.<br><br>
 - Web interface.
 - Hostname can be set.
 - Acces point mode to setup WiFi connection.
-
 
 This software started as a project on the original Arduino Uno, but due to RAM size and lack of network connectivity on the Arduino, the hardware was changed to a WeMos D1 mini.
 
