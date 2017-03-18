@@ -176,6 +176,7 @@ void setupWebServer() {
       }
       PWMfrequency = tempPWMfrequency;
       analogWriteFreq( PWMfrequency );
+      updateChannels();
       writeConfigFile();
     }
     webServer.send( 200, FPSTR( textplainHEADER ), String( PWMfrequency ) );
