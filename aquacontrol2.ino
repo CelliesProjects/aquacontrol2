@@ -40,7 +40,10 @@ bool channelLogging = false; //logging of percentage % values over Serial. Usefu
 const byte numberOfChannels         =  5  ;
 const byte maxTimers                =  50 ;
 
-unsigned int PWMdepth                =  PWMRANGE * 10;                //PWMRANGE defaults to 1023 on ESP8266 in Arduino IDE
+//pwm setup
+unsigned int PWMdepth                =  10240;                        //PWMRANGE defaults to 1023 on ESP8266 in Arduino IDE
+unsigned int minPWMdepth             =  1024;
+unsigned int maxPWMdepth             =  10240;
 int PWMfrequency                     =  400;                          //in Hz
 
 //the beef of the program is constructed here
@@ -153,8 +156,9 @@ void setup() {
     } else if ( lineBuf.startsWith( F( "pwmdepth" ) ) ) {
       valueStr = lineBuf.substring(lineBuf.indexOf( F( "=" ) ) + 1 );
       unsigned int newPWMdepth = valueStr.toInt();
-      if ( newPWMdepth >= 1024 && newPWMdepth <= 10230 ) {
+      if ( newPWMdepth >= minPWMdepth && newPWMdepth <= maxPWMdepth ) {
         PWMdepth = newPWMdepth;
+        analogWriteRange( PWMdepth );
         Serial.print( F( "PWM depth set to " ) ); Serial.println( PWMdepth );
       }
 

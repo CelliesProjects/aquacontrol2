@@ -184,11 +184,13 @@ void setupWebServer() {
   webServer.on( "/api/pwmdepth", []() {
     if ( webServer.arg( "newpwmdepth" ) != "" ) {
       unsigned int newPWMdepth = webServer.arg( "newpwmdepth" ).toInt();
-      if ( newPWMdepth < 1024 || newPWMdepth > 10240 ) {
+      if ( newPWMdepth < minPWMdepth || newPWMdepth > maxPWMdepth ) {
         webServer.send( 200, FPSTR( textplainHEADER ), F( "ERROR - Invalid PWM depth" ) );
         return;
       }
       PWMdepth = newPWMdepth;
+      analogWriteRange( PWMdepth );
+      updateChannels();
       writeConfigFile();
     }
     webServer.send( 200, FPSTR( textplainHEADER ), String( PWMdepth ) );
