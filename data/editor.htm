@@ -419,29 +419,28 @@ function readTimerFile( filename ) {
     });
 }
 
-
 $( document ).ready( function() {
   $('input').prop("disabled",true);
+
   //set correct height for jCanvas - get the width/height set in html
   $('#editorCanvas').width( $('#editorCanvas').width() ).height( $('#editorCanvas').height() );
+
+  //draw the editor background
+  drawBackground();
 
   //get/show the hostname
   $.get( "/api/hostname", function( data ) {
     $( "#hostName" ).html( data );
     document.title = data + " Editor";
     hostName = data;
+    //read the default timer file
+    readTimerFile( "/default.aqu" );
   });
-
-  //draw the editor background
-  drawBackground();
-
-  //read the default timer file
-  readTimerFile( "/default.aqu" );
 
   ///end of setup
 
-
   //event handlers
+
   $('#editorCanvas').on( 'mousemove', showMousePosition );
 
   $('#editorCanvas').on( 'mouseout', function() {

@@ -174,10 +174,8 @@ function deleteFile(file){
   if ( confirm( "Are you sure you want to delete '" + file + "'?" ) ) {
     $.get( file + "?action=delete" , function( data ) {
        console.log( data );
+       readFiles();
     });    
-    readFiles();
-  } else {
-      // Do nothing!
   }
 }
 
@@ -200,9 +198,8 @@ $(document).ready( function() {
   var diskSpace;
   $.get( "/api/diskspace", function( data ) {
     diskSpace = parseInt( data );
+    readFiles();
   });
-
-  readFiles();
 
   $( '#fileList' ).on( 'click', '.deleteButton', function() {
     deleteFile( this.getAttribute( "data-filename" ) );

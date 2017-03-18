@@ -144,8 +144,6 @@ function updateBargraph() {
 
 $( document ).ready( function() {
 
-  updateBargraph();
-
   //disable the links
   $( 'a' ).bind( 'click', function( e ){
     e.preventDefault(); //will be unbound by first call to updateBarGraph
@@ -156,6 +154,7 @@ $( document ).ready( function() {
   $.get( "/api/hostname", function( data ) {
     $( "#hostName" ).html( data );
     document.title = data;
+    updateBargraph();
   });
 
 //event handlers
