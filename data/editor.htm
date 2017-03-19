@@ -155,8 +155,8 @@ function map( x,  in_min,  in_max,  out_min,  out_max)
 
 function timeInSeconds(timeAsString) {        //  input formatted like 12:34:56 -
                                               // returns value only to full  minute accuracy eg. slashes seconds
-  var thisTimeInSeconds = timeAsString.slice(0,2) * 3600;
-  thisTimeInSeconds += timeAsString.slice(3,5) * 60;
+  var thisTimeInSeconds = timeAsString.slice(0,timeAsString.indexOf(':') ) * 3600;
+  thisTimeInSeconds += timeAsString.slice( timeAsString.indexOf(':') + 1,timeAsString.indexOf(':') + 3) * 60;
   return thisTimeInSeconds
 }
 
@@ -428,7 +428,6 @@ function readTimerFile( filename ) {
 function updateNowIndicator() {
   $.get( "/api/getpercentage", function( data ) {
     var item = data.split( "," );
-    //console.log(  item[5]  );
     var offSet = map( timeInSeconds( item[5] ), 0,86400, sideBorder, $('#editorCanvas').width() - sideBorder );
     $('#editorCanvas').removeLayer( 'nowIndicator' ).removeLayer( 'nowTextIndicator' );
     $('#editorCanvas').drawLine({
