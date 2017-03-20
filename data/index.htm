@@ -94,7 +94,7 @@ p{
 <body>
 <script>
 function updateBargraph() {
-  $.get( '/api/getpercentage', function( data ) {
+  $.get( '/api/status', function( data ) {
     var channelValue = data.split( ',' );
     for ( i=0; i < 5; i++ ) {
       $( '.bar:eq(' + i + ')' ).css( 'height', String( channelValue[i]*.75) + '%' ).css( 'opacity', Math.max( channelValue[i]/100, 0.15 ) );

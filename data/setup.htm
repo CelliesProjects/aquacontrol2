@@ -188,7 +188,7 @@ $(document).ready( function() {
             $('#timeZoneValue').html( "UTC" + data );
           }
 
-          $.get("/api/getpercentage",function( data ) {
+          $.get("/api/status",function( data ) {
             var item = data.split(',');
             $('#lightStatus').html( item[6] );
 
