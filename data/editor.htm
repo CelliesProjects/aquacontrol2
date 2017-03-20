@@ -102,6 +102,15 @@ input[type="button"]:hover {
 .timerEntryDelete:hover{
   background:red;
 }
+
+.earlierButton, .laterButton{
+  vertical-align:text-bottom;
+}
+
+.itemValue{
+  width:80px;
+  display:inline-block;
+}
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jcanvas/16.7.3/jcanvas.js"></script>
@@ -211,7 +220,7 @@ function addTimer( thisChannel, thisTime, currentPercentage ){
     console.log( "Timer already set" );
     return;
   }
-  thisChannel.splice( insertPosition, 0, { "time": thisTime.toString(), "percentage": currentPercentage.toString() } );
+  thisChannel.splice( insertPosition, 0, { "time": thisTime, "percentage": currentPercentage } );
   refreshCanvas();
   refreshTimerList();
 }
@@ -245,11 +254,11 @@ function fillTimerList( thisChannel ) {
   //fill the list with the current channel timers
   $('#timerList').html( "" );
   for (var  thisTimer = 0; thisTimer < thisChannel.length; thisTimer++ ) {
-    //
-    $('#timerList').append( "<div class=\"timerEntry\"><p class=\"timerEntryTime\">" +
+    $('#timerList').append( "<div class=\"timerEntry\"><p class=\"timerEntryTime\"><button class=\"earlierButton\"><</button><span class=\"itemValue\">" +
                             formattedTime( thisChannel[thisTimer].time ).slice(0,5) +
-                            "</p><p class=\"timerEntryPercentage\">" +  parseInt( thisChannel[thisTimer].percentage  ) +
-                            "%</p><p class=\"timerEntryDelete\">DELETE</div>" );
+                            "</span><button class=\"laterButton\">></button></p><p class=\"timerEntryPercentage\"><button class=\"downButton\">&darr;</button><span class=\"itemValue\">" +
+                            parseInt( thisChannel[thisTimer].percentage  ) +
+                            "%</span><button class=\"upButton\">&uarr;</button></p><p class=\"timerEntryDelete\">DELETE</div>" );
   }
 }
 
@@ -392,19 +401,19 @@ function readTimerFile( filename ) {
         }
         switch ( parseInt( currentReadChannel ) ) {
           case 0:
-            channel1.push( {'time':thisTimer[0], 'percentage':thisTimer[1]});
+            channel1.push( {'time':parseInt(thisTimer[0]), 'percentage':parseInt(thisTimer[1])});
             break;
           case 1:
-            channel2.push( {'time':thisTimer[0], 'percentage':thisTimer[1]});
+            channel2.push( {'time':parseInt(thisTimer[0]), 'percentage':parseInt(thisTimer[1])});
             break;
           case 2:
-            channel3.push( {'time':thisTimer[0], 'percentage':thisTimer[1]});
+            channel3.push( {'time':parseInt(thisTimer[0]), 'percentage':parseInt(thisTimer[1])});
             break;
           case 3:
-            channel4.push( {'time':thisTimer[0], 'percentage':thisTimer[1]});
+            channel4.push( {'time':parseInt(thisTimer[0]), 'percentage':parseInt(thisTimer[1])});
             break;
           case 4:
-            channel5.push( {'time':thisTimer[0], 'percentage':thisTimer[1]});
+            channel5.push( {'time':parseInt(thisTimer[0]), 'percentage':parseInt(thisTimer[1])});
         }
       }
       refreshCanvas();
@@ -588,6 +597,205 @@ $( document ).ready( function() {
     };
     request.send(formData);
   });
+
+  $('#timerList').on('click', '.earlierButton' , function(){
+    console.log( "Current Channel: " + currentChannel );
+    //dont handle first timer!
+    if ( $(this).parents('.timerEntry' ).index() != 0 ) {
+      console.log( "Timer " + $(this).parents('.timerEntry' ).index() + " clicked" );
+      //change the timer if it is bigger than the previous timer + 1 minute
+      var thisTimer = $(this).parents('.timerEntry' ).index();
+      switch ( currentChannel + 1 ) {
+        case 1:
+          if ( channel1[thisTimer].time - 60 > channel1[thisTimer - 1].time ) {
+            channel1[thisTimer].time = channel1[thisTimer].time - 60;
+          }
+          break;
+        case 2:
+          if ( channel2[thisTimer].time - 60 > channel2[thisTimer - 1].time ) {
+            channel2[thisTimer].time = channel2[thisTimer].time - 60;
+          }
+          break;
+        case 3:
+          if ( channel3[thisTimer].time - 60 > channel3[thisTimer - 1].time ) {
+            channel3[thisTimer].time = channel3[thisTimer].time - 60;
+          }
+          break;
+        case 4:
+          if ( channel4[thisTimer].time - 60 > channel4[thisTimer - 1].time ) {
+            channel4[thisTimer].time = channel4[thisTimer].time - 60;
+          }
+          break;
+        case 5:
+          if ( channel5[thisTimer].time - 60 > channel5[thisTimer - 1].time ) {
+            channel5[thisTimer].time = channel5[thisTimer].time - 60;
+          }
+          break;
+        default:
+          //default
+      }
+      refreshCanvas();
+      refreshTimerList();
+    }
+  });
+
+  $('#timerList').on('click', '.laterButton' , function(){
+    console.log( "Current Channel: " + currentChannel );
+    //dont handle first timer!
+    if ( $(this).parents('.timerEntry' ).index() != 0 ) {
+      console.log( "Timer " + $(this).parents('.timerEntry' ).index() + " clicked" );
+      //change the timer if it is bigger than the previous timer - 1 minute
+      var thisTimer = $(this).parents('.timerEntry' ).index();
+      switch ( currentChannel + 1 ) {
+        case 1:
+          //last timer cannot be set later then 23:59
+          if ( thisTimer == channel1.length - 1 && channel1[thisTimer].time < 86400 - 60 ) {
+            console.log("last timer");
+            channel1[thisTimer].time = channel1[thisTimer].time + 60 ;
+            break;
+          }
+          if ( channel1[thisTimer].time < channel1[thisTimer + 1].time - 60) {
+            channel1[thisTimer].time = channel1[thisTimer].time + 60 ;
+          }
+          break;
+        case 2:
+          //last timer cannot be set later then 23:59
+          if ( thisTimer == channel2.length - 1 && channel2[thisTimer].time < 86400 - 60 ) {
+            console.log("last timer");
+            channel2[thisTimer].time = channel2[thisTimer].time + 60 ;
+            break;
+          }
+          if ( channel2[thisTimer].time < channel2[thisTimer + 1].time - 60) {
+            channel2[thisTimer].time = channel2[thisTimer].time + 60 ;
+          }
+          break;
+        case 3:
+          //last timer cannot be set later then 23:59
+          if ( thisTimer == channel3.length - 1 && channel3[thisTimer].time < 86400 - 60 ) {
+            console.log("last timer");
+            channel3[thisTimer].time = channel3[thisTimer].time + 60 ;
+            break;
+          }
+          if ( channel3[thisTimer].time < channel3[thisTimer + 1].time - 60) {
+            channel3[thisTimer].time = channel3[thisTimer].time + 60 ;
+          }
+          break;
+        case 4:
+          //last timer cannot be set later then 23:59
+          if ( thisTimer == channel4.length - 1 && channel4[thisTimer].time < 86400 - 60 ) {
+            console.log("last timer");
+            channel4[thisTimer].time = channel4[thisTimer].time + 60 ;
+            break;
+          }
+          if ( channel4[thisTimer].time < channel4[thisTimer + 1].time - 60) {
+            channel4[thisTimer].time = channel4[thisTimer].time + 60 ;
+          }
+          break;
+        case 5:
+          //last timer cannot be set later then 23:59
+          if ( thisTimer == channel5.length - 1 && channel5[thisTimer].time < 86400 - 60 ) {
+            console.log("last timer");
+            channel5[thisTimer].time = channel5[thisTimer].time + 60 ;
+            break;
+          }
+          if ( channel5[thisTimer].time < channel5[thisTimer + 1].time - 60) {
+            channel5[thisTimer].time = channel5[thisTimer].time + 60 ;
+          }
+          break;
+        default:
+          //default
+      }
+      refreshCanvas();
+      refreshTimerList();
+    }
+  });
+
+  $('#timerList').on('click','.downButton',function(){
+    console.log( $(this).parents('.timerEntry').index() );
+    var thisTimer = $(this).parents('.timerEntry').index();
+    switch ( currentChannel + 1) {
+      case 1:
+        if ( channel1[ thisTimer ].percentage > 0) {
+          channel1[ thisTimer ].percentage -= 1;
+          refreshCanvas();
+          refreshTimerList();
+        }
+        break;
+      case 2:
+        if ( channel2[ thisTimer ].percentage > 0) {
+          channel2[ thisTimer ].percentage -= 1;
+          refreshCanvas();
+          refreshTimerList();
+        }
+        break;
+      case 3:
+        if ( channel3[ thisTimer ].percentage > 0) {
+          channel3[ thisTimer ].percentage -= 1;
+          refreshCanvas();
+          refreshTimerList();
+        }
+        break;
+      case 4:
+        if ( channel4[ thisTimer ].percentage > 0) {
+          channel4[ thisTimer ].percentage -= 1;
+          refreshCanvas();
+          refreshTimerList();
+        }
+        break;
+      case 5:
+        if ( channel5[ thisTimer ].percentage > 0) {
+          channel5[ thisTimer ].percentage -= 1;
+          refreshCanvas();
+          refreshTimerList();
+        }
+        break;
+      default:
+    }
+  });
+
+  $('#timerList').on('click','.upButton',function(){
+    console.log( $(this).parents('.timerEntry').index() );
+    var thisTimer = $(this).parents('.timerEntry').index();
+    switch ( currentChannel + 1) {
+      case 1:
+        if ( channel1[ thisTimer ].percentage < 100) {
+          channel1[ thisTimer ].percentage += 1;
+          drawChannel( channel1 , "channel1", 0 );
+          refreshTimerList();
+        }
+        break;
+      case 2:
+        if ( channel2[ thisTimer ].percentage < 100) {
+          channel2[ thisTimer ].percentage += 1;
+          drawChannel( channel2 , "channel1", 0 );
+          refreshTimerList();
+        }
+        break;
+      case 3:
+        if ( channel3[ thisTimer ].percentage < 100) {
+          channel3[ thisTimer ].percentage += 1;
+          drawChannel( channel3 , "channel1", 0 );
+          refreshTimerList();
+        }
+        break;
+      case 4:
+        if ( channel4[ thisTimer ].percentage < 100) {
+          channel4[ thisTimer ].percentage += 1;
+          drawChannel( channel4 , "channel1", 0 );
+          refreshTimerList();
+        }
+        break;
+      case 5:
+        if ( channel5[ thisTimer ].percentage < 100) {
+          channel5[ thisTimer ].percentage += 1;
+          drawChannel( channel5 , "channel1", 0 );
+          refreshTimerList();
+        }
+        break;
+      default:
+    }
+  });
+
 });
 </script>
 </body>
