@@ -13,9 +13,6 @@ html, body{
 	font-variant: small-caps;
   font-size:20px;
 }
-body{
-  opacity:0.4;
-}
 
 a {
   color:black;
@@ -59,11 +56,33 @@ input[type="button"]:hover {
   user-select: none;
 }
 
+#confirmWindow{
+  box-shadow: 0px 0px 13px 0px rgba(0,0,0,1);
+  border:solid 1px black;  position:absolute;
+  border-radius: 15px;
+  overflow:hidden;
+  width:500px;
+  height:400px;
+  background:beige;
+  margin: auto;
+  top: 0; left: 0; bottom: 0; right: 0;
+  display:none;
+}
+
+#confirmMessage{
+  padding:20px;
+}
+
 .shadowedBox {
   box-shadow: 0px 0px 13px 0px rgba(0,0,0,1);
   border:solid 1px black;
   border-radius: 15px;
   margin:10px 0;
+  overflow:hidden;
+}
+
+.buttonBar{
+  background:beige;
 }
 
 #hostName{
@@ -74,7 +93,7 @@ input[type="button"]:hover {
 }
 
 #timerList{
-  height: 300px;
+  height: 150px;
   width: 600px;
   background: beige;
   margin: auto;
@@ -110,7 +129,7 @@ input[type="button"]:hover {
 }
 
 .itemValue{
-  width:80px;
+  width:60px;
   display:inline-block;
 }
 </style>
@@ -118,16 +137,19 @@ input[type="button"]:hover {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jcanvas/16.7.3/jcanvas.js"></script>
 </head>
 <body>
+<div id="confirmWindow"><div id="confirmMessage">A message</div></div>
 <p class="shadowedBox"  style="background-color:beige;"><a class="systemLink" href="/">HOME</a><a class="systemLink" href="setup">SETUP</a><a href="filemanager">FILE MANAGER</a></p>
 <p id="hostName" class="shadowedBox">&nbsp;</p>
-<p class="shadowedBox"  style="background-color:beige;"><input id="clearButton" type="button" value="CLEAR"><input id="reloadButton" type="button" value="RELOAD"><input type="button" id="uploadButton" value="UPLOAD"></p>
-<div id="wrapper" class="shadowedBox">
+<div class="shadowedBox" style="background-color:black;">
+<p class="buttonBar"><input id="clearButton" type="button" value="CLEAR"><input id="reloadButton" type="button" value="RELOAD"><input type="button" id="uploadButton" value="UPLOAD"></p>
 <canvas id="editorCanvas" width="1000px" height="200px"></canvas>
 </div>
-<div class="shadowedBox"  style="background-color:beige;"><input class="channelButton" type="button" value="CHANNEL 1"><input class="channelButton" type="button" value="CHANNEL 2"><input class="channelButton" type="button" value="CHANNEL 3"><input class="channelButton" type="button" value="CHANNEL 4"><input class="channelButton" type="button" value="CHANNEL 5"><hr><input type="button" value="<<"><input type="button" value="<"><input type="button" value=">"><input type="button" value=">>"></div>
-<div class="shadowedBox"><p id="channelTitle">Select a channel.</p><div id="timerList"></div></div>
+<div class="shadowedBox">
+<p class="buttonBar">
+<input class="channelButton" type="button" value="CHANNEL 1"><input class="channelButton" type="button" value="CHANNEL 2"><input class="channelButton" type="button" value="CHANNEL 3"><input class="channelButton" type="button" value="CHANNEL 4"><input class="channelButton" type="button" value="CHANNEL 5">
+</p>
+<p id="channelTitle">Select a channel.</p><div id="timerList"></div>
 <script>
-
 var sideBorder = 42; //pixels
 var updownBorder = 30; //pixels
 var hostName;
@@ -256,11 +278,22 @@ function fillTimerList( thisChannel ) {
   //fill the list with the current channel timers
   $('#timerList').html( "" );
   for (var  thisTimer = 0; thisTimer < thisChannel.length; thisTimer++ ) {
-    $('#timerList').append( "<div class=\"timerEntry\"><p class=\"timerEntryTime\"><button class=\"earlierButton\"><</button><span class=\"itemValue\">" +
-                            formattedTime( thisChannel[thisTimer].time ).slice(0,5) +
-                            "</span><button class=\"laterButton\">></button></p><p class=\"timerEntryPercentage\"><button class=\"downButton\">&darr;</button><span class=\"itemValue\">" +
-                            parseInt( thisChannel[thisTimer].percentage  ) +
-                            "%</span><button class=\"upButton\">&uarr;</button></p><p class=\"timerEntryDelete\">DELETE</div>" );
+    var itemHTML = "<div class=\"timerEntry\"><p class=\"timerEntryTime\">";
+    if (thisTimer != 0 ) {
+      itemHTML += "<button class=\"earlierButton\"><</button>";
+    }
+    itemHTML += "<span class=\"itemValue\">" + formattedTime( thisChannel[thisTimer].time ).slice(0,5) + "</span>";
+    if (thisTimer != 0 ) {
+      itemHTML += "<button class=\"laterButton\">></button>";
+    }
+    itemHTML += "<p class=\"timerEntryPercentage\"><button class=\"downButton\">&darr;</button><span class=\"itemValue\">" +
+                parseInt( thisChannel[thisTimer].percentage  ) +
+                "%</span><button class=\"upButton\">&uarr;</button></p>";
+    if (thisTimer != 0 ) {
+      itemHTML += "<p class=\"timerEntryDelete\">DELETE</p>";
+    }
+    itemHTML += "</div>";
+    $('#timerList').append( itemHTML );
   }
 }
 
@@ -549,6 +582,7 @@ $( document ).ready( function() {
           channel5.splice( $(this).parent().index(), 1 );
           break;
       }
+      $('#editorCanvas').removeLayer( 'timerLayer' ).drawLayers();
       refreshCanvas();
       refreshTimerList();
     }
@@ -565,6 +599,10 @@ $( document ).ready( function() {
   });
 
   $('#uploadButton').on('click', function() {
+    if (confirm("Uploading these timers will overwrite current timers.\nAre you sure?") != true) {
+      return;
+    }
+
     var formData = new FormData();
     //make a valid file from the cahnneldata
     var fileData = "[0]\n";
@@ -592,10 +630,7 @@ $( document ).ready( function() {
     var request = new XMLHttpRequest();
     request.open("POST", "/api/upload");
     request.onload = function( data ) {
-      if ( confirm( "Timers uploaded. Apply now?\n\nIf you choose cancel, the new settings\nwill not be visible." ) ) {
-        //apply the default timers from SPIFFS;
-        $('#hostName').load( '/api/loadtimers' );
-      }
+      $('#hostName').load( '/api/loadtimers' );
     };
     request.send(formData);
   });
@@ -796,6 +831,45 @@ $( document ).ready( function() {
         break;
       default:
     }
+  });
+
+  $('#timerList').on('mouseenter','.timerEntry',function(){
+    //highlight the timer
+    var timeOffset;
+    switch ( currentChannel + 1 ) {
+      case 1:
+        timeOffset = map( channel1[$(this).index()].time, 0,86400, sideBorder, $('#editorCanvas').width() - sideBorder );
+        break;
+      case 2:
+        timeOffset = map( channel2[$(this).index()].time, 0,86400, sideBorder, $('#editorCanvas').width() - sideBorder );
+        break;
+      case 3:
+        timeOffset = map( channel3[$(this).index()].time, 0,86400, sideBorder, $('#editorCanvas').width() - sideBorder );
+        break;
+      case 4:
+        timeOffset = map( channel4[$(this).index()].time, 0,86400, sideBorder, $('#editorCanvas').width() - sideBorder );
+        break;
+      case 5:
+        timeOffset = map( channel5[$(this).index()].time, 0,86400, sideBorder, $('#editorCanvas').width() - sideBorder );
+        break;
+      default:
+    }
+    $('#editorCanvas').addLayer({
+      //describe the layer
+      type: "line",
+      layer: true,
+      name: 'timerLayer',
+      strokeStyle: 'yellow',
+      strokeWidth: 1.7,
+      strokeDash: [2],
+      strokeDashOffset: 0,
+      x1: timeOffset, y1: updownBorder,
+      x2: timeOffset, y2: $('#editorCanvas').height() - updownBorder
+    }).drawLayers();
+  });
+
+  $('#timerList').on('mouseleave','.timerEntry',function(){
+    $('#editorCanvas').removeLayer( 'timerLayer' ).drawLayers();
   });
 
 });
