@@ -87,6 +87,7 @@ void startAccessPoint() {
   Serial.println( "Access point " + apName + " created.");
   Serial.print( "IP address: " );
   Serial.println( accessPointIP );
+  Serial.println( "Access point password: " + pinStr );
 
   webServer.on( "/", []() {
     webServer.send_P ( 200, "text/html", portalHTML );

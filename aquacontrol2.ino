@@ -135,6 +135,12 @@ void setup() {
   }
   Serial.println( F( "WiFi connected." ) );
 
+  OLED.clear();
+  OLED.drawString( 64, 10, F( "SPIFFS" ) );
+  OLED.drawString( 64, 30, F( "setup..." ) );
+  OLED.display();
+  Serial.println( F( "SPIFFS disc setup..." ) );
+
   // check SPIFFS and if config file is present
   // apply the settings from the configfile
   // invalid settings are silently ignored

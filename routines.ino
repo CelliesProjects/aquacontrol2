@@ -109,7 +109,7 @@ bool defaultTimersAreLoaded() {                                                 
   //return false on error
   File f = SPIFFS.open( "/default.aqu", "r" );
   if (!f) {
-    Serial.println( F("ERROR: No SPIFFS file!") );
+    Serial.println( F("No default timer file found.") );
     return false;
   }
   String lineBuf;
