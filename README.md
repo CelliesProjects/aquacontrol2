@@ -5,7 +5,6 @@ Aquacontrol2 is software for a 5 channel LED controller based on a WeMos D1 mini
 
 With this software and the custom hardware, you can control 5 LED strips and program the light output of each channel via a web interface.
 
-
 ## Installation:
 To install the software on a WeMos D1 mini, you will need the Arduino IDE with the ESP8266 boards -[2.3.0](https://github.com/esp8266/Arduino/releases/tag/2.3.0)- already added to the board manager.
 
@@ -54,3 +53,15 @@ This new version is setup specifically for the WeMos D1 and some custom hardware
 
 [esp8266-oled-ssd1306 3.2.5](https://github.com/squix78/esp8266-oled-ssd1306/tree/3.2.5)
 
+## Screenshots:
+### Index page:
+![index](https://cloud.githubusercontent.com/assets/24290108/24398142/ccb0f268-13a8-11e7-83fa-fe5ad6e291da.png)
+
+### Timer editor:
+![editor](https://cloud.githubusercontent.com/assets/24290108/24397893/e37401a8-13a7-11e7-9ad7-7dc72b33d04b.png)
+
+### Device setup:
+![setup](https://cloud.githubusercontent.com/assets/24290108/24398262/275ced3e-13a9-11e7-9a75-ccb7ed953f80.png)
+
+### File manager:
+![filemanager](https://cloud.githubusercontent.com/assets/24290108/24398316/552862ac-13a9-11e7-893d-b6e577138219.png)
