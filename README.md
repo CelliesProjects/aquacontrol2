@@ -51,7 +51,12 @@ This new version is setup specifically for the WeMos D1 and some custom hardware
 
 ## External libraries used:
 
-[esp8266-oled-ssd1306 3.2.5](https://github.com/squix78/esp8266-oled-ssd1306/tree/3.2.5)
+Time library [Time 1.5](https://github.com/PaulStoffregen/Time/archive/v1.5.zip) on GitHub.
+
+OLED library [esp8266-oled-ssd1306 3.2.5](https://github.com/squix78/esp8266-oled-ssd1306/archive/3.2.5.zip)
+ on GitHub.
+ 
+You can install the libraries by choosing `Sketch->Include library->Add .ZIP library` in the Arduino IDE.
 
 ## Screenshots:
 ### Index page:
