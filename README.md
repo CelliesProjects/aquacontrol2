@@ -5,8 +5,26 @@ Aquacontrol2 is software for a 5 channel LED controller based on a WeMos D1 mini
 
 With this software and the custom hardware, you can control 5 LED strips and program the light output of each channel via a web interface.
 
+## Features:
+- 128*64 OLED support via I2C.
+- 5 channels with 50 timers.
+- Web interface.
+- Hostname can be set.
+- Acces point mode to setup WiFi connection.
+
+## External libraries used:
+
+Time library [Time 1.5](https://github.com/PaulStoffregen/Time/archive/v1.5.zip) on GitHub.
+
+OLED library [esp8266-oled-ssd1306 3.2.5](https://github.com/squix78/esp8266-oled-ssd1306/archive/3.2.5.zip)
+ on GitHub.
+
+You can install the libraries by choosing `Sketch->Include library->Add .ZIP library` in the Arduino IDE.
+
 ## Installation:
+
 To install the software on a WeMos D1 mini, you will need the Arduino IDE with the ESP8266 boards -[2.3.0](https://github.com/esp8266/Arduino/releases/tag/2.3.0)- already added to the board manager.
+<br>The external `Time` and `esp8266-oled-ssd1306` libraries also have to be installed.
 
 [How to add ESP8266 to Arduino IDE.](http://wasietsmet.nl/esp8266/arduino-ide-1-8-1-setup-voor-esp8266/)
 
@@ -27,13 +45,6 @@ Click `Tools>ESP8266 Sketch Data Upload` to upload the files.<br><br>
 
 9. After WiFi login the controller will show the hostname and IP address on the OLED screen.<br>Navigate to IP or hostname and set up your controller.<br>Hostname access will require correct local DNS setup
 
-## Features:
-- 128*64 OLED support via I2C. 
-- 5 channels with 50 timers.
-- Web interface.
-- Hostname can be set.
-- Acces point mode to setup WiFi connection.
-
 This software started as a project on the original Arduino Uno, but due to RAM size and lack of network connectivity on the Arduino, the hardware was changed to a WeMos D1 mini.
 
 This new version is setup specifically for the WeMos D1 and some custom hardware, mainly consisting of 5 IRLZ44N mosfets, some circuit board and a 128x64 monochrome OLED.
@@ -49,14 +60,6 @@ This new version is setup specifically for the WeMos D1 and some custom hardware
 - D6 Serial clock.
 - D7 Serial data.
 
-## External libraries used:
-
-Time library [Time 1.5](https://github.com/PaulStoffregen/Time/archive/v1.5.zip) on GitHub.
-
-OLED library [esp8266-oled-ssd1306 3.2.5](https://github.com/squix78/esp8266-oled-ssd1306/archive/3.2.5.zip)
- on GitHub.
- 
-You can install the libraries by choosing `Sketch->Include library->Add .ZIP library` in the Arduino IDE.
 
 ## Screenshots:
 ### Index page:
