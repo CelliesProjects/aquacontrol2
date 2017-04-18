@@ -1,8 +1,4 @@
 
-
-time_t nextOLEDswitch = now() + 5;                   //switch between showing IP or hostname every 5 seconds
-bool showIP = true;
-
 void updateOLED() {
   if ( programOverride ) {
     OLED.invertDisplay();
@@ -29,6 +25,8 @@ void updateOLED() {
   }
   OLED.drawString( DISPLAY_WIDTH / 2, 0, formattedTime( localTime() ) );
   OLED.setFont(ArialMT_Plain_10);
+  static time_t nextOLEDswitch = now() + 5;
+  static bool showIP = true;
   if ( now() >= nextOLEDswitch ) {
     showIP = !showIP;
     nextOLEDswitch = now() + 5;
