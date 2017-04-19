@@ -129,7 +129,7 @@ input[type="range"]{
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 </head>
 <body>
-<p class="shadowedBox"  style="background-color:beige;"><a class="systemLink" href="/">HOME</a><a class="systemLink" href="editor">EDITOR</a><a class="systemLink" href="filemanager">FILE MANAGER</a></p>  
+<p class="shadowedBox"  style="background-color:beige;"><a class="systemLink" href="/">HOME</a><a class="systemLink" href="editor">EDITOR</a><a class="systemLink" href="filemanager">FILE MANAGER</a></p>
 <div id="titleBox" class="shadowedBox"><h3>DEVICE SETUP</h3></div>
 <div class="shadowedBox">
   <h3>LIGHT CONTROL</h3>
@@ -149,6 +149,7 @@ input[type="range"]{
 <div class="shadowedBox">
   <div class="settingsBox">
     <p class="item">SYSTEM START:&nbsp;&nbsp;<span id="bootTime"></span></p>
+    <p class="item">LAST NTP SYNC:&nbsp;&nbsp;<span id="lastSyncTime"></span></p>
     <p class="item">FREE DISK SPACE:&nbsp;&nbsp;<span id="freeDiskSpace"></span></p>
   </div>
 </div>
@@ -163,11 +164,11 @@ function formatBytes( bytes, decimals ) {
   return parseFloat( ( bytes / Math.pow( k, i ) ).toFixed( dm ) ) + ' ' + sizes[i];
 }
 
-$(document).ready( function() {  
+$(document).ready( function() {
 
   //disable inputs until all values are loaded
   $('input').prop('disabled', true);
-  //load the items one by one   
+  //load the items one by one
   $.get( "/api/boottime", function( data ) {
     var bootDate = new Date( data * 1000 );
     $('#bootTime').html( bootDate.toLocaleString() );
@@ -194,15 +195,21 @@ $(document).ready( function() {
 
             $.get("/api/ntpinterval",function( data ) {
               $('#ntpUpdateSlider').val( data );
-              $('#ntpUpdateValue').html( data / 3600 + "h" );    
+              $('#ntpUpdateValue').html( data / 3600 + "h" );
 
               $.get("/api/diskspace",function( data ) {
                 $('#freeDiskSpace').html( formatBytes( data ) );
 
                 $.get("/api/hostname",function( data ) {
                   $('#hostNameInput').val(  data  );
-                  $('input').prop('disabled', false); //and finally enable the inputs again
-                  $('body').css('opacity','1'); // and show the page
+
+                  $.get("/api/ntplastsynctime",function( data ) {
+                    var lastSync = new Date( data * 1000 );
+                    $('#lastSyncTime').html( lastSync.toLocaleString() );
+                    $('input').prop('disabled', false); //and finally enable the inputs again
+                    $('body').css('opacity','1'); // and show the page
+                  });
+
                 });
 
               });
@@ -210,9 +217,9 @@ $(document).ready( function() {
             });
 
           });
- 
+
         });
- 
+
       });
 
     });
@@ -221,19 +228,19 @@ $(document).ready( function() {
 
   //event handlers
 
-  $('#lightsOn').on('click', function() {   
+  $('#lightsOn').on('click', function() {
     $.get( "/api/lightson", function( data ) {
       $("#lightStatus").html( data );
     });
   });
 
-  $('#lightsOff').on('click', function() {   
+  $('#lightsOff').on('click', function() {
     $.get( "/api/lightsoff", function( data ) {
       $('#lightStatus').html( data );
     });
   });
 
-  $('#lightsProgram').on('click', function() {   
+  $('#lightsProgram').on('click', function() {
     $.get( "/api/lightsprogram", function( data ) {
       $('#lightStatus').html( data );
     });
@@ -261,7 +268,7 @@ $(document).ready( function() {
   $('#pwmDepthSlider').on('input', function( ) {
     $('#pwmDepthValue').html( $(this).val() );
   });
-  
+
   $('#pwmDepthSlider').on('change', function() {
     $.get( "/api/pwmdepth?newpwmdepth=" + $(this).val(), function( data ) {
       if ( data == 'ERROR - Invalid PWM depth' ) {
@@ -287,14 +294,22 @@ $(document).ready( function() {
       }
     });
   });
-  
+
   $('#ntpUpdateSlider').on('change', function() {
-    $.get( '/api/ntpinterval?newntpinterval=' + $(this).val() );
+    $.get( '/api/ntpinterval?newntpinterval=' + $(this).val(),function() {
+      $.get("/api/ntplastsynctime",function( data ) {
+        var lastSync = new Date( data * 1000 );
+        $('#lastSyncTime').html( lastSync.toLocaleString() );
+      });
+    });
   });
 
   $('#ntpUpdateSlider').on('input', function( ) {
     $('#ntpUpdateValue').html( $(this).val() / 3600  + "h");
   });
+
+
+
 
 });
 </script>
