@@ -113,12 +113,12 @@ input{
 }
 
 input[type="file"] button{
-  height:30px;  
+  height:30px;
 }
 
 input[type="file"]{
   background-color:beige;
-  height:30px;  
+  height:30px;
 }
 
 input[type="button"]{
@@ -142,9 +142,10 @@ progress{
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 </head>
 <body>
-<p class="shadowedBox"  style="background-color:beige;"><a class="systemLink" href="/">HOME</a><a class="systemLink" href="setup">SETUP</a><a class="systemLink" href="editor">EDITOR</a></p>  
+<p class="shadowedBox"  style="background-color:beige;"><a class="systemLink" href="/">HOME</a><a class="systemLink" href="setup">SETUP</a><a class="systemLink" href="editor">EDITOR</a></p>
 <div id="titleBox" class="shadowedBox">AQUACONTROL FILE MANAGER</div>
 <div id="fileBox" class="shadowedBox">
+  <p id="diskSpace">&nbsp;</p>
   <div id="fileList"></div>
   <div id="functionBox">
     <!--<input id="formatButton" type="button" value="FORMAT" />-->
@@ -175,7 +176,7 @@ function deleteFile(file){
     $.get( file + "?action=delete" , function( data ) {
        console.log( data );
        readFiles();
-    });    
+    });
   }
 }
 
@@ -188,18 +189,19 @@ function readFiles(){
       thisFile = item.split( "," );
       //console.log( thisFile );
       if ( thisFile[0].startsWith("/") ) { thisFile[0] = thisFile[0].substring( 1 ) };
-      $('#fileList').append( '<div class="fileEntry"><p class="fileName"><a href="' + 
+      $('#fileList').append( '<div class="fileEntry"><p class="fileName"><a href="' +
       thisFile[0] + '" target="_blank">' + thisFile[0] + '</a></p><p class="fileSize">' + thisFile[1] + '</p><p class="deleteButton" data-filename="' + thisFile[0] +'">DELETE</p></div>' );
+    });
+    $.get( "/api/diskspace", function( data ) {
+      diskSpace = parseInt( data );
+      $('#diskSpace').html( formatBytes( data ) + ' REMAINING' );
     });
   });
 }
 
 $(document).ready( function() {
   var diskSpace;
-  $.get( "/api/diskspace", function( data ) {
-    diskSpace = parseInt( data );
-    readFiles();
-  });
+  readFiles();
 
   $( '#fileList' ).on( 'click', '.deleteButton', function() {
     deleteFile( this.getAttribute( "data-filename" ) );
