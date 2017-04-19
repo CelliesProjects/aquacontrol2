@@ -67,9 +67,9 @@ time_t getTimefromNTP() {
     // Unix time starts on Jan 1 1970. In seconds, that's 2208988800:
     const unsigned long seventyYears = 2208988800UL;
     // subtract seventy years:
-    unsigned long epoch = secsSince1900 - seventyYears;
-    Serial.println( "NTP time stamp received @ " + formattedTime( epoch ) + " UTC");
-    return epoch;                                             // return the time
+    ntpLastSyncTime = secsSince1900 - seventyYears;
+    Serial.println( "NTP time stamp received @ " + formattedTime( ntpLastSyncTime ) + " UTC");
+    return ntpLastSyncTime;                                             // return the time
   } else {
     Serial.println( F("NTP sync failed.") );
     return 0;                                                 //return error code

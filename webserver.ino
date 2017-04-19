@@ -167,6 +167,10 @@ void setupWebServer() {
     webServer.send( 200, FPSTR( textplainHEADER ), String( ntpInterval ) );
   });
 
+  webServer.on( "/api/ntplastsynctime", []() {
+    webServer.send( 200, FPSTR( textplainHEADER ), String( ntpLastSyncTime ) );
+  });
+
   webServer.on( "/api/pwmfrequency", []() {
     if ( webServer.arg( "newpwmfrequency" ) != "" ) {
       int tempPWMfrequency = webServer.arg( "newpwmfrequency" ).toInt();

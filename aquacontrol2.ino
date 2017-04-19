@@ -27,6 +27,7 @@ int timeZone = 0;
 
 // NTP sync
 time_t ntpSyncTime;
+time_t ntpLastSyncTime;
 time_t ntpInterval = 86400;
 
 bool programOverride = false; // used for LIGHTS ON & LIGHTS OFF in webinterface
