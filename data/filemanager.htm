@@ -199,8 +199,10 @@ function readFiles(){
   });
 }
 
+var diskSpace;
+
 $(document).ready( function() {
-  var diskSpace;
+
   readFiles();
 
   $( '#fileList' ).on( 'click', '.deleteButton', function() {
