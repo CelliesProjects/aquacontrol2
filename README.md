@@ -39,11 +39,11 @@ Click `Tools>ESP8266 Sketch Data Upload` to upload the files.<br><br>
 
 ## First boot and setup:
 
-7. The first time Aquacontrol is installed it does not know your WiFi settings.<br>First the controller will try to connect to the last known network for 15 seconds. If this fails the controller starts a WiFi access point called 'aquacontrol'.<br>Connect your WiFi -phone, tablet- to the access point.<br>You will need the pass phrase shown on the OLED screen.<br>Once logged in, select your WiFi network from the list and provide your WiFi password.<br>After entering your password the controller will reboot and try to log in on your WiFi network.
+1. The first time Aquacontrol is installed it does not know your WiFi settings.<br>First the controller will try to connect to the last known network for 15 seconds. If this fails the controller starts a WiFi access point called 'aquacontrol'.<br>Connect your WiFi -phone, tablet- to the access point.<br>You will need the pass phrase shown on the OLED screen.<br>Once logged in, select your WiFi network from the list and provide your WiFi password.<br>After entering your password the controller will reboot and try to log in on your WiFi network.
 
-8. If something goes wrong with logging in, the accesspoint will be started again, but with a DIFFERENT PASSWORD! The new password is shown on OLED and Serial.<br>Repeat the first step to provide the correct WiFi network and password.<br>If the WiFi network and password are correct the controller will login.
+2. If something goes wrong with logging in, the accesspoint will be started again, but with a DIFFERENT PASSWORD! The new password is shown on OLED and Serial.<br>Repeat the first step to provide the correct WiFi network and password.<br>If the WiFi network and password are correct the controller will login.
 
-9. After WiFi login the controller will show the hostname and IP address on the OLED screen.<br>Navigate to IP or hostname and set up your controller.<br>Hostname access will require correct local DNS setup
+3. After WiFi login the controller will show the hostname and IP address on the OLED screen.<br>Navigate to IP or hostname and set up your controller.<br>Hostname access will require correct local DNS setup
 
 ## External libraries:
 
