@@ -6,60 +6,74 @@ Aquacontrol2 is software for a 5 channel LED controller based on a WeMos D1 mini
 With this software and the custom hardware, you can control 5 LED strips and program the light output of each channel via a web interface.
 
 ## Features:
-- 128*64 OLED support via I2C.
-- 5 channels with 50 timers.
-- Web interface.
-- Hostname can be set.
-- Acces point mode to setup WiFi connection.
+* 128*64 OLED support via I2C.
 
-## External libraries used:
+* 5 channels with 50 timers.
 
-Time library [Time 1.5](https://github.com/PaulStoffregen/Time/archive/v1.5.zip) on GitHub.
+* Web interface.
 
-OLED library [esp8266-oled-ssd1306 3.2.5](https://github.com/squix78/esp8266-oled-ssd1306/archive/3.2.5.zip)
- on GitHub.
+* Hostname can be set.
 
-You can install the libraries by choosing `Sketch->Include library->Add .ZIP library` in the Arduino IDE.
+* Acces point mode to setup WiFi connection.
 
 ## Installation:
 
 To install the software on a WeMos D1 mini, you will need the Arduino IDE with the ESP8266 boards -[2.3.0](https://github.com/esp8266/Arduino/releases/tag/2.3.0)- already added to the board manager.
-<br>The external `Time` and `esp8266-oled-ssd1306` libraries also have to be installed.
+<br>The external `Time` , `esp8266-oled-ssd1306` and `Dallas` libraries also have to be installed. 
 
-[How to add ESP8266 to Arduino IDE.](http://wasietsmet.nl/esp8266/arduino-ide-1-8-1-setup-voor-esp8266/)
-
-With the IDE successfully compiling ESP8266 code just follow these steps:
+With the IDE successfully compiling ESP8266 code and all libs installed, just follow these steps:
 
 1. Download and unpack the zip file.
+
 2. Rename the folder you just unzipped to '`aquacontrol2`'. You can skip this step, but the Arduino IDE will moan about file and foldernames.
+
 3. Open the sketch in the Arduino IDE.
+
 4. Use the upload button to compile and upload the sketch to the controller.
+
 5. Upload the html files to the controller.<br>
 Click `Tools>ESP8266 Sketch Data Upload` to upload the files.<br><br>
 ![arduinoupload](https://cloud.githubusercontent.com/assets/24290108/23563262/367bfd80-0046-11e7-8170-59ab86d173d9.png) 
 
 6. After upload your controller should be good to go.
-7. The first time Aquacontrol is installed it does not know your WiFi settings.<br>The controller starts a WiFi access point called 'aquacontrol'.<br>Connect via WiFi to the access point <br>You will need the pass phrase shown on the OLED screen.<br>Select your WiFi network from the list and provide the correct password.<br>The controller will reboot and try to log in on your WiFi network.
 
-8. If something went wrong with logging in, the accesspoint will be started again, but with a DIFFERENT PASSWORD!<br>Repeat step 7 to provide the correct WiFi network and password.<br>If the WiFi network and password are correct the controller will login.
+## First boot and setup:
+
+7. The first time Aquacontrol is installed it does not know your WiFi settings.<br>First the controller will try to connect to the last known network for 15 seconds. If this fails the controller starts a WiFi access point called 'aquacontrol'.<br>Connect your WiFi -phone, tablet- to the access point.<br>You will need the pass phrase shown on the OLED screen.<br>Once logged in, select your WiFi network from the list and provide your WiFi password.<br>After entering your password the controller will reboot and try to log in on your WiFi network.
+
+8. If something goes wrong with logging in, the accesspoint will be started again, but with a DIFFERENT PASSWORD! The new password is shown on OLED and Serial.<br>Repeat the first step to provide the correct WiFi network and password.<br>If the WiFi network and password are correct the controller will login.
 
 9. After WiFi login the controller will show the hostname and IP address on the OLED screen.<br>Navigate to IP or hostname and set up your controller.<br>Hostname access will require correct local DNS setup
 
-This software started as a project on the original Arduino Uno, but due to RAM size and lack of network connectivity on the Arduino, the hardware was changed to a WeMos D1 mini.
+## External libraries:
 
-This new version is setup specifically for the WeMos D1 and some custom hardware, mainly consisting of 5 IRLZ44N mosfets, some circuit board and a 128x64 monochrome OLED.
+* Time library [1.5](https://github.com/PaulStoffregen/Time/archive/v1.5.zip) maintained by [PaulStoffregen](https://github.com/PaulStoffregen)
+
+* 128 x 64 OLED library [3.2.5](https://github.com/squix78/esp8266-oled-ssd1306/archive/3.2.5.zip) maintained by [squix78](https://github.com/squix78/)
+
+* Maxim ( or Dallas ) DS18B20 library [3.7.6](https://github.com/milesburton/Arduino-Temperature-Control-Library/archive/3.7.6.zip) maintained by [milesburton](https://github.com/milesburton/)
+
+You can install the libraries by choosing `Sketch->Include library->Add .ZIP library` in the Arduino IDE.
 
 ## Pins used:
-### Led output:
-- D1 channel 1, connected to mosfet gate.
-- D2 channel 2, connected to mosfet gate.
-- D3 channel 3, connected to mosfet gate.
-- D4 channel 4, connected to mosfet gate.
-- D5 channel 5, connected to mosfet gate.
-### I2C bus:
-- D6 Serial clock.
-- D7 Serial data.
+#### Led output:
+* D1 - channel 1, connected to mosfet gate.
 
+* D2 - channel 2, connected to mosfet gate.
+
+* D3 - channel 3, connected to mosfet gate.
+
+* D4 - channel 4, connected to mosfet gate.
+
+* D5 - channel 5, connected to mosfet gate.
+
+#### I2C bus:
+* D6 - Serial clock.
+
+* D7 - Serial data.
+
+#### One-Wire:
+* D8 - DS18B200 temperature sensor.
 
 ## Screenshots:
 ### Index page:
