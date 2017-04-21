@@ -3,6 +3,8 @@
 const char textplainHEADER[] PROGMEM = "text/plain";
 const char texthtmlHEADER[] PROGMEM = "text/html";
 
+char webBuffer[81];
+
 void setupWebServer() {
 
   ////////////////////////////////////////////////////////////////////////////////////
@@ -161,11 +163,13 @@ void setupWebServer() {
       }
       writeConfigFile();
     }
-    webServer.send( 200, FPSTR( textplainHEADER ), String( ntpInterval ) );
+    snprintf( webBuffer, sizeof( webBuffer ), "%u", ntpInterval );
+    webServer.send( 200, FPSTR( textplainHEADER ), webBuffer );
   });
 
   webServer.on( "/api/ntplastsynctime", []() {
-    webServer.send( 200, FPSTR( textplainHEADER ), String( ntpLastSyncTime ) );
+    snprintf( webBuffer, sizeof( webBuffer ), "%u", ntpLastSyncTime );
+    webServer.send( 200, FPSTR( textplainHEADER ), webBuffer );
   });
 
   webServer.on( "/api/pwmfrequency", []() {
