@@ -1,8 +1,5 @@
 //http://www.esp8266.com/viewtopic.php?f=29&t=2153
 
-//holds the current upload
-File fsUploadFile;
-
 const char textplainHEADER[] PROGMEM = "text/plain";
 const char texthtmlHEADER[] PROGMEM = "text/html";
 
@@ -218,6 +215,7 @@ void setupWebServer() {
   webServer.on( "/api/upload", HTTP_POST, []() {
     webServer.send( 200, FPSTR( textplainHEADER ), "" );
   }, []() {
+    static File fsUploadFile;
     HTTPUpload& upload = webServer.upload();
     if ( upload.status == UPLOAD_FILE_START ) {
       String filename = upload.filename;
