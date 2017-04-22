@@ -39,11 +39,17 @@ Click `Tools>ESP8266 Sketch Data Upload` to upload the files.<br><br>
 
 ## First boot and setup:
 
-1. The first time Aquacontrol is installed it does not know your WiFi settings.<br>First the controller will try to connect to the last known network for 15 seconds. If this fails the controller starts a WiFi access point called 'aquacontrol'.<br>Connect your WiFi -phone, tablet- to the access point.<br>You will need the pass phrase shown on the OLED screen.<br>Once logged in, select your WiFi network from the list and provide your WiFi password.<br>After entering your password the controller will reboot and try to log in on your WiFi network.
+1. The first time Aquacontrol is installed it does not know your WiFi settings.<br>First the controller will try to connect to the last known network for 15 seconds. If this fails the controller starts a WiFi access point called 'aquacontrol'.
 
-2. If something goes wrong with logging in, the accesspoint will be started again, but with a DIFFERENT PASSWORD! The new password is shown on OLED and Serial.<br>Repeat the first step to provide the correct WiFi network and password.<br>If the WiFi network and password are correct the controller will login.
+2. Connect your WiFi phone or tablet to the access point.<br>You will need the pass phrase shown on the OLED screen and the serial port.
 
-3. After WiFi login the controller will show the hostname and IP address on the OLED screen.<br>Navigate to IP or hostname and set up your controller.<br>Hostname access will require correct local DNS setup
+3. Once logged in, browse to `192.168.3.1`, select your WiFi network from the list and provide your own WiFi password.<br>After entering your password the controller will reboot and try to log in on your WiFi network.
+
+4. If something goes wrong with logging in, the accesspoint will be started again, but with a DIFFERENT PASSWORD! The new password is shown on OLED and the serial port.<br>Repeat step 2 if you made a mistake to provide the correct WiFi network and password.<br>If the WiFi network and password are correct the controller will login.
+
+5. After WiFi login the controller start setup and will show the hostname and IP address on the OLED screen.<br>The first time the controller is started SPIFFS setup may take a long time, this is normal.
+
+6. Navigate to IP or hostname and set up your controller.<br>Hostname access will require correct local DNS setup
 
 ## External libraries:
 
