@@ -34,3 +34,14 @@ void updateOLED() {
   OLED.drawString( DISPLAY_WIDTH / 2, 52, showIP ? WiFi.localIP().toString() : WiFi.hostname() );
   OLED.display();
 }
+
+void showUploadProgressOLED( const String progress, const String filename ) {
+  OLED.clear();
+  OLED.setFont( ArialMT_Plain_16 );
+  OLED.setTextAlignment( TEXT_ALIGN_CENTER );
+  OLED.drawString( DISPLAY_WIDTH / 2, 0, F( "UPLOADING:" ) );
+  OLED.drawString( DISPLAY_WIDTH / 2, 20, filename );
+  OLED.setFont( ArialMT_Plain_24 );
+  OLED.drawString( DISPLAY_WIDTH / 2, 40, progress + "%" );
+  OLED.display();
+}

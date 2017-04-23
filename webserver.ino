@@ -226,8 +226,10 @@ void setupWebServer() {
       if ( !filename.startsWith("/") ) filename = "/" + filename;
       fsUploadFile = SPIFFS.open( filename, "w");
     } else if ( upload.status == UPLOAD_FILE_WRITE ) {
-      if ( fsUploadFile )
+      if ( fsUploadFile ) {
         fsUploadFile.write( upload.buf, upload.currentSize );
+        showUploadProgressOLED( String( (float) fsUploadFile.position() / webServer.header( "Content-Length" ).toInt() * 100 ), upload.filename );
+      }
     } else if ( upload.status == UPLOAD_FILE_END) {
       if ( fsUploadFile ) {
         fsUploadFile.close();
@@ -239,6 +241,12 @@ void setupWebServer() {
 
   /////////////////////////////////////////////////////////////////////////////////////
   //done with setup, start the server
+
+  //here the list of request headers to be recorded
+  const char * headerkeys[] = { "Content-Length" } ;
+  size_t headerkeyssize = sizeof ( headerkeys ) / sizeof( char* );
+  webServer.collectHeaders( headerkeys, headerkeyssize );
+
   webServer.begin();
 
   Serial.print( F( "HTTP web server started at IP address: " ) );
