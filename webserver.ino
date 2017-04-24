@@ -279,6 +279,7 @@ bool handleSPIFFSfile( String path ) {
   if ( SPIFFS.exists( path ) ) {
     if ( webServer.arg( "action" ) == "delete" ) {
       Serial.println( F( "Delete request. Deleting..." ) );
+      showDeleteOLED( path.substring(1) );
       SPIFFS.remove( path );
       Serial.println( path + F( " deleted" ) );
       webServer.send( 200, FPSTR( textplainHEADER ), path.substring(1) + F( " deleted" ) );

@@ -45,3 +45,12 @@ void showUploadProgressOLED( const String progress, const String filename ) {
   OLED.drawString( DISPLAY_WIDTH / 2, 40, progress + "%" );
   OLED.display();
 }
+
+void showDeleteOLED( const String filename ) {
+  OLED.clear();
+  OLED.setFont( ArialMT_Plain_16 );
+  OLED.setTextAlignment( TEXT_ALIGN_CENTER );
+  OLED.drawString( DISPLAY_WIDTH / 2, 0, F( "DELETING" ) );
+  OLED.drawString( DISPLAY_WIDTH / 2, 20, filename );
+  OLED.display();
+}
