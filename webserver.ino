@@ -221,9 +221,13 @@ void setupWebServer() {
   }, []() {
     static File fsUploadFile;
     HTTPUpload& upload = webServer.upload();
+    String filename = upload.filename;
+    if ( !filename.startsWith("/") ) filename = "/" + filename;
+    if ( filename.length() > 30 ) {
+      Serial.println( "Upload filename too long!" );
+      return;
+    }
     if ( upload.status == UPLOAD_FILE_START ) {
-      String filename = upload.filename;
-      if ( !filename.startsWith("/") ) filename = "/" + filename;
       fsUploadFile = SPIFFS.open( filename, "w");
     } else if ( upload.status == UPLOAD_FILE_WRITE ) {
       if ( fsUploadFile ) {
