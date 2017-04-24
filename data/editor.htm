@@ -207,15 +207,15 @@ function formattedTime(secondsSinceMidnight) {
   return hours + ':' + minutes + ':' + seconds;
 }
 
-function pointerInTimerArea(){ //returns TRUE or FALSE depending if the mouse is above the actual drawing area of the canvas between the borders
+function pointerInTimerArea( event ){ //returns TRUE or FALSE depending if the mouse is above the actual drawing area of the canvas between the borders
   var areaClickMargin = 5; //number of pixels above or below the actual area that still registers as a click - otherwise setting 0% or 100% would be very tricky
   return ( event.offsetX > sideBorder && event.offsetX < $('#editorCanvas').width() - sideBorder )
            &&
          ( event.offsetY > ( updownBorder - areaClickMargin ) && ( event.offsetY < $('#editorCanvas').height() - ( updownBorder  - areaClickMargin ) ) );
 }
 
-function showMousePosition(){
-  if ( pointerInTimerArea() ) {
+function showMousePosition( event ){
+  if ( pointerInTimerArea( event ) ) {
     var clickedTimeInSeconds =  parseInt( ( event.offsetX - sideBorder ) / ( $('#editorCanvas').width() - ( 2 * sideBorder ) ) * 86400 );
     var currentPercentage =  parseInt (map( event.offsetY, updownBorder, $('#editorCanvas').height() - updownBorder, 100, 0 ) );
     currentPercentage = Math.min(Math.max(parseInt(currentPercentage), 0), 100);
@@ -525,14 +525,16 @@ $( document ).ready( function() {
 
   //event handlers
 
-  $('#editorCanvas').on( 'mousemove', showMousePosition );
+  $('#editorCanvas').on( 'mousemove', function( event ){
+    showMousePosition( event );
+  });
 
   $('#editorCanvas').on( 'mouseout', function() {
     $('#hostName').html( hostName );
   });
 
-  $('#editorCanvas').on( 'mouseup', function() {
-    if ( pointerInTimerArea() ) {
+  $('#editorCanvas').on( 'mouseup', function( event ) {
+    if ( pointerInTimerArea( event ) ) {
       var clickedTimeInSeconds =  parseInt( ( event.offsetX - sideBorder ) / ( $('#editorCanvas').width() - ( 2 * sideBorder ) ) * 86400 );
       var currentPercentage =  parseInt (map( event.offsetY, updownBorder, $('#editorCanvas').height() - updownBorder, 100, 0 ) );
       currentPercentage = Math.min(Math.max(parseInt(currentPercentage), 0), 100);
