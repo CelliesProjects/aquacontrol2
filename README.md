@@ -5,6 +5,11 @@ Aquacontrol2 is software for a 5 channel LED controller based on a WeMos D1 mini
 
 With this software and the custom hardware, you can control 5 LED strips and program the light output of each channel via a web interface.
 
+
+Questions or remarks?
+<br>Email: aquacontrol-@-wasietsmet.nl
+<br>( Remove the '`-`' characters from the mail address. )
+
 ## Features:
 * 128*64 OLED support via I2C.
 
@@ -27,9 +32,9 @@ With the IDE successfully compiling ESP8266 code and all libs installed, just fo
 
 1. Download and unpack the zip file.
 
-2. Rename the folder you just unzipped to '`aquacontrol2`'. You can skip this step, but the Arduino IDE will moan about file and foldernames.
+2. Rename the folder you just unzipped to '`aquacontrol2`'.
 
-3. Open the sketch in the Arduino IDE.
+3. Open the sketch by opening `aquacontrol2.ino` from the unzipped folder in the Arduino IDE.
 
 4. Use the upload button to compile and upload the sketch to the controller.
 
