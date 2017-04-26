@@ -168,6 +168,7 @@ void writeConfigFile() {
   f.println( "pwmfrequency=" + String( PWMfrequency ) );
   f.println( "pwmdepth=" + String( PWMdepth ) );
   f.println( "ntpinterval=" + String( ntpInterval ) );
+  f.print( "apply_dst=" ); f.println( dstEnabled ? F( "enabled" ) : F( "disabled" ) );
   f.close();
   Serial.print( F( "System settings saved as " ) ); Serial.println( configFile );
 }

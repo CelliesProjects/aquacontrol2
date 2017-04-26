@@ -187,6 +187,12 @@ void setup() {
         timeZone = newTimezone;
         Serial.print( F( "Timezone set to " ) ); Serial.println( timeZone );
       }
+
+    } else if ( lineBuf.startsWith( F( "apply_dst" ) ) ) {
+      valueStr = lineBuf.substring(lineBuf.indexOf( F( "=" ) ) + 1 );
+      valueStr.trim();
+      valueStr == F( "enabled" ) ? dstEnabled = true : NULL;
+      valueStr == F( "disabled" )? dstEnabled = false : NULL;
     }
   }
 

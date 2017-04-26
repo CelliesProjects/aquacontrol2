@@ -63,6 +63,7 @@ void setupWebServer() {
       } else if ( webServer.arg( "newdststatus" ) == F( "disabled" ) ) {
         dstEnabled = false;
       }
+      writeConfigFile();
       updateChannels();
     }
     webServer.send( 200, FPSTR( textplainHEADER ), dstEnabled ? F( "enabled" ) : F( "disabled" ) );
