@@ -21,6 +21,9 @@ Questions or remarks?
 
 * Acces point mode to setup WiFi connection.
 
+* DS18B20 one-wire digital temperature sensor support.
+<br>-Not working, hardware is ordered and on the way.-
+
 ## Installation:
 
 To install the software on a WeMos D1 mini, you will need the Arduino IDE with the ESP8266 boards -[2.3.0](https://github.com/esp8266/Arduino/releases/tag/2.3.0)- already added to the board manager.
