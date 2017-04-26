@@ -144,6 +144,7 @@ input[type="range"]{
     <p class="item"><span class="itemName">PWM DEPTH</span><span id="pwmDepthValue" class="itemValue">&nbsp;</span><input type="range" id="pwmDepthSlider" value="1024" min="1024" max="10240" step="1024"></p>
     <p class="item"><span class="itemName">TIME ZONE</span><span id="timeZoneValue" class="itemValue">0</span><input type="range" id="timeZoneSlider" value="0" min="-13" max="13"></p>
     <p class="item"><span class="itemName">NTP UPDATE FREQUENCY</span><span id="ntpUpdateValue" class="itemValue">0</span><input type="range" id="ntpUpdateSlider" value="21600" min="21600" max="86400" step="21600"></p>
+    <p class="item"><span class="itemName">APPLY<a style="color:beige;" href="https://en.wikipedia.org/wiki/Daylight_saving_time" target="_blank">DAYLIGHT SAVING TIME</a></span><span id="dstValue" class="itemValue">&nbsp;</span><input type="range" id="dstSlider" value="0" min="0" max="1"></p>
   </div>
 </div>
 <div class="shadowedBox">
@@ -206,8 +207,19 @@ $(document).ready( function() {
                   $.get("/api/ntplastsynctime",function( data ) {
                     var lastSync = new Date( data * 1000 );
                     $('#lastSyncTime').html( lastSync.toLocaleString() );
-                    $('input').prop('disabled', false); //and finally enable the inputs again
-                    $('body').css('opacity','1'); // and show the page
+                    $.get("/api/dststatus",function( data ) {
+                      $('#dstValue').html( data );
+                      if ( data == 'enabled' ) {
+                        $('#dstSlider').val(1);
+                      }
+                      if ( data == 'disabled' ) {
+                        $('#dstSlider').val(0);
+                      }
+                      $('input').prop('disabled', false); //and finally enable the inputs again
+                      $('body').css('opacity','1'); // and show the page
+
+                    });
+
                   });
 
                 });
@@ -227,6 +239,17 @@ $(document).ready( function() {
   });
 
   //event handlers
+
+  $('#dstSlider').on('change', function( event ) {
+    $.get( "/api/dststatus?newdststatus=" + $('#dstValue').html(), function( data ) {
+      console.log( data );
+    });
+  });
+
+  $('#dstSlider').on('input', function( event ) {
+    if ( $(this).val() == 0 ) $('#dstValue').html('disabled');
+    if ( $(this).val() == 1 ) $('#dstValue').html('enabled');
+  });
 
   $('#lightsOn').on('click', function() {
     $.get( "/api/lightson", function( data ) {
