@@ -30,6 +30,7 @@ time_t ntpSyncTime;
 time_t ntpLastSyncTime;
 time_t ntpInterval = 86400;
 
+bool dstEnabled      = true;
 bool programOverride = false; // used for LIGHTS ON & LIGHTS OFF in webinterface
 
 String lightStatus; //To keep track if lights are on, off or programmed, this string is displayed on the webif

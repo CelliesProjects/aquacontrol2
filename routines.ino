@@ -33,8 +33,7 @@ String formattedTime( const time_t t) {  ///output a time with if necessary lead
 
 time_t localTime() {
   time_t t = now() + ( timeZone * 3600 );
-  //if ( dstSet ) {
-  if ( isDST( month(t), day(t), dayOfWeek(t) ) ) {
+  if ( dstEnabled && isDST( month(t), day(t), dayOfWeek(t) ) ) {
     t += 3600;
   }
   return t;

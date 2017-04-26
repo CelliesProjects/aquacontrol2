@@ -56,6 +56,18 @@ void setupWebServer() {
     webServer.send( 200, FPSTR( textplainHEADER ), String( diskSpace ) );
   });
 
+  webServer.on( "/api/dststatus", []() {
+    if ( webServer.arg( "newdststatus" ) != "" ) {
+      if ( webServer.arg( "newdststatus" ) == F( "enabled" ) ) {
+        dstEnabled = true;
+      } else if ( webServer.arg( "newdststatus" ) == F( "disabled" ) ) {
+        dstEnabled = false;
+      }
+      updateChannels();
+    }
+    webServer.send( 200, FPSTR( textplainHEADER ), dstEnabled ? F( "enabled" ) : F( "disabled" ) );
+  });
+
   webServer.on( "/api/formatspiffs", []() {
     OLED.clear();
     OLED.setTextAlignment( TEXT_ALIGN_CENTER );
