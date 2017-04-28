@@ -161,6 +161,26 @@ void setupWebServer() {
     updateChannels();
   });
 
+  webServer.on( "/api/minimumlevel", []() {
+    if ( webServer.arg( "channel" ) != "" && webServer.arg( "percentage" != "" ) ) {
+      int thisChannel = webServer.arg( "channel" ).toInt();
+      if ( thisChannel < 0 || thisChannel > numberOfChannels ) {
+        webServer.send( 400, FPSTR( textplainHEADER ), F( "Invalid channel." ) );
+        return;
+      }
+      float thisPercentage = webServer.arg( "percentage" ).toFloat();
+      if ( thisPercentage < 0 || thisPercentage > 0.99 ) {
+        webServer.send( 400, FPSTR( textplainHEADER ), F( "Invalid percentage." ) );
+        return;
+      }
+      channel[thisChannel].minimumLevel = thisPercentage;
+      writeMinimumLevelFile();
+      webServer.send( 200, FPSTR( textplainHEADER ), F( "Minimum level set." ) );
+      return;
+    }
+    webServer.send( 400, FPSTR( textplainHEADER ), F( "Invalid input." ) );
+  });
+
   webServer.on( "/api/ntpinterval", []() {
     if ( webServer.arg( "newntpinterval" ) != "" ) {
       int tempntpInterval = webServer.arg( "newntpinterval" ).toInt();
@@ -213,6 +233,49 @@ void setupWebServer() {
       writeConfigFile();
     }
     webServer.send( 200, FPSTR( textplainHEADER ), String( PWMdepth ) );
+  });
+
+  webServer.on( "/api/setchannelcolor", []() {
+    int thisChannel;
+    if ( webServer.hasArg( "channel" ) ) {
+      thisChannel = webServer.arg( "channel" ).toInt();
+      Serial.println(thisChannel);
+      if ( thisChannel < 0 || thisChannel > numberOfChannels ) {
+        webServer.send( 400, FPSTR( textplainHEADER ), F( "Invalid channel." ) );
+        return;
+      }
+    }
+    if ( webServer.hasArg( "newcolor" ) ) {
+      String newColor = "#" + webServer.arg( "newcolor" );
+      newColor.trim();
+      channel[thisChannel].color = newColor;
+      writeChannelColorFile();
+      webServer.send( 200, FPSTR( textplainHEADER ), F( "Success" ) );
+      return;
+    }
+    webServer.send( 400, FPSTR( textplainHEADER ), F( "Invalid input." ) );
+  });
+
+  webServer.on( "/api/setchannelname", []() {
+    int thisChannel;
+    if ( webServer.hasArg( "channel" ) ) {
+      thisChannel = webServer.arg( "channel" ).toInt();
+      Serial.println(thisChannel);
+      if ( thisChannel < 0 || thisChannel > numberOfChannels ) {
+        webServer.send( 400, FPSTR( textplainHEADER ), F( "Invalid channel." ) );
+        return;
+      }
+    }
+    if ( webServer.hasArg( "newname" ) ) {
+      String newName = webServer.arg( "newname" );
+      newName.trim();
+      //TODO: check if illegal cahrs present and get out if so
+      channel[thisChannel].name = newName;
+      writeChannelNameFile();
+      webServer.send( 200, FPSTR( textplainHEADER ), F( "Success" ) );
+      return;
+    }
+    webServer.send( 400, FPSTR( textplainHEADER ), F( "Invalid input." ) );
   });
 
   webServer.on( "/api/timezone", []() {

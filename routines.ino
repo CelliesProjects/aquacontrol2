@@ -173,3 +173,79 @@ void writeConfigFile() {
   Serial.print( F( "System settings saved as " ) ); Serial.println( configFile );
 }
 
+void writeMinimumLevelFile() {
+  File f = SPIFFS.open( minimumLevelFile , "w");
+  if (!f) {
+      Serial.println( F( "Minimum level file error. No data saved." ) );
+      return;
+  }
+  for ( byte thisChannel = 0; thisChannel < numberOfChannels; thisChannel++ ){
+    f.println( channel[thisChannel].minimumLevel );
+  }
+  f.close();
+}
+
+void readMinimumLevelFile() {
+  File f = SPIFFS.open( minimumLevelFile , "r");
+  if (!f) {
+      Serial.println( F( "Minimum level file error. No data read." ) );
+      return;
+  }
+  for ( byte thisChannel = 0; thisChannel < numberOfChannels; thisChannel++ ){
+    String s = f.readStringUntil('\n');
+    channel[thisChannel].minimumLevel = s.toFloat();
+  }
+  f.close();
+}
+
+void writeChannelNameFile() {
+  File f = SPIFFS.open( channelNameFile , "w");
+  if (!f) {
+      Serial.println( F( "Channel name file error. No data saved." ) );
+      return;
+  }
+  for ( byte thisChannel = 0; thisChannel < numberOfChannels; thisChannel++ ){
+    f.println( channel[thisChannel].name );
+  }
+  f.close();
+}
+
+void readChannelNameFile() {
+  File f = SPIFFS.open( channelNameFile , "r");
+  if (!f) {
+      Serial.println( F( "Channel name file error. No data read." ) );
+      return;
+  }
+  for (byte thisChannel = 0; thisChannel < numberOfChannels; thisChannel++ ){
+    String s = f.readStringUntil('\n');
+    s.trim();
+    channel[thisChannel].name = s;
+  }
+  f.close();
+}
+
+void writeChannelColorFile() {
+  File f = SPIFFS.open( channelColorFile , "w");
+  if (!f) {
+      Serial.println( F( "Channel color file error. No data saved." ) );
+      return;
+  }
+  for ( byte thisChannel = 0; thisChannel < numberOfChannels; thisChannel++ ){
+    f.println( channel[thisChannel].color );
+  }
+  f.close();
+}
+
+void readChannelColorFile() {
+  File f = SPIFFS.open( channelColorFile , "r");
+  if (!f) {
+      Serial.println( F( "Channel color file error. No data read." ) );
+      return;
+  }
+  for (byte thisChannel = 0; thisChannel < numberOfChannels; thisChannel++ ){
+    String s = f.readStringUntil('\n');
+    s.trim();
+    channel[thisChannel].color = s;
+  }
+  f.close();
+}

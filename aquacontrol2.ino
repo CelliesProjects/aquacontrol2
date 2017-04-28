@@ -13,7 +13,10 @@ extern "C" {
 
 //https://gist.github.com/dogrocker/f998dde4dbac923c47c1
 
-String configFile = "/system.cfg"; //dont forget the starting slash!
+const String configFile       = "/system.cfg";            //dont forget the starting slash!
+const String channelNameFile  = "/channelnames.txt";
+const String channelColorFile = "/channelcolors.txt";
+const String minimumLevelFile = "/minimumlevels.txt";
 
 bool hostNameChanged = false;
 
@@ -192,9 +195,13 @@ void setup() {
       valueStr = lineBuf.substring(lineBuf.indexOf( F( "=" ) ) + 1 );
       valueStr.trim();
       valueStr == F( "enabled" ) ? dstEnabled = true : NULL;
-      valueStr == F( "disabled" )? dstEnabled = false : NULL;
+      valueStr == F( "disabled" ) ? dstEnabled = false : NULL;
     }
   }
+
+  readMinimumLevelFile();
+  readChannelNameFile();
+  readChannelColorFile();
 
   initNTP();
   ntpSyncTime = bootTime + ntpInterval;
