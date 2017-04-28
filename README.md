@@ -42,7 +42,7 @@ You can install the libraries by choosing `Sketch->Include library->Add .ZIP lib
 
 With the IDE successfully compiling ESP8266 code and all libs installed, just follow these steps:
 
-1. Download and unpack the zip file.
+1. Download and unpack the latest [release](https://github.com/CelliesProjects/aquacontrol2/releases) file.
 
 2. Rename the folder you just unzipped to '`aquacontrol2`'.
 
