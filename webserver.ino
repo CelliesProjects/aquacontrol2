@@ -35,6 +35,11 @@ void setupWebServer() {
     webServer.serveStatic( "/setup", SPIFFS, "/setup.htm" );
   }
 
+  //handle the setup page
+  if ( SPIFFS.exists( F( "/channelsetup.htm" ) ) ) {
+    webServer.serveStatic( "/channels", SPIFFS, "/channelsetup.htm" );
+  }
+
   /////////////////////////////////////////////////////////////////////////////////////
   //API calls alphabetically
   //API calls come from flash memory only and can not be deleted unlike files on SPIFFS
