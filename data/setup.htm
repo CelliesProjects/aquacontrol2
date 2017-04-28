@@ -105,6 +105,7 @@ input{
 }
 
 input[type="text"]{
+  background:beige;
   width:auto;
   margin:0;
   vertical-align: middle;
@@ -269,10 +270,23 @@ $(document).ready( function() {
     });
   });
 
-  $('#hostNameInput').on('change', function() {
-    $.get( "/api/hostname?newhostname=" + $(this).val() );
-    //TODO: error checking
-    //TODO: wait 10 seconds and reload page with new hostname;
+  $('#hostNameInput').on('input', function() {
+    $( '#hostNameInput' ).css({'background':'beige'});
+  });
+
+  $('#hostNameInput').on('change', function( data ) {
+    var newHostname = $(this).val();
+    $.get( "/api/hostname?newhostname=" + newHostname )
+      .done(function( data ){
+        console.log( data );
+        $( '#lightStatus' ).html( data + "<a href=\"http://" + newHostname + "\">Click here to go to " + newHostname + "</a>");
+        $( '#hostNameInput' ).css({'background':'lightgreen'});
+      })
+      .fail(function( data ){
+        console.log( data );
+        $( '#lightStatus' ).html( "ERROR: " + data.responseText  );
+        $( '#hostNameInput' ).css({'background':'red'});
+      });
   });
 
   $('#pwmFreqSlider').on('input', function() {

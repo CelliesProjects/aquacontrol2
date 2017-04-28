@@ -114,21 +114,25 @@ void setupWebServer() {
       String newHostName = webServer.arg( "newhostname" );
       newHostName.trim();
       newHostName = webServer.urlDecode( newHostName );
+      if ( newHostName.length() > 29 ) {
+        webServer.send( 400, FPSTR( textplainHEADER ), F( "Hostname too long." ) );
+        return;
+      }
       //check for illegal characters --legal chars are alphanumeric
       for ( byte thisChar = 0; thisChar < newHostName.length(); thisChar++ ) {
         if ( !isAlphaNumeric( newHostName[thisChar] ) ) {
-          webServer.send( 200, FPSTR( textplainHEADER ), F( "ERROR - Invalid character in hostname." ) );
+          webServer.send( 400, FPSTR( textplainHEADER ), F( "Invalid character in hostname." ) );
           return;
         }
       }
       if ( newHostName == WiFi.hostname() ) {
-        webServer.send( 200, FPSTR( textplainHEADER ), "Hostname already set to " + WiFi.hostname() );
+        webServer.send( 400, FPSTR( textplainHEADER ), "Hostname already set to " + WiFi.hostname() );
         return;
       }
       myWIFIhostname = newHostName;
       hostNameChanged = true;
       writeWifiDataToEEPROM();
-      webServer.send( 200, FPSTR( textplainHEADER ), "Hostname set to " + myWIFIhostname);
+      webServer.send( 200, FPSTR( textplainHEADER ), "Hostname set to '" + myWIFIhostname + "'." );
       return;
     }
     webServer.send( 200, FPSTR( textplainHEADER ), WiFi.hostname() );
