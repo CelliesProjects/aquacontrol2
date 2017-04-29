@@ -9,20 +9,26 @@ html, body{
   margin:0 auto;
   background-color:grey;
   text-align:center;
-  width:860px;
-  min-width:860px;
+  width:1024px;
 	font-variant: small-caps;
   font-size:20px;
 }
 
 a {
-  color:black;
-  text-decoration:none;
-  margin:0 10px;
+  color: black;
+  text-decoration: none;
+  margin: 0 10px;
+}
+
+h3{
+  margin:0;
+}
+
+.systemLink{
   padding: 3px 10px;
 }
 
-a:hover {
+.systemLink:hover {
   background:grey;
 }
 
@@ -86,10 +92,10 @@ p{
 }
 
 #hostName{
-  color:blue;
+  color:yellow;
 }
 </style>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.js"></script>
 </head>
 <body>
 <script>
@@ -117,12 +123,15 @@ function updateBargraph() {
     averageChannelValue = ( total / 5);
     averageChannelValue = parseInt( averageChannelValue * 2 );
     $( "div#wrapper" ).css( 'background-color', 'rgba(' + averageChannelValue + "," + averageChannelValue + ","  + averageChannelValue + ","  + 255 + ')' );
-    $( "#confirmDialog" ).hide();
     $( 'a' ).unbind( 'click' ); //re-enable the links which are bound to e.preventdefault()
   })
 }
 </script>
-<p class="shadowedBox"  style="background-color:beige;"><a class="systemLink" href="channels">CHANNELS</a><a href="setup">SETUP</a><a href="editor">EDITOR</a><a href="filemanager">FILE MANAGER</a></p>
+<p class="shadowedBox" style="background-color:beige;"><a class="systemLink" href="/">HOME</a><a class="systemLink" href="channels">CHANNELS</a><a class="systemLink" href="setup">SETUP</a><a class="systemLink" href="editor">EDITOR</a><a class="systemLink" href="filemanager">FILE MANAGER</a></p>
+<div id="titleBox" class="shadowedBox">
+  <h3>LIGHT STATUS</h3>
+  <p>Check lights and temperatures.</p>
+</div>
 <p id="hostName" class="shadowedBox">&nbsp;</p>
 <div id="wrapper" class="shadowedBox"><div class="bar"></div>
   <div class="bar" style="left:20%;height:0%;"></div>

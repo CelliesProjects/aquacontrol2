@@ -1,20 +1,21 @@
 <!doctype HTML>
 <html lang="en">
 <head>
-<title> </title>
+<title>File manager</title>
 <meta charset="utf-8">
-<script>
-</script>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">  <!--prevent favicon requests-->
 <style>
 html, body{
   margin:0 auto;
   background-color:grey;
   text-align:center;
-  width:860px;
-  min-width:860px;
+  width:1024px;
   font-variant: small-caps;
   font-size:20px;
+}
+
+h3{
+  margin:0;
 }
 
 p{
@@ -108,8 +109,9 @@ form{
 
 input{
   margin:5px auto;
-  height:30px;
   vertical-align:middle;
+  box-shadow: 0px 0px 2px 0px rgba(0,0,0,1);
+  border-radius: 5px;
 }
 
 input[type="file"] button{
@@ -142,10 +144,13 @@ progress{
 <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
 </head>
 <body>
-<p class="shadowedBox"  style="background-color:beige;"><a class="systemLink" href="/">HOME</a><a class="systemLink" href="channels">CHANNELS</a><a class="systemLink" href="setup">SETUP</a><a class="systemLink" href="editor">EDITOR</a></p>
-<div id="titleBox" class="shadowedBox">AQUACONTROL FILE MANAGER</div>
+<p class="shadowedBox" style="background-color:beige;"><a class="systemLink" href="/">HOME</a><a class="systemLink" href="channels">CHANNELS</a><a class="systemLink" href="setup">SETUP</a><a class="systemLink" href="editor">EDITOR</a><a class="systemLink" href="filemanager">FILE MANAGER</a></p>
+<div class="shadowedBox">
+  <h3>FILE MANAGER</h3>
+  <p>Upload, download and delete files.</p>
+</div>
+<div class="shadowedBox"><p id="statusBox"></p><p id="diskSpace">&nbsp;</p></div>
 <div id="fileBox" class="shadowedBox">
-  <p id="diskSpace">&nbsp;</p>
   <div id="fileList"></div>
   <div id="functionBox">
     <!--<input id="formatButton" type="button" value="FORMAT" />-->
