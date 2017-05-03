@@ -40,7 +40,6 @@ String lightStatus; //To keep track if lights are on, off or programmed, this st
 
 //Serial logging switches
 bool memoryLogging = false;
-bool channelLogging = false; //logging of percentage % values over Serial. Useful when debugging unrelated stuff and a uncluttered screen
 
 //channel setup
 const byte numberOfChannels         =  5  ;

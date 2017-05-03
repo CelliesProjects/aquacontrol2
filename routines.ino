@@ -73,27 +73,13 @@ void setPercentage( const byte thisChannel, const time_t secondsToday ) {
     if ( channel[thisChannel].currentPercentage < channel[thisChannel].minimumLevel ) {
       channel[thisChannel].currentPercentage = channel[thisChannel].minimumLevel;
     }
-
     analogWrite( channel[thisChannel].pin, ( int )mapFloat( channel[thisChannel].currentPercentage, 0, 100, 0, PWMdepth ) );
-
-    if ( channelLogging ) {
-      Serial.print( F("Channel: ") );
-      Serial.print( channel[thisChannel].name );
-      Serial.print( F(" ") );
-      Serial.print( String( channel[ thisChannel ].currentPercentage ) );
-      String rawValue = String( ( int )mapFloat( channel[thisChannel].currentPercentage, 0, 100, 0, PWMdepth ) );
-      Serial.print( F("% RAW: ") );
-      Serial.println(  rawValue );
-    }
   }
 }
 
 void updateChannels() {
   if ( programOverride ) {
     return;
-  }
-  if (channelLogging) {
-    Serial.print( F("Updating all channels at ") );  Serial.print( formattedTime( localTime() ) );  Serial.println( F(" local time.") );
   }
   //get the current timeInSeconds and use that as time argument for setPercentage
   time_t secondsToday = elapsedSecsToday( localTime() );      //elapsedSecsToday lives in TimeLib.h
