@@ -220,8 +220,6 @@ void setup() {
   }
 }
 
-int previousFreeRAM; //for memory logging usage, see last lines of loop()
-
 void loop() {
 
   if ( now() >= ntpSyncTime ) {
@@ -242,7 +240,8 @@ void loop() {
 
   if ( memoryLogging ) {
     //show mem usage
-    int nowFreeRAM = ESP.getFreeHeap();
+    static int previousFreeRAM; 
+    static int nowFreeRAM = ESP.getFreeHeap();
     if ( previousFreeRAM != nowFreeRAM) {
       Serial.print( nowFreeRAM );  Serial.println( F( " bytes RAM." ) );
       previousFreeRAM = nowFreeRAM;
