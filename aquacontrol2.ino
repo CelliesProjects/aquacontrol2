@@ -207,7 +207,7 @@ void setup() {
   setupWebServer();
 
   if ( defaultTimersAreLoaded() ) {
-    Serial.println( "Timers loaded from SPIFFS." );
+    Serial.println( F( "Timers loaded from SPIFFS." ) );
   }
 
   //set all channels
