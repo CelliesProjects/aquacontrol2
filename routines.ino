@@ -89,6 +89,20 @@ void updateChannels() {
   }
 }
 
+void updateDallasTemperature() {
+  if ( numberOfSensors > 0 ) {
+    sensorTemp[0] = sensors.getTempCByIndex(0);
+  }
+  if ( numberOfSensors > 1 ) {
+    sensorTemp[0] = sensors.getTempCByIndex(1);
+  }
+  if ( numberOfSensors > 2 ) {
+    sensorTemp[0] = sensors.getTempCByIndex(2);
+  }
+  sensors.requestTemperatures();
+  nextDallasUpdate = millis() + 750;
+}
+
 bool defaultTimersAreLoaded() {                                                      //this function loads the timers or returns FALSE
   //find 'default.aqu' on SPIFFS disk and if present load the timerdata from this file
   //return false on error
@@ -127,7 +141,7 @@ bool defaultTimersAreLoaded() {                                                 
   return true;
 }
 
-void setNewHostname(){
+void setNewHostname() {
   WiFi.hostname( myWIFIhostname );
   WiFi.mode( WIFI_OFF );
   WiFi.begin();
@@ -141,14 +155,14 @@ void setNewHostname(){
     delay(20);
     yield();
   }
-  hostNameChanged = false;  
+  hostNameChanged = false;
 }
 
 void writeConfigFile() {
   File f = SPIFFS.open( configFile , "w");
   if (!f) {
-      Serial.println( F( "config file error. No data saved." ) );
-      return;
+    Serial.println( F( "config file error. No data saved." ) );
+    return;
   }
   f.println( "timezone=" + String( timeZone ) );
   f.println( "pwmfrequency=" + String( PWMfrequency ) );
@@ -162,10 +176,10 @@ void writeConfigFile() {
 void writeMinimumLevelFile() {
   File f = SPIFFS.open( minimumLevelFile , "w");
   if (!f) {
-      Serial.println( F( "Minimum level file error. No data saved." ) );
-      return;
+    Serial.println( F( "Minimum level file error. No data saved." ) );
+    return;
   }
-  for ( byte thisChannel = 0; thisChannel < numberOfChannels; thisChannel++ ){
+  for ( byte thisChannel = 0; thisChannel < numberOfChannels; thisChannel++ ) {
     f.println( channel[thisChannel].minimumLevel );
   }
   f.close();
@@ -174,10 +188,10 @@ void writeMinimumLevelFile() {
 void readMinimumLevelFile() {
   File f = SPIFFS.open( minimumLevelFile , "r");
   if (!f) {
-      Serial.println( F( "Minimum level file error. No data read." ) );
-      return;
+    Serial.println( F( "Minimum level file error. No data read." ) );
+    return;
   }
-  for ( byte thisChannel = 0; thisChannel < numberOfChannels; thisChannel++ ){
+  for ( byte thisChannel = 0; thisChannel < numberOfChannels; thisChannel++ ) {
     String s = f.readStringUntil('\n');
     channel[thisChannel].minimumLevel = s.toFloat();
   }
@@ -187,10 +201,10 @@ void readMinimumLevelFile() {
 void writeChannelNameFile() {
   File f = SPIFFS.open( channelNameFile , "w");
   if (!f) {
-      Serial.println( F( "Channel name file error. No data saved." ) );
-      return;
+    Serial.println( F( "Channel name file error. No data saved." ) );
+    return;
   }
-  for ( byte thisChannel = 0; thisChannel < numberOfChannels; thisChannel++ ){
+  for ( byte thisChannel = 0; thisChannel < numberOfChannels; thisChannel++ ) {
     f.println( channel[thisChannel].name );
   }
   f.close();
@@ -199,10 +213,10 @@ void writeChannelNameFile() {
 void readChannelNameFile() {
   File f = SPIFFS.open( channelNameFile , "r");
   if (!f) {
-      Serial.println( F( "Channel name file error. No data read." ) );
-      return;
+    Serial.println( F( "Channel name file error. No data read." ) );
+    return;
   }
-  for (byte thisChannel = 0; thisChannel < numberOfChannels; thisChannel++ ){
+  for (byte thisChannel = 0; thisChannel < numberOfChannels; thisChannel++ ) {
     String s = f.readStringUntil('\n');
     s.trim();
     channel[thisChannel].name = s;
@@ -213,10 +227,10 @@ void readChannelNameFile() {
 void writeChannelColorFile() {
   File f = SPIFFS.open( channelColorFile , "w");
   if (!f) {
-      Serial.println( F( "Channel color file error. No data saved." ) );
-      return;
+    Serial.println( F( "Channel color file error. No data saved." ) );
+    return;
   }
-  for ( byte thisChannel = 0; thisChannel < numberOfChannels; thisChannel++ ){
+  for ( byte thisChannel = 0; thisChannel < numberOfChannels; thisChannel++ ) {
     f.println( channel[thisChannel].color );
   }
   f.close();
@@ -225,10 +239,10 @@ void writeChannelColorFile() {
 void readChannelColorFile() {
   File f = SPIFFS.open( channelColorFile , "r");
   if (!f) {
-      Serial.println( F( "Channel color file error. No data read." ) );
-      return;
+    Serial.println( F( "Channel color file error. No data read." ) );
+    return;
   }
-  for (byte thisChannel = 0; thisChannel < numberOfChannels; thisChannel++ ){
+  for (byte thisChannel = 0; thisChannel < numberOfChannels; thisChannel++ ) {
     String s = f.readStringUntil('\n');
     s.trim();
     channel[thisChannel].color = s;

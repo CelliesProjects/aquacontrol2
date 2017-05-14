@@ -9,6 +9,35 @@ void updateOLED() {
     OLED.display();
     return;
   }
+
+  OLED.normalDisplay();
+  OLED.clear();
+  if ( numberOfSensors == 0 ) {
+    showBarGraphOLED();
+    return;
+  }
+
+  OLED.setFont( ArialMT_Plain_24 );
+  if ( numberOfSensors > 0 ) {
+    OLED.drawString( 64, 0, String( sensors.getTempCByIndex(0) ) + "°C" );
+  }
+  if ( numberOfSensors > 1 ) {
+    OLED.drawString( 64, 20, String( sensors.getTempCByIndex(1) ) + "°C" );
+  }
+  if ( numberOfSensors > 2 ) {
+    OLED.drawString( 64, 40, String( sensors.getTempCByIndex(2) ) + "°C" );
+  }
+  if ( numberOfSensors < 2 ) {
+    OLED.setFont( ArialMT_Plain_24 );
+    OLED.drawString( 64, 25, formattedTime( localTime() ) );
+  }
+  if ( numberOfSensors < 3 ) {
+    showIpOrHostname();
+  }
+  OLED.display();
+}
+
+void showBarGraphOLED() {
   int barWidth = DISPLAY_WIDTH / numberOfChannels;
   OLED.normalDisplay();
   OLED.clear();
@@ -24,6 +53,11 @@ void updateOLED() {
     OLED.drawString( 2 + x1 + barWidth / 2, y1 - 11, String( (int) channel[thisChannel].currentPercentage ) );
   }
   OLED.drawString( DISPLAY_WIDTH / 2, 0, formattedTime( localTime() ) );
+  showIpOrHostname();
+  OLED.display();
+}
+
+void showIpOrHostname() {
   OLED.setFont(ArialMT_Plain_10);
   static time_t nextOLEDswitch = now() + 5;
   static bool showIP = true;
@@ -34,7 +68,6 @@ void updateOLED() {
   OLED.drawString( DISPLAY_WIDTH / 2, 52, showIP ? WiFi.localIP().toString() : WiFi.hostname() );
   OLED.display();
 }
-
 void showUploadProgressOLED( const String progress, const String filename ) {
   OLED.clear();
   OLED.setFont( ArialMT_Plain_16 );
