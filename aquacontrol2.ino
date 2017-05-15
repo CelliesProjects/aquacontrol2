@@ -243,7 +243,7 @@ void setup() {
 }
 
 void loop() {
-  if ( numberOfSensors > 0 && nextDallasUpdate <= millis() ) {
+  if ( numberOfSensors > 0 && (long)(millis() - nextDallasUpdate ) >= 0 ) {
     updateDallasTemperature();
   }
 
