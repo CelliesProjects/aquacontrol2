@@ -98,7 +98,7 @@ void setupWebServer() {
     }
     webServer.send( 200, FPSTR( textplainHEADER ), HTTPresponse );
   });
-
+    
   webServer.on( "/api/status", []() {
     String HTTPresponse;
     for ( byte thisChannel = 0; thisChannel < numberOfChannels; thisChannel++ ) {

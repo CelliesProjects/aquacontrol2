@@ -99,6 +99,7 @@ void updateDallasTemperature() {
   if ( numberOfSensors > 2 ) {
     sensorTemp[0] = sensors.getTempCByIndex(2);
   }
+  sensors.setWaitForConversion(false);
   sensors.requestTemperatures();
   nextDallasUpdate = millis() + 750;
 }

@@ -19,13 +19,13 @@ void updateOLED() {
 
   OLED.setFont( ArialMT_Plain_24 );
   if ( numberOfSensors > 0 ) {
-    OLED.drawString( 64, 0, String( sensors.getTempCByIndex(0) ) + "°C" );
+    OLED.drawString( 64, 0, String( sensorTemp[0] ) + "°C" );
   }
   if ( numberOfSensors > 1 ) {
-    OLED.drawString( 64, 20, String( sensors.getTempCByIndex(1) ) + "°C" );
+    OLED.drawString( 64, 20, String( sensorTemp[1] ) + "°C" );
   }
   if ( numberOfSensors > 2 ) {
-    OLED.drawString( 64, 40, String( sensors.getTempCByIndex(2) ) + "°C" );
+    OLED.drawString( 64, 40, String( sensorTemp[2] ) + "°C" );
   }
   if ( numberOfSensors < 2 ) {
     OLED.setFont( ArialMT_Plain_24 );
