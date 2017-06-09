@@ -103,9 +103,6 @@ Questions or remarks?
 
 * D7 - Serial data.
 
-#### One-Wire:
-* D8 - DS18B200 temperature sensor.
-
 ## Screenshots:
 ### Index page:
 ![index](https://cloud.githubusercontent.com/assets/24290108/24398142/ccb0f268-13a8-11e7-83fa-fe5ad6e291da.png)
