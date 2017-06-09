@@ -16,9 +16,6 @@ With this software and the custom hardware, you can control 5 LED strips and pro
 
 * Acces point mode to setup WiFi connection.
 
-* DS18B20 one-wire digital temperature sensor support.
-<br>-Not working yet, hardware is ordered and on the way.-
-
 # Installation:
 
 ## What you need:
@@ -26,15 +23,13 @@ With this software and the custom hardware, you can control 5 LED strips and pro
 To install the software on a WeMos D1 mini, you will need the Arduino IDE with the ESP8266 boards -[2.3.0](https://github.com/esp8266/Arduino/releases/tag/2.3.0)- already added to the board manager.
 <br>The ESP8266 data upload plugin has to be installed.
 <br><br>[How to install the SPIFFS upload plugin](https://github.com/esp8266/Arduino/blob/master/doc/filesystem.md#uploading-files-to-file-system)
-<br><br>The external `Time` , `esp8266-oled-ssd1306` and `Dallas` libraries also have to be installed. 
+<br><br>The external `Time` and `esp8266-oled-ssd1306` libraries also have to be installed. 
 
 ### External libraries:
 
 * Time library [1.5](https://github.com/PaulStoffregen/Time/archive/v1.5.zip) maintained by [PaulStoffregen](https://github.com/PaulStoffregen)
 
 * 128 x 64 OLED library [3.2.5](https://github.com/squix78/esp8266-oled-ssd1306/archive/3.2.5.zip) maintained by [squix78](https://github.com/squix78/)
-
-* Maxim ( or Dallas ) DS18B20 library [3.7.6](https://github.com/milesburton/Arduino-Temperature-Control-Library/archive/3.7.6.zip) maintained by [milesburton](https://github.com/milesburton/)
 
 You can install the libraries by choosing `Sketch->Include library->Add .ZIP library` in the Arduino IDE.
 
