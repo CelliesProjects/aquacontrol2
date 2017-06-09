@@ -79,6 +79,8 @@ const byte ledPin[numberOfChannels] =  { D1, D2, D3, D4, D5 } ;        //pin num
 //       OLED( OLEDaddress, SDA_pin, SCL_pin );
 SSD1306  OLED( 0x3c, D7, D6 );
 
+bool OLEDflipped = false;                                              // false = OLED displays normally - true = OLED displays upside down
+
 ESP8266WebServer webServer ( 80 );
 
 Ticker channelUpdateTimer;
@@ -100,7 +102,9 @@ void setup() {
 
   OLED.init();
   OLED.clear();
-  OLED.flipScreenVertically();
+  if ( OLEDflipped) {
+    OLED.flipScreenVertically();
+  }
   OLED.setTextAlignment( TEXT_ALIGN_CENTER );
   OLED.setFont( ArialMT_Plain_16 );
   OLED.drawString( 64, 10, F( "AquaControl" ) );

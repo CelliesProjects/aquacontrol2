@@ -74,6 +74,18 @@ void setupWebServer() {
     webServer.send( 200, FPSTR( textplainHEADER ), dstEnabled ? F( "enabled" ) : F( "disabled" ) );
   });
 
+  webServer.on( "/api/flipoled", []() {
+    OLEDflipped = !OLEDflipped;
+    if ( !OLEDflipped ) {
+      OLED.init();
+    } else {
+      //OLED.init();
+      OLED.flipScreenVertically();
+    }
+    webServer.send( 200, FPSTR( textplainHEADER ), OLEDflipped ? "OLED flipped" : "OLED normal" );
+  });
+
+
   webServer.on( "/api/formatspiffs", []() {
     OLED.clear();
     OLED.setTextAlignment( TEXT_ALIGN_CENTER );
