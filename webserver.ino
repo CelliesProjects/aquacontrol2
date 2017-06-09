@@ -79,10 +79,9 @@ void setupWebServer() {
     if ( !OLEDflipped ) {
       OLED.init();
     } else {
-      //OLED.init();
       OLED.flipScreenVertically();
     }
-    webServer.send( 200, FPSTR( textplainHEADER ), OLEDflipped ? "OLED flipped" : "OLED normal" );
+    webServer.send( 200, FPSTR( textplainHEADER ), OLEDflipped ? F( "OLED flipped" ) : F( "OLED normal" ) );
   });
 
 
