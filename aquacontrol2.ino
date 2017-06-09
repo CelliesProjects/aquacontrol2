@@ -6,7 +6,6 @@
 #include <FS.h>
 #include <Ticker.h>
 #include "SSD1306.h"              //https://github.com/squix78/esp8266-oled-ssd1306
-#include <DallasTemperature.h>    //https://github.com/milesburton/Arduino-Temperature-Control-Library
 
 extern "C" {
 #include "user_interface.h"
@@ -80,17 +79,9 @@ const byte ledPin[numberOfChannels] =  { D1, D2, D3, D4, D5 } ;        //pin num
 //       OLED( OLEDaddress, SDA_pin, SCL_pin );
 SSD1306  OLED( 0x3c, D7, D6 );
 
-//temp sensors
-OneWire           oneWire( RX );                                                  // 1-wire is on RX so no serial debugging!!
-DallasTemperature sensors( &oneWire );
-int               numberOfSensors;
-unsigned long     nextDallasUpdate;
-float             sensorTemp[3];
-
 ESP8266WebServer webServer ( 80 );
 
 Ticker channelUpdateTimer;
-Ticker dallasTempTimer;
 
 void setup() {
   WiFi.persistent( false );
@@ -223,18 +214,6 @@ void setup() {
   channelUpdateTimer.attach_ms( 1000 , updateChannels );         // Finally set the timer routine to update the leds
   updateChannels();
 
-  Serial.end();                                                  // otherwise no temp readings:
-  delay(50);
-
-  //set up the temperature sensors
-  sensors.begin();
-  numberOfSensors = sensors.getDeviceCount();
-  if ( numberOfSensors > 0 ) {
-    sensors.setWaitForConversion(false);
-    sensors.requestTemperatures();
-    nextDallasUpdate = millis() + 750;
-  }
-
   lightStatus = F( "Lights controlled by program." );
 
   if ( WiFi.hostname() != myWIFIhostname) {
@@ -243,9 +222,6 @@ void setup() {
 }
 
 void loop() {
-  if ( numberOfSensors > 0 && (long)(millis() - nextDallasUpdate ) >= 0 ) {
-    updateDallasTemperature();
-  }
 
   if ( now() >= ntpSyncTime ) {
     time_t ntpTime = getTimefromNTP();

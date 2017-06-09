@@ -89,21 +89,6 @@ void updateChannels() {
   }
 }
 
-void updateDallasTemperature() {
-  if ( numberOfSensors > 0 ) {
-    sensorTemp[0] = sensors.getTempCByIndex(0);
-  }
-  if ( numberOfSensors > 1 ) {
-    sensorTemp[0] = sensors.getTempCByIndex(1);
-  }
-  if ( numberOfSensors > 2 ) {
-    sensorTemp[0] = sensors.getTempCByIndex(2);
-  }
-  sensors.setWaitForConversion(false);
-  sensors.requestTemperatures();
-  nextDallasUpdate = millis() + 750;
-}
-
 bool defaultTimersAreLoaded() {                                                      //this function loads the timers or returns FALSE
   //find 'default.aqu' on SPIFFS disk and if present load the timerdata from this file
   //return false on error
