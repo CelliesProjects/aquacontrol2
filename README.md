@@ -54,8 +54,12 @@ Click `Tools>ESP8266 Sketch Data Upload` to upload the files.<br><br>
 ## First boot and setup:
 
 After a succesfull install the controller will go through some setup after first boot.
+<br>
+<br>Is this the first time you install Aquacontrol on your Wemos D1? Then jump go step number 1 below to set your WiFi data.
+<br>
 <br>If you installed a previous version, chances are that you don't have to set up your WiFi again, as these values are stored in EEPROM memory.
-<br>A flash of the SPIFFS disk however deletes your `system.cfg` and `default.aqu` files and you will have to set up your device and timers again.
+<br>
+<br>A flash of the SPIFFS disk deletes your `system.cfg` and `default.aqu` files and you will have to set up your device and timers again.
 <br><br>Follow these steps after a successfull install:
 
 1. The first time Aquacontrol is installed it does not know your WiFi settings.
