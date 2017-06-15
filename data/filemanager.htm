@@ -14,6 +14,11 @@ html, body{
   font-size:20px;
 }
 
+
+body{
+  opacity:0.4;
+}
+
 h3{
   margin:0;
 }
@@ -223,6 +228,8 @@ var diskSpace;
 $(document).ready( function() {
 
   readFiles();
+
+  $('body').css('opacity','1');
 
   $( '#fileList' ).on( 'click', '.deleteButton', function() {
     deleteFile( this.getAttribute( "data-filename" ) );
