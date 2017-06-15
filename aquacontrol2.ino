@@ -102,9 +102,6 @@ void setup() {
 
   OLED.init();
   OLED.clear();
-  if ( OLEDflipped) {
-    OLED.flipScreenVertically();
-  }
   OLED.setTextAlignment( TEXT_ALIGN_CENTER );
   OLED.setFont( ArialMT_Plain_16 );
   OLED.drawString( 64, 10, F( "AquaControl" ) );
@@ -199,6 +196,15 @@ void setup() {
       valueStr.trim();
       valueStr == F( "enabled" ) ? dstEnabled = true : NULL;
       valueStr == F( "disabled" ) ? dstEnabled = false : NULL;
+
+    } else if ( lineBuf.startsWith( F( "oled" ) ) ) {
+      valueStr = lineBuf.substring(lineBuf.indexOf( F( "=" ) ) + 1 );
+      valueStr.trim();
+      valueStr == F( "normal" ) ? OLEDflipped = false : NULL;
+      valueStr == F( "flipped" ) ? OLEDflipped = true : NULL;
+      if ( OLEDflipped ) {
+        OLED.flipScreenVertically();
+      }
     }
   }
 
