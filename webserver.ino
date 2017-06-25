@@ -76,9 +76,9 @@ void setupWebServer() {
 
   webServer.on( "/api/flipoled", []() {
     OLEDflipped = !OLEDflipped;
-    if ( !OLEDflipped ) {
-      OLED.init();
-    } else {
+    OLED.end();
+    OLED.init();
+    if ( OLEDflipped ) {
       OLED.flipScreenVertically();
     }
     writeConfigFile();
