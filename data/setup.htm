@@ -149,6 +149,7 @@ input[type="range"]{
     <p class="item"><span class="itemName">TIME ZONE</span><span id="timeZoneValue" class="itemValue">0</span><input type="range" id="timeZoneSlider" value="0" min="-13" max="13"></p>
     <p class="item"><span class="itemName">NTP UPDATE FREQUENCY</span><span id="ntpUpdateValue" class="itemValue">0</span><input type="range" id="ntpUpdateSlider" value="21600" min="21600" max="86400" step="21600"></p>
     <p class="item"><span class="itemName">APPLY<a style="color:beige;" href="https://en.wikipedia.org/wiki/Daylight_saving_time" target="_blank">DAYLIGHT SAVING TIME</a></span><span id="dstValue" class="itemValue">&nbsp;</span><input type="range" id="dstSlider" value="0" min="0" max="1"></p>
+    <p class="item"><span class="itemName">DISPLAY ORIENTATION</span><span id="oledValue" class="itemValue">&nbsp;</span><input type="range" id="oledSlider" value="0" min="0" max="1"></p>
   </div>
 </div>
 <div class="shadowedBox">
@@ -219,8 +220,19 @@ $(document).ready( function() {
                       if ( data == 'disabled' ) {
                         $('#dstSlider').val(0);
                       }
-                      $('input').prop('disabled', false); //and finally enable the inputs again
-                      $('body').css('opacity','1'); // and show the page
+
+                      $.get("/api/oledstatus", function( data ) {
+                        $('#oledValue').html( data );
+                        if ( data == 'normal' ) {
+                          $('#oledSlider').val(0);
+                        }
+                        if ( data == 'flipped' ) {
+                          $('#oledSlider').val(1);
+                        }
+
+                        $('input').prop('disabled', false); //and finally enable the inputs again
+                        $('body').css('opacity','1'); // and show the page
+                      });
 
                     });
 
@@ -243,6 +255,14 @@ $(document).ready( function() {
   });
 
   //event handlers
+
+  $('#oledSlider').on('change', function( event ) {
+    if ( $(this).val() == 0 ) $('#oledValue').html('normal');
+    if ( $(this).val() == 1 ) $('#oledValue').html('flipped');
+    $.get( "/api/oledstatus?newoledstatus=" + $('#oledValue').html(), function( data ) {
+      console.log( data );
+    });
+  });
 
   $('#dstSlider').on('change', function( event ) {
     $.get( "/api/dststatus?newdststatus=" + $('#dstValue').html(), function( data ) {

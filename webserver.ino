@@ -74,18 +74,6 @@ void setupWebServer() {
     webServer.send( 200, FPSTR( textplainHEADER ), dstEnabled ? F( "enabled" ) : F( "disabled" ) );
   });
 
-  webServer.on( "/api/flipoled", []() {
-    OLEDflipped = !OLEDflipped;
-    OLED.end();
-    OLED.init();
-    if ( OLEDflipped ) {
-      OLED.flipScreenVertically();
-    }
-    writeConfigFile();
-    webServer.send( 200, FPSTR( textplainHEADER ), OLEDflipped ? F( "OLED flipped" ) : F( "OLED normal" ) );
-  });
-
-
   webServer.on( "/api/formatspiffs", []() {
     OLED.clear();
     OLED.setTextAlignment( TEXT_ALIGN_CENTER );
@@ -110,7 +98,7 @@ void setupWebServer() {
     }
     webServer.send( 200, FPSTR( textplainHEADER ), HTTPresponse );
   });
-    
+
   webServer.on( "/api/status", []() {
     String HTTPresponse;
     for ( byte thisChannel = 0; thisChannel < numberOfChannels; thisChannel++ ) {
@@ -224,6 +212,20 @@ void setupWebServer() {
   webServer.on( "/api/ntplastsynctime", []() {
     snprintf( webBuffer, sizeof( webBuffer ), "%u", ntpLastSyncTime );
     webServer.send( 200, FPSTR( textplainHEADER ), webBuffer );
+  });
+
+  webServer.on( "/api/oledstatus", []() {
+    if ( webServer.arg( "newoledstatus" ) != "" ) {
+      webServer.arg( "newoledstatus" ) == F( "normal" ) ? OLEDflipped = false : NULL;
+      webServer.arg( "newoledstatus" ) == F( "flipped" ) ? OLEDflipped = true : NULL;
+      OLED.end();
+      OLED.init();
+      if ( OLEDflipped ) {
+        OLED.flipScreenVertically();
+      }
+      writeConfigFile();
+    };
+    webServer.send( 200, FPSTR( textplainHEADER ), OLEDflipped ? F( "flipped" ) : F( "normal" ) );
   });
 
   webServer.on( "/api/pwmfrequency", []() {
