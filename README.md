@@ -12,6 +12,8 @@ With this software and the custom hardware, you can control 5 LED strips and pro
 
 * Web interface.
 
+* NTP time keeping.
+
 * Hostname can be set.
 
 * Acces point mode to setup WiFi connection.
@@ -23,9 +25,9 @@ With this software and the custom hardware, you can control 5 LED strips and pro
 To install the software on a WeMos D1 mini, you will need the Arduino IDE with the ESP8266 boards -[2.3.0](https://github.com/esp8266/Arduino/releases/tag/2.3.0)- already added to the board manager.
 <br>The ESP8266 data upload plugin has to be installed.
 <br><br>[How to install the SPIFFS upload plugin](https://github.com/esp8266/Arduino/blob/master/doc/filesystem.md#uploading-files-to-file-system)
-<br><br>The external `Time` and `esp8266-oled-ssd1306` libraries also have to be installed. 
 
 ### External libraries:
+The external `Time` and `esp8266-oled-ssd1306` libraries also have to be installed. 
 
 * Time library [1.5](https://github.com/PaulStoffregen/Time/archive/v1.5.zip) maintained by [PaulStoffregen](https://github.com/PaulStoffregen)
 
@@ -55,11 +57,13 @@ Click `Tools>ESP8266 Sketch Data Upload` to upload the files.<br><br>
 
 After a succesfull install the controller will go through some setup after first boot.
 <br>
-<br>Is this the first time you install Aquacontrol on your Wemos D1? Then jump go step number 1 below to set your WiFi data.
+<br>Is this the first time you install Aquacontrol on your Wemos D1?
+<br>
+<br>Then jump go step number 1 below to set your WiFi data.
 <br>
 <br>If you installed a previous version, chances are that you don't have to set up your WiFi again, as these values are stored in EEPROM memory.
 <br>
-<br>A flash of the SPIFFS disk deletes your `system.cfg` and `default.aqu` files and you will have to set up your device and timers again.
+<br>A flash of the SPIFFS disk (Sketch Data upload) deletes your `system.cfg` and `default.aqu` files and you will have to set up your device and timers again.
 <br><br>Follow these steps after a successfull install:
 
 1. The first time Aquacontrol is installed it does not know your WiFi settings.
