@@ -90,10 +90,6 @@ After a succesfull install the controller will go through some setup after first
 
 ## Done!
 
-Questions or remarks?
-<br>Email: aquacontrol-@-wasietsmet.nl
-<br>( Remove the '`-`' characters from the mail address. )
-
 ## Pins used:
 #### Led output:
 * D1 - channel 1, connected to mosfet gate.
