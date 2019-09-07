@@ -1,5 +1,6 @@
 # aquacontrol2
-
+## This project is no longer maintained.
+[Follow this link to aquacontrol32](https://github.com/CelliesProjects/aquacontrol32)
 ### Description:
 Aquacontrol2 is software for a 5 channel LED controller based on a WeMos D1 mini.
 
