@@ -1,47 +1,13 @@
 <!doctype HTML>
 <html lang="en">
 <head>
-<title>Timer editor</title>
+<title data-key="t_36">Aquacontrol - Timer editor</title>
 <meta charset="utf-8">
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">  <!--prevent favicon requests-->
 <style>
-html, body{
-  margin:0 auto;
-  background-color:grey;
-  text-align:center;
-  width:1024px;
-	font-variant: small-caps;
-  font-size:20px;
-}
-
-body{
-  opacity:0.4;
-}
-
-h3{
-  margin:0;
-}
-
 a {
-  color: black;
-  text-decoration: none;
+  color: white;
   margin: 0 10px;
-}
-
-.systemLink{
-  padding: 3px 10px;
-}
-
-.systemLink:hover {
-  background:grey;
-}
-
-p{
-  margin:0;
-}
-
-hr{
-  margin:auto;
 }
 
 input{
@@ -61,18 +27,6 @@ input[type="button"] {
 input[type="button"]:hover {
   background:darkgray;
 }
-#wrapper{
-  background-color: black;
-  margin:auto;
-  cursor: default;
-  //unselectable
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
 
 #confirmWindow{
   box-shadow: 0px 0px 13px 0px rgba(0,0,0,1);
@@ -91,26 +45,18 @@ input[type="button"]:hover {
   padding:20px;
 }
 
-.shadowedBox {
-  box-shadow: 0px 0px 13px 0px rgba(0,0,0,1);
-  border:solid 1px black;
-  border-radius: 15px;
-  margin:10px 0;
-  overflow:hidden;
-}
-
 .buttonBar{
-  background:beige;
+  background: #34495e;
 }
-
 
 #editorCanvas{
+    width: 100%;
 }
 
 #timerList{
   height: 150px;
   width: 600px;
-  background: beige;
+  background: #3a3a3a5c;
   margin: auto;
   overflow:auto;
 }
@@ -129,7 +75,6 @@ input[type="button"]:hover {
   float:left;
 }
 
-
 .timerEntryDelete{
   width:20%;
   float:left;
@@ -147,24 +92,112 @@ input[type="button"]:hover {
   width:60px;
   display:inline-block;
 }
+
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	font-family: Arial, sans-serif;
+}
+
+body {
+	background-color: #2c3e50;
+	color: white;
+	text-align: center;
+	margin: auto;
+	padding: 20px;
+	min-width: 780px;
+}
+
+.nav-bar {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 10px;
+	background: #34495e;
+	padding: 10px;
+	border-radius: 10px;
+	margin-bottom: 20px;
+}
+
+.nav-bar a {
+	color: white;
+	text-decoration: none;
+	padding: 10px 15px;
+	background: #1abc9c;
+	border-radius: 5px;
+	transition: 0.3s;
+}
+
+.nav-bar a:hover {
+	background: #16a085;
+}
+
+.shadowedBox {
+	background: #34495e;
+	padding: 15px;
+	border-radius: 10px;
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+	margin-bottom: 15px;
+}
+
+.wrapper {
+	height:300px;
+	display: inline-flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	padding: 20px;
+	border-radius: 10px;
+	gap: 10px;
+	width: 250px;
+}
+
+@media (max-width: 600px) {
+	body {
+		padding: 10px;
+	}
+
+	.nav-bar {
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.nav-bar a {
+		width: 90%;
+		text-align: center;
+	}
+
+	#wrapper {
+		flex-direction: row;
+		justify-content: center;
+		gap: 5px;
+		width: 250px;
+	}
+}
 </style>
-<script src="https://code.jquery.com/jquery-3.2.1.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jcanvas/16.7.3/jcanvas.js"></script>
+<script src="../jquery-3.7.1.min.js"></script>
+<script src="../jcanvas-16.7.3.js"></script>
 </head>
 <body>
 <div id="confirmWindow"><div id="confirmMessage">A message</div></div>
-<p class="shadowedBox" style="background-color:beige;"><a class="systemLink" href="/">HOME</a><a class="systemLink" href="channels">CHANNELS</a><a class="systemLink" href="setup">SETUP</a><a class="systemLink" href="editor">EDITOR</a><a class="systemLink" href="filemanager">FILE MANAGER</a></p>
-<div class="shadowedBox">
-  <h3>TIMER EDITOR</h3>
-  <p>Program and upload timers to the controller.</p>
+<div class="nav-bar shadowedBox">
+	<a class="systemLink" data-key="t_1" href="/">HOME</a><a class="systemLink" data-key="t_2" href="channels">CHANNELS SETUP</a><a class="systemLink" data-key="t_3" style="background: #0094b7;" href="editor">TIMER SETUP</a><a class="systemLink" data-key="t_4" href="setup">SETUP</a><a class="systemLink" data-key="t_5" href="filemanager">FILE MANAGER</a>
+<select id="languageSwitcher">
+    <option value="en">English</option>
+    <option value="fr">Français</option>
+</select>
 </div>
-<div class="shadowedBox"><p id="statusBox"><a href="https://github.com/CelliesProjects/aquacontrol2">AQUACONTROL GITHUB</a></p></div>
-<div class="shadowedBox" style="background-color:black;">
+<div class="shadowedBox">
+  <h3 data-key="t_37">TIMER EDITOR</h3>
+  <p data-key="t_38">Program and upload timers to the controller.</p>
+</div>
+<div class="shadowedBox"><p id="statusBox"><a data-key="t_39" href="https://github.com/CelliesProjects/aquacontrol2">AQUACONTROL GITHUB</a></p></div>
+<div class="shadowedBox" id="graph" style="background-color:#3a3a3a5c;">
 <p class="buttonBar"><input id="clearButton" type="button" value="CLEAR"><input id="reloadButton" type="button" value="RELOAD"><input type="button" id="uploadButton" value="UPLOAD"></p>
 <canvas id="editorCanvas" width="1000px" height="200px"></canvas>
 <p class="buttonBar"><input class="channelButton" type="button" value="CHANNEL 1"><input class="channelButton" type="button" value="CHANNEL 2"><input class="channelButton" type="button" value="CHANNEL 3"><input class="channelButton" type="button" value="CHANNEL 4"><input class="channelButton" type="button" value="CHANNEL 5"></p>
 </div>
-<p class="shadowedBox" id="channelTitle">Select a channel.</p>
+<p class="shadowedBox" id="channelTitle" data-key="t_40">Select a channel.</p>
 <div class="shadowedBox"><div id="timerList"></div>
 <script>
 var sideBorder = 42; //pixels
@@ -365,7 +398,7 @@ function drawBackground(){
     x3: $('#editorCanvas').width() - sideBorder, y3: $('#editorCanvas').height() - updownBorder,
     x4: $('#editorCanvas').width() - sideBorder, y4: updownBorder
   });
-  //draw the hour indicators on the bottom
+	//draw the hour indicators on the bottom
   var hourWidth = $('#editorCanvas').width() - ( 2 * sideBorder ) ;
   hourWidth = hourWidth / 24;
   for ( hours = 0; hours <= 24; hours++) {
@@ -882,6 +915,49 @@ $( document ).ready( function() {
     $('#editorCanvas').removeLayer( 'timerLayer' ).drawLayers();
   });
 
+});
+
+function resizeCanvas() {
+   const canvas = document.getElementById("editorCanvas");
+
+    const width = canvas.clientWidth;
+    const height = canvas.clientHeight;
+
+    canvas.width = width;
+    canvas.height = height;
+}
+
+// Exécuter au chargement de la page
+document.addEventListener("DOMContentLoaded", resizeCanvas);
+
+// Exécuter au redimensionnement de la fenêtre
+window.addEventListener("resize", resizeCanvas);
+
+</script>
+<script>
+$(document).ready(function () {
+    let browserLang = navigator.language.split('-')[0];
+    let supportedLanguages = ["en", "fr"];
+    let currentLang = localStorage.getItem("lang") || 
+                      (supportedLanguages.includes(browserLang) ? browserLang : "en");
+
+    function loadTranslations(lang) {
+        $.getJSON("translations.json", function (translations) {
+            $("[data-key]").each(function () { // Sélectionne tous les éléments avec data-key
+                let key = $(this).data("key");
+                $(this).text(translations[lang][key]);
+            });
+        });
+    }
+
+    loadTranslations(currentLang);
+    $("#languageSwitcher").val(currentLang);
+
+    $("#languageSwitcher").change(function () {
+        currentLang = $(this).val();
+        localStorage.setItem("lang", currentLang);
+        loadTranslations(currentLang);
+    });
 });
 </script>
 </body>
