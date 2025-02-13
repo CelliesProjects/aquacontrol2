@@ -1,61 +1,15 @@
 <!doctype HTML>
 <html lang="en">
 <head>
-<title>Channel setup</title>
+<title data-key="t_8">Aquacontrol - Channel setup</title>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">  <!--prevent favicon requests-->
 <style>
-html, body{
-  margin:0 auto;
-  background-color:grey;
-  text-align:center;
-  width:1024px;
-  font-variant: small-caps;
-  font-size:20px;
-}
-
-body{
-  opacity:0.4;
-}
-
-h3{
-  margin:0;
-}
-
-p{
-  margin:0;
-}
-
-a {
-  color: black;
-  text-decoration: none;
-  margin: 0 10px;
-}
-
-.systemLink{
-  padding: 3px 10px;
-}
-
-.systemLink:hover {
-  background:grey;
-}
-
-.fileName a{
-  display:block;
-}
-
-.shadowedBox  {
-  box-shadow: 0px 0px 13px 0px rgba(0,0,0,1);
-  border:solid 1px black;
-  border-radius: 15px;
-  margin:10px 0;
-}
-
 .item{
   width:625px;
   margin:auto;
   text-align:justify;
-  background-color:beige;
 }
 
 .item:hover {
@@ -104,22 +58,120 @@ input[type="color"] {
   width:60px;
   margin: 0 15px 0 30px;
 }
+
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	font-family: Arial, sans-serif;
+}
+
+body {
+	background-color: #2c3e50;
+	color: white;
+	text-align: center;
+	max-width: 1024px;
+	margin: auto;
+	padding: 20px;
+	min-width: 650px;
+}
+
+.nav-bar {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 10px;
+	background: #34495e;
+	padding: 10px;
+	border-radius: 10px;
+	margin-bottom: 20px;
+}
+
+.nav-bar a {
+	color: white;
+	text-decoration: none;
+	padding: 10px 15px;
+	background: #1abc9c;
+	border-radius: 5px;
+	transition: 0.3s;
+}
+
+.nav-bar a:hover {
+	background: #16a085;
+}
+
+.shadowedBox {
+	background: #34495e;
+	padding: 15px;
+	border-radius: 10px;
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+	margin-bottom: 15px;
+}
+
+.wrapper {
+	height:300px;
+	display: inline-flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	padding: 20px;
+	border-radius: 10px;
+	gap: 10px;
+	width: 250px;
+}
+
+.shadowedBox {
+	background: #34495e;
+	padding: 15px;
+	border-radius: 10px;
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+	margin-bottom: 15px;
+}
+
+@media (max-width: 600px) {
+	body {
+		padding: 10px;
+	}
+
+	.nav-bar {
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.nav-bar a {
+		width: 90%;
+		text-align: center;
+	}
+
+	#wrapper {
+		flex-direction: row;
+		justify-content: center;
+		gap: 5px;
+		width: 250px;
+	}
+}
 </style>
-<script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+<script src="../jquery-3.7.1.min.js"></script>
 </head>
 <body>
-<p class="shadowedBox" style="background-color:beige;"><a class="systemLink" href="/">HOME</a><a class="systemLink" href="channels">CHANNELS</a><a class="systemLink" href="setup">SETUP</a><a class="systemLink" href="editor">EDITOR</a><a class="systemLink" href="filemanager">FILE MANAGER</a></p>
+<div class="nav-bar shadowedBox">
+	<a class="systemLink" data-key="t_1" href="/">HOME</a><a class="systemLink" data-key="t_2" style="background: #0094b7;"  href="channels">CHANNELS SETUP</a><a class="systemLink"  data-key="t_3" href="editor">TIMER SETUP</a><a class="systemLink" data-key="t_4" href="setup">SETUP</a><a class="systemLink"  data-key="t_5" href="filemanager">FILE MANAGER</a>
+<select id="languageSwitcher">
+    <option value="en">English</option>
+    <option value="fr">Français</option>
+</select>
+</div>
 <div class="shadowedBox">
-  <h3>CHANNEL SETUP</h3>
-  <p>Set up channelnames, interface colors and minimum levels.</p>
+  <h3 data-key="t_9">CHANNEL SETUP</h3>
+  <p data-key="t_10">Set up channelnames, interface colors and minimum levels.</p>
+  <p data-key="t_11">To remove a channel from homepage display, clear the channel name in the table below.</p>
 </div>
 <div class="shadowedBox"><p id="statusBox">&nbsp;</p></div>
 <div class="shadowedBox">
-    <div class="item"><p class="itemName">1:</p><input type="text" class="channelName" value=""><input type="color" class="colorPicker"><p class="itemName">MIN:</p><input type="range" class="minLevel" value="0" min="0" max="0.99" step="0.01"><p class="itemValue minimumPercent">0%</p></div>
-    <div class="item"><p class="itemName">2:</p><input type="text" class="channelName" value=""><input type="color" class="colorPicker"><p class="itemName">MIN:</p><input type="range" class="minLevel" value="0" min="0" max="0.99" step="0.01"><p class="itemValue minimumPercent">0%</p></div>
-    <div class="item"><p class="itemName">3:</p><input type="text" class="channelName" value=""><input type="color" class="colorPicker"><p class="itemName">MIN:</p><input type="range" class="minLevel" value="0" min="0" max="0.99" step="0.01"><p class="itemValue minimumPercent">0%</p></div>
-    <div class="item"><p class="itemName">4:</p><input type="text" class="channelName" value=""><input type="color" class="colorPicker"><p class="itemName">MIN:</p><input type="range" class="minLevel" value="0" min="0" max="0.99" step="0.01"><p class="itemValue minimumPercent">0%</p></div>
-    <div class="item"><p class="itemName">5:</p><input type="text" class="channelName" value=""><input type="color" class="colorPicker"><p class="itemName">MIN:</p><input type="range" class="minLevel" value="0" min="0" max="0.99" step="0.01"><p class="itemValue minimumPercent">0%</p></div>
+    <div class="item"><p class="itemName">1 :</p><input type="text" class="channelName" value=""><input type="color" class="colorPicker"><p class="itemName">MIN:</p><input type="range" class="minLevel" value="0" min="0" max="0.98" step="0.01"><p class="itemValue minimumPercent">0%</p></div>
+    <div class="item"><p class="itemName">2 :</p><input type="text" class="channelName" value=""><input type="color" class="colorPicker"><p class="itemName">MIN:</p><input type="range" class="minLevel" value="0" min="0" max="0.98" step="0.01"><p class="itemValue minimumPercent">0%</p></div>
+    <div class="item"><p class="itemName">3 :</p><input type="text" class="channelName" value=""><input type="color" class="colorPicker"><p class="itemName">MIN:</p><input type="range" class="minLevel" value="0" min="0" max="0.98" step="0.01"><p class="itemValue minimumPercent">0%</p></div>
+    <div class="item"><p class="itemName">4 :</p><input type="text" class="channelName" value=""><input type="color" class="colorPicker"><p class="itemName">MIN:</p><input type="range" class="minLevel" value="0" min="0" max="0.98" step="0.01"><p class="itemValue minimumPercent">0%</p></div>
+    <div class="item"><p class="itemName">5 :</p><input type="text" class="channelName" value=""><input type="color" class="colorPicker"><p class="itemName">MIN:</p><input type="range" class="minLevel" value="0" min="0" max="0.98" step="0.01"><p class="itemValue minimumPercent">0%</p></div>
 </div>
 <script>
 
@@ -221,6 +273,32 @@ $(document).ready( function() {
 
 });
 </script>
+<script>
+$(document).ready(function () {
+    let browserLang = navigator.language.split('-')[0];
+    let supportedLanguages = ["en", "fr"];
+    let currentLang = localStorage.getItem("lang") || 
+                      (supportedLanguages.includes(browserLang) ? browserLang : "en");
 
+    function loadTranslations(lang) {
+        $.getJSON("translations.json", function (translations) {
+            $("[data-key]").each(function () { // Sélectionne tous les éléments avec data-key
+                let key = $(this).data("key");
+                $(this).text(translations[lang][key]);
+            });
+        });
+    }
+
+    loadTranslations(currentLang);
+    $("#languageSwitcher").val(currentLang);
+
+    $("#languageSwitcher").change(function () {
+        currentLang = $(this).val();
+        localStorage.setItem("lang", currentLang);
+        loadTranslations(currentLang);
+    });
+});
+
+</script>
 </body>
 </html>
