@@ -23,9 +23,9 @@ With this software and the custom hardware, you can control 5 LED strips and pro
 
 ## What you need:
 
-To install the software on a WeMos D1 mini, you will need the Arduino IDE with the ESP8266 boards -[2.3.0](https://github.com/esp8266/Arduino/releases/tag/2.3.0)- already added to the board manager.
+To install the software on a WeMos D1 mini, you will need the Arduino IDE with the ESP8266 boards -[2.3.0](https://github.com/esp8266/Arduino/releases)- already added to the board manager.
 <br>The ESP8266 data upload plugin has to be installed.
-<br><br>[How to install the SPIFFS upload plugin](https://github.com/esp8266/Arduino/blob/master/doc/filesystem.md#uploading-files-to-file-system)
+<br><br>[How to install the SPIFFS upload plugin](https://github.com/esp8266/Arduino/blob/master/doc/filesystem.rst#uploading-files-to-file-system)
 
 ### External libraries:
 The external `Time` and `esp8266-oled-ssd1306` libraries also have to be installed. 
