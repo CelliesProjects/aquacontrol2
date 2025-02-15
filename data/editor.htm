@@ -193,9 +193,9 @@ body {
 </div>
 <div class="shadowedBox"><p id="statusBox"><a data-key="t_39" href="https://github.com/CelliesProjects/aquacontrol2">AQUACONTROL GITHUB</a></p></div>
 <div class="shadowedBox" id="graph" style="background-color:#3a3a3a5c;">
-<p class="buttonBar"><input id="clearButton" type="button" value="CLEAR"><input id="reloadButton" type="button" value="RELOAD"><input type="button" id="uploadButton" value="UPLOAD"></p>
+<p class="buttonBar"><input id="clearButton" data-key="t_41" type="button" value="CLEAR"><input id="reloadButton" data-key="t_42" type="button" value="RELOAD"><input type="button" data-key="t_43" id="uploadButton" value="UPLOAD"></p>
 <canvas id="editorCanvas" width="1000px" height="200px"></canvas>
-<p class="buttonBar"><input class="channelButton" type="button" value="CHANNEL 1"><input class="channelButton" type="button" value="CHANNEL 2"><input class="channelButton" type="button" value="CHANNEL 3"><input class="channelButton" type="button" value="CHANNEL 4"><input class="channelButton" type="button" value="CHANNEL 5"></p>
+<p class="buttonBar"><input class="channelButton channel1" type="button" value="CHANNEL 1"><input class="channelButton channel2" type="button" value="CHANNEL 2"><input class="channelButton channel3" type="button" value="CHANNEL 3"><input class="channelButton channel4" type="button" value="CHANNEL 4"><input class="channelButton channel5" type="button" value="CHANNEL 5"></p>
 </div>
 <p class="shadowedBox" id="channelTitle" data-key="t_40">Select a channel.</p>
 <div class="shadowedBox"><div id="timerList"></div>
@@ -544,9 +544,58 @@ function updateNowIndicator() {
   });
 }
 
+function getChannelNames() {
+  $.get("/channelnames.txt")
+    .done(function(data) {
+      var values = data.split("\n").map(function(line) {
+        return line.replace("\r", "").trim();
+      });
+
+      for (var index = 0; index < 5; index++) {
+        if (index < values.length) {
+          var element = values[index];
+
+          if (index === 0) {
+            var button = $(".channel1");
+            button.val(element);
+            button.css('display', '');
+          } else if (index === 1) {
+            var button = $(".channel2");
+            button.val(element);
+            button.css('display', '');
+          } else if (index === 2) {
+            var button = $(".channel3");
+            button.val(element);
+            button.css('display', '');
+          } else if (index === 3) {
+            var button = $(".channel4");
+            button.val(element);
+            button.css('display', '');
+          } else if (index === 4) {
+            var button = $(".channel5");
+            button.val(element);
+            button.css('display', '');
+          } else {
+            var button = $('');
+          }
+		  if (element === "") {
+            button.css('display', 'none');
+          } 
+        } else {
+          //var button = $('.channel' + index);
+          //button.css('display', 'none');
+        }
+      }
+    })
+    .fail(function() {
+      console.log("Getting channel names failed.");
+    });
+}
+
+
 $( document ).ready( function() {
   $('input').prop("disabled",true);
-
+	getChannelNames();
   //set correct height for jCanvas - get the width/height set in html
   $('#editorCanvas').width( $('#editorCanvas').width() ).height( $('#editorCanvas').height() );
 
@@ -946,6 +995,9 @@ $(document).ready(function () {
             $("[data-key]").each(function () { // Sélectionne tous les éléments avec data-key
                 let key = $(this).data("key");
                 $(this).text(translations[lang][key]);
+				$('#clearButton').val(translations[lang].t_41);
+				$('#reloadButton').val(translations[lang].t_42);
+				$('#uploadButton').val(translations[lang].t_43);
             });
         });
     }
