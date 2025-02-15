@@ -10,7 +10,7 @@
 		"t_8": "Aquacontrol - Channel setup",
 		"t_9": "CHANNEL SETUP",
 		"t_10": "Set up channelnames, interface colors and minimum levels.",
-		"t_11": "To remove a channel from homepage display, clear the channel name in the table below.",
+		"t_11": "To remove a channel from display, clear the channel name in the table below.",
 		"t_12": "Aquacontrol - Device setup",
 		"t_13": "DEVICE SETUP",	
 		"t_14": "Control your lights and device.",
@@ -39,7 +39,10 @@
 		"t_37": "TIMER EDITOR",
 		"t_38": "Program and upload timers to the controller.",
 		"t_39": "AQUACONTROL GITHUB",
-		"t_40": "Select a channel."
+		"t_40": "Select a channel.",
+		"t_41": "CLEAR",
+		"t_42": "RELOAD",
+		"t_43": "UPLOAD"
 		    },
     "fr": {
         "t_1": "ACCUEIL",
@@ -52,7 +55,7 @@
     	"t_8": "Aquacontrol (M3on-theme) - Configuration des canaux",
 		"t_9": "CONFIGURATION DES CANAUX",
 		"t_10": "Configurer les noms des canaux, la couleur du statut et les niveaux minimum.",
-		"t_11": "Pour supprimer un canal de la page d'acceuil, laisser un champ vide à la place de son nom.",
+		"t_11": "Pour supprimer un canal de l'affichage, laisser un champ vide à la place de son nom.",
 		"t_12": "Aquacontrol (M3on-theme) - Configuration",	
  		"t_13": "CONFIGURATION",	
 		"t_14": "Contrôlez vos lampes et votre appareil.",
@@ -81,6 +84,9 @@
 		"t_37": "ÉDITER LES PLAGES HORAIRES",
 		"t_38": "Programmer et téléverser des plages horaire au contrôleur.",
 		"t_39": "AQUACONTROL GITHUB",
-		"t_40": "Sélectionner un canal."
+		"t_40": "Sélectionner un canal.",
+		"t_41": "TOUT EFFACER",
+		"t_42": "RECHARGER",
+		"t_43": "SAUVEGARDER"
    }
 }
