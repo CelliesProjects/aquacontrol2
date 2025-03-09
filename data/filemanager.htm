@@ -1,55 +1,17 @@
 <!doctype HTML>
 <html lang="en">
 <head>
-<title>File manager</title>
+<title data-key="t_31">Aquacontrol - File manager</title>
 <meta charset="utf-8">
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">  <!--prevent favicon requests-->
 <style>
-html, body{
-  margin:0 auto;
-  background-color:grey;
-  text-align:center;
-  width:1024px;
-  font-variant: small-caps;
-  font-size:20px;
-}
-
-
-body{
-  opacity:0.4;
-}
-
-h3{
-  margin:0;
-}
-
-p{
-  margin:0;
-}
-
 a {
-  color: black;
-  text-decoration: none;
+  color: white;
   margin: 0 10px;
-}
-
-.systemLink{
-  padding: 3px 10px;
-}
-
-.systemLink:hover {
-  background:grey;
 }
 
 .fileName a{
   display:block;
-}
-
-.shadowedBox  {
-  box-shadow: 0px 0px 13px 0px rgba(0,0,0,1);
-  border:solid 1px black;
-  border-radius: 15px;
-  margin:10px 0;
 }
 
 #titleBox{
@@ -65,7 +27,7 @@ a {
 #fileList{
   height: 200px;
   width: 700px;
-  background-color: beige;
+  background-color: #3a3a3a5c;
   margin: auto;
   font-family: monospace;
   font-variant-caps: initial;
@@ -106,12 +68,6 @@ a {
   cursor:pointer;
 }
 
-#uploadBox{
-}
-
-form{
-}
-
 input{
   margin:5px auto;
   vertical-align:middle;
@@ -124,7 +80,7 @@ input[type="file"] button{
 }
 
 input[type="file"]{
-  background-color:beige;
+background-color: #3a3a3a5c;
   height:30px;
 }
 
@@ -141,20 +97,108 @@ progress{
   margin: 10px;
   vertical-align: middle;
 }
+
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	font-family: Arial, sans-serif;
+}
+
+body {
+	background-color: #2c3e50;
+	color: white;
+	text-align: center;
+	max-width: 1024px;
+	margin: auto;
+	padding: 20px;
+	min-width: 780px;
+}
+
+.nav-bar {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 10px;
+	background: #34495e;
+	padding: 10px;
+	border-radius: 10px;
+	margin-bottom: 20px;
+}
+
+.nav-bar a {
+	color: white;
+	text-decoration: none;
+	padding: 10px 15px;
+	background: #1abc9c;
+	border-radius: 5px;
+	transition: 0.3s;
+}
+
+.nav-bar a:hover {
+	background: #16a085;
+}
+
+.wrapper {
+	height:300px;
+	display: inline-flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	padding: 20px;
+	border-radius: 10px;
+	gap: 10px;
+	width: 250px;
+}
+
+.shadowedBox {
+	background: #34495e;
+	padding: 15px;
+	border-radius: 10px;
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+	margin-bottom: 15px;
+}
+
+@media (max-width: 600px) {
+	body {
+		padding: 10px;
+	}
+
+	.nav-bar {
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.nav-bar a {
+		width: 90%;
+		text-align: center;
+	}
+
+	#wrapper {
+		flex-direction: row;
+		justify-content: center;
+		gap: 5px;
+		width: 250px;
+	}
+}
 </style>
 
 <!-- http://stackoverflow.com/questions/166221/how-can-i-upload-files-asynchronously -->
 <!-- https://developer.mozilla.org/en-US/docs/Web/Guide/Using_FormData_Objects -->
 
-<script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+<script src="../jquery-3.7.1.min.js"></script>
 </head>
 <body>
-<p class="shadowedBox" style="background-color:beige;"><a class="systemLink" href="/">HOME</a><a class="systemLink" href="channels">CHANNELS</a><a class="systemLink" href="setup">SETUP</a><a class="systemLink" href="editor">EDITOR</a><a class="systemLink" href="filemanager">FILE MANAGER</a></p>
-<div class="shadowedBox">
-  <h3>FILE MANAGER</h3>
-  <p>Upload, download and delete files.</p>
+<div class="nav-bar shadowedBox">
+	<a class="systemLink" data-key="t_1" href="/">HOME</a><a class="systemLink" data-key="t_2" href="channels">CHANNELS SETUP</a><a class="systemLink" data-key="t_3" href="editor">TIMER SETUP</a><a class="systemLink" data-key="t_4" href="setup">SETUP</a><a class="systemLink" data-key="t_5" style="background: #0094b7;" href="filemanager">FILE MANAGER</a>
+<select id="languageSwitcher">
+    <option value="en">English</option>
+    <option value="fr">Français</option>
+</select>
+</div><div class="shadowedBox">
+  <h3 data-key="t_32">FILE MANAGER</h3>
+  <p data-key="t_33">Upload, download and delete files.</p>
 </div>
-<div class="shadowedBox"><p id="statusBox"></p><p id="diskSpace">&nbsp;</p></div>
+<div class="shadowedBox"><p id="statusBox"></p><text id="diskSpace">&nbsp;</text><text data-key="t_35"></text></div>
 <div id="fileBox" class="shadowedBox">
   <div id="fileList"></div>
   <div id="functionBox">
@@ -163,7 +207,7 @@ progress{
   </div>
 </div>
 <div id="uploadBox" class="shadowedBox">
-<p id="uploadTitle">Click or drop a file in the box to upload.</p>
+<p id="uploadTitle"  data-key="t_34">Click or drop a file in the box to upload.</p>
 <form enctype="multipart/form-data">
 <input id="fileInput" name="file" type="file" />
 </form>
@@ -184,7 +228,7 @@ function formatBytes( bytes, decimals ) {
 function updateDiskspace() {
   $.get( "/api/diskspace", function( data ) {
     diskSpace = parseInt( data );
-    $('#diskSpace').html( formatBytes( diskSpace ) + " LEFT" );
+    $('#diskSpace').html( formatBytes( diskSpace ) );
   });
 }
 
@@ -297,6 +341,31 @@ $(document).ready( function() {
   });
 });
 </script>
+<script>
+$(document).ready(function () {
+    let browserLang = navigator.language.split('-')[0];
+    let supportedLanguages = ["en", "fr"];
+    let currentLang = localStorage.getItem("lang") || 
+                      (supportedLanguages.includes(browserLang) ? browserLang : "en");
 
+    function loadTranslations(lang) {
+        $.getJSON("translations.json", function (translations) {
+            $("[data-key]").each(function () { // Sélectionne tous les éléments avec data-key
+                let key = $(this).data("key");
+                $(this).text(translations[lang][key]);
+            });
+        });
+    }
+
+    loadTranslations(currentLang);
+    $("#languageSwitcher").val(currentLang);
+
+    $("#languageSwitcher").change(function () {
+        currentLang = $(this).val();
+        localStorage.setItem("lang", currentLang);
+        loadTranslations(currentLang);
+    });
+});
+</script>
 </body>
 </html>
